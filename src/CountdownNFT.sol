@@ -290,33 +290,58 @@ contract CountdownNFT is ERC721, Ownable {
     function _generateAnimatedDigitColumn(uint256 xPos, uint256 startDigit, string memory color, string memory duration, uint256 cycleSeconds, bool discrete) internal view returns (string memory) {
         // Ensure startDigit is single digit
         startDigit = startDigit % 10;
-        // Time-synced begin offset so refreshes resume at correct position
-        uint256 elapsed = block.timestamp % cycleSeconds;
-        string memory beginAttr = string(abi.encodePacked("-", elapsed.toString(), "s"));
-        
+        uint256 elapsed = cycleSeconds == 0 ? 0 : (block.timestamp % cycleSeconds);
+
+        string memory anim;
+        string memory initialY;
+        if (discrete) {
+            // 10 steps per full cycle, advance 50px per step
+            uint256 step = cycleSeconds / 10; // assume divisible
+            uint256 timeInto = step == 0 ? 0 : (elapsed % step);
+            uint256 timeToNext = step == 0 ? 0 : (step - timeInto) % step;
+            string memory beginAttr = string(abi.encodePacked(timeToNext.toString(), "s"));
+            string memory durAttr = string(abi.encodePacked((step * 10).toString(), "s"));
+            initialY = "0"; // current digit is already at y=0 in the stack
+            anim = string(
+                abi.encodePacked(
+                    '<animateTransform attributeName="transform" type="translate" calcMode="discrete" ',
+                    'values="13 0;13 -50;13 -100;13 -150;13 -200;13 -250;13 -300;13 -350;13 -400;13 -450;13 -500;13 0" ',
+                    'keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1" dur="', durAttr, '" begin="', beginAttr, '" repeatCount="indefinite"/>'
+                )
+            );
+        } else {
+            // Continuous scroll over full range in cycleSeconds (e.g., 120s)
+            int256 y0 = -int256((500 * elapsed) / (cycleSeconds == 0 ? 1 : cycleSeconds));
+            uint256 tRem = cycleSeconds == 0 ? 0 : ((cycleSeconds - elapsed) % cycleSeconds);
+            initialY = _i2s(y0);
+            string memory firstDur = string(abi.encodePacked(tRem.toString(), "s"));
+            string memory loopDur = string(abi.encodePacked(cycleSeconds.toString(), "s"));
+            anim = string(
+                abi.encodePacked(
+                    '<animateTransform attributeName="transform" type="translate" from="13 ', _i2s(y0), '" to="13 -500" dur="', firstDur, '" begin="0s" fill="freeze"/>',
+                    '<animateTransform attributeName="transform" type="translate" from="13 0" to="13 -500" dur="', loopDur, '" begin="', firstDur, '" repeatCount="indefinite"/>'
+                )
+            );
+        }
+
         return string(abi.encodePacked(
             '<g transform="translate(', xPos.toString(), ', 0)" clip-path="url(#digitWindow)">',
             '<g fill="', color, '" shape-rendering="crispEdges">',
-            '<g transform="translate(13, 0)">',
+            '<g transform="translate(13, ', initialY, ')">',
             _generateDigitSequence(startDigit),
-            (discrete
-                ? string(
-                    abi.encodePacked(
-                        '<animateTransform attributeName="transform" type="translate" calcMode="discrete" ',
-                        'values="13 0;13 -50;13 -100;13 -150;13 -200;13 -250;13 -300;13 -350;13 -400;13 -450;13 -500" ',
-                        'keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1" dur="', duration, '" begin="', beginAttr, '" repeatCount="indefinite"/>'
-                    )
-                )
-                : string(
-                    abi.encodePacked(
-                        '<animateTransform attributeName="transform" type="translate" from="13 0" to="13 -500" dur="', duration, '" begin="', beginAttr, '" repeatCount="indefinite"/>'
-                    )
-                )
-            ),
+            anim,
             '</g>',
             '</g>',
             '</g>'
         ));
+    }
+
+    function _i2s(int256 v) private pure returns (string memory) {
+        if (v == 0) return "0";
+        bool neg = v < 0;
+        uint256 u = uint256(neg ? -v : v);
+        string memory s = u.toString();
+        return neg ? string(abi.encodePacked("-", s)) : s;
     }
     
     function _generateRevealYear(uint256 year) internal pure returns (string memory) {
