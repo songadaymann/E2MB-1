@@ -104,10 +104,42 @@ Note: Several iterations; each listed with a short purpose.
 - Added tick animation for all columns except the ones place (which remains continuous): discrete steps each cycle using SMIL `calcMode="discrete"` with 50px per-step translate.
 - Tightened clip window to 50px height (per step) and aligned inner translate to y=0 to eliminate neighbor bleed.
 - Deploys:
-  - Tick build: `0xE35962cE7d03F5D310CC5157882a687E4aa267b1` (out-tick.svg)
-  - Tick + tight clip: `0xABe782248869C43AF4c4Bc61b15730D4DE62d57E` (out-tick-tight.svg)
+  - Tick build: `0xE35962cE7d03F5D310CC5157882a687E4aa267b1` ([out-tick.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-tick.svg))
+  - Tick + tight clip: `0xABe782248869C43AF4c4Bc61b15730D4DE62d57E` ([out-tick-tight.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-tick-tight.svg))
+
+## 10.6) Centered Year (4-digit)
+
+- Centered the year label after scale; translate set to `translate(38, 310)` with `scale(1.5)` to visually center within 360px viewport.
+- Deploy: `0xfc6d57c0Bfb67168224aa1e2a5969BbE6E12F8e1` ([out-centered-year.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-centered-year.svg)).
+
+## 10.7) No-Reset Time Sync
+
+- Removed negative `begin` offsets. Rendering starts in the correct phase and schedules the next change in the future.
+  - Tick columns: compute `timeToNext = step - (elapsed % step)`; initial y=0; `begin=timeToNext` with discrete values for 11 keyTimes (wrap).
+  - Ones column: staged animation — first partial from current `y0` to end; then repeating full cycles.
+- Result: Refreshing does not reset animation state; columns remain time-synced to `block.timestamp`.
+- Deploy: `0x990aA5327F7EDCeEFc9bEbcc1BAdd609753C68Fe` ([out-no-reset.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-no-reset.svg)).
+
+## 10.8) Snapshots & Tags
+
+- Locked snapshots for reference:
+  - v0.1-tick-tight — tick mode + tight 50px clip, bleed fixed.
+  - v0.2-no-reset — future-begin ticks + staged ones column; centered year retained.
+- Prior Sepolia decodes archived for regression comparison:
+  - `0xEEaF90…` → [out-prev-EEaF90.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-prev-EEaF90.svg)
+  - `0x844adA…` → [out-prev-844adA.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-prev-844adA.svg)
+  - `0xE8f6e4…` → [out-prev-E8f6e4.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-prev-E8f6e4.svg)
+  - `0xf8B56d…` → [out-prev-f8B56d.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-prev-f8B56d.svg)
+  - `0xC4c1DF…` → [out-prev-C4c1DF.svg](file:///Users/jonathanmann/SongADAO%20Dropbox/Jonathan%20Mann/projects/THE-LONG-SONG/contracts/out-prev-C4c1DF.svg)
 
 ## 11) Outstanding / Next Tweaks
+
+- [ ] Rank-aware coloring with minimal byte-size:
+  - Phase A (low-risk): opacity ramp for digits: `fill-opacity = 0.15 + 0.85 * closeness` (closeness = 1 - rank/(supply-1)).
+  - Phase B (optional): subtle hue per row using inline `hsl(h,s%,l%)`, computed on the fly (no shared helpers) to avoid byte-size growth.
+- [ ] UTC Jan-1 table for precise reveal boundaries (current method is simplified).
+- [ ] Optional: add `restart="never"` where supported (most viewers behave correctly already).
+- [ ] Test coverage for time-sync math (tick edges, ones column handoff).
 
 - [ ] Micro‑align per-digit centering across all digits (renderer differences can introduce 1–2px variance). Options:
   - Fine‑tune inner translate x (12↔14) and/or switch segment stroke/joins.
