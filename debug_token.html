@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Token URI</title>
+</head>
+<body>
+    <script>
+        // Paste the tokenURI data URL here to decode it
+        const dataUrl = 'data:application/json;base64,eyJuYW1lIjogIkNvdW50ZG93biAjMCIsICJkZXNjcmlwdGlvbiI6ICJBbiBhbmltYXRlZCBjb3VudGRvd24gb2RvbWV0ZXIiLCAiaW1hZ2UiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhacFpYZENiM2c5SWpBZ01DQXpOakFnTkRJd0lpQjNhV1IwYUQwaU16WXdJaUJvWldsbmFIUTlJalF5TUNJK1BHUmxabk0rUEdjZ2FXUTlJbVF3SWo0OGNtVmpkQ0I0UFNJd0lpQjVQU0l3SWlCM2FXUjBhRDBpTVRZaUlHaGxhV2RvZEQwaU5DSXZQanh5WldOMElIZzlJaTAwSWlCNVBTSTBJaUIzYVdSMGFEMGlOQ0lnYUdWcFoyaDBQU0l4TmlJdlBqeHlaV04wSUhnOUlqRTJJaUI1UFNJMElpQjNhV1IwYUQwaU5DSWdhR1ZwWjJoMFBTSXhOaUl2UGp4eVpXTjBJSGc5SWkwMElpQjVQU0l5TWlJZ2QybGtkR2c5SWpRaUlHaGxhV2RvZEQwaU1UWWlMejQ4Y21WamRDQjRQU0l4TmlJZ2VUMGlNaklpSUhkcFpIUm9QU0kwSWlCb1pXbG5hSFE5SWpFMklpOCtQSEpsWTNRZ2VEMGlNQ0lnZVQwaU16WWlJSGRwWkhSb1BTSXhOaUlnYUdWcFoyaDBQU0kwSWk4K1BDOW5QanhuSUdsa1BTSmtNU0krUEhKbFkzUWdlRDBpTVRZaUlIazlJalFpSUhkcFpIUm9QU0kwSWlCb1pXbG5hSFE5SWpFMklpOCtQSEpsWTNRZ2VEMGlNVFlpSUhrOUlqSXlJaUIzYVdSMGFEMGlOQ0lnYUdWcFoyaDBQU0l4TmlJdlBqd3ZaejQ4';
+        
+        // Extract the JSON part
+        const jsonB64 = dataUrl.split(',')[1];
+        const json = JSON.parse(atob(jsonB64));
+        
+        console.log('Metadata JSON:', json);
+        
+        // Extract and decode the SVG
+        const svgB64 = json.image.split(',')[1];
+        const svg = atob(svgB64);
+        
+        console.log('SVG Content:', svg);
+        
+        // Display the SVG
+        document.body.innerHTML = '<h3>Decoded SVG:</h3>' + svg;
+    </script>
+</body>
+</html>

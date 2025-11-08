@@ -1,0 +1,2619 @@
+1
+
+/*▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░░▒▒▓▓▓▓░░▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▓▓▓▓▓▒▒▒░░░░░░░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░▒▒▓▓▓▓░░▓▓░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▓▓▓▓▓▒▒▒░░░░░░░░▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒░░░▒▒▓▓▓▓▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▓▓▓▓▓▒▒▒░░░░░░░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▒▒░░░░░░░░░░░░░░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▒▒▒░░░░░░░░░▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▒▒░░░░░▒▒▒▒▒░░░░░░░░░▒▓▓▓▓▓▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░▒▓▓▓▓▓▒▒▒░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▒░░░░▒▒▒▓▓▓▓▓▓▒▒░░░░░░▒▓▓▓▓▓░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▓▓▓▓▓▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▒▒░░░▒▒▓▓▓▓▓▓▓▓▓▓▒░░░░░▒▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▒░░░░▒▓▓▓▓▓▓▓▓▓▓▓▒░░░░▒▒▓▓▓▓▓▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░▓▓▓▓▓▓▒▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▒░░░░▒▓▓▓▓▓▓▓▓▓▓▓▒░░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░▒▓▓▓▓▓▓▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▒▒░░░▒▒▓▓▓▓▓▓▓▓▓▒▒░░░░░▒▓▓▓▓▓▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒░
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▒▒░░░░▒▒▓▓▓▓▓▒▒░░░░░░░▒▓▓▓▓▒░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒░░░░░░▒▒▒▒▒▒▒▒▒▓▓▓▓▓▒▒▒
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▒▒░░░░░░░▒░░░░░░░░░░░░▒▒▓▓▒░▒▒░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░▒▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▒▒░░░░░░░░░░░░░░░░░░▒▒▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▓▓▓▓▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒░░░░░░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░░░░░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒░░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒░░░░░░░▒▒▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░░░░░░░░░░░▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░░░░░░░░░░░░░░░▒▒▒▒(CC0)▒▒▒░░
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓░░▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒░Beginning to Believe░░*/
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "./base64.sol";
+import "./IFileStore.sol";
+import "./IT0nev1.sol";
+import "./ILens.sol";
+
+interface IERC721 {
+    function ownerOf(uint tokenId) external view returns (address);
+    function refreshMetadata(uint _tokenId) external; 
+}
+
+interface ILensAlgorithm {
+    function currentLens() external view returns (uint);
+}
+
+interface ISVG {
+    function generateSVG(string memory _text, bytes[2] memory _colors, uint[6][] memory _values) external view returns (string memory);
+}
+
+interface IJavaScript {
+    function generateScript() external view returns (string memory);
+}
+
+contract beginning {
+
+    address public Owner;
+
+    IERC721 public tokenContract;
+    ISVG public svgExtention;
+    IJavaScript public jsExtension;
+    IFileStore public fileStore;
+    ILensAlgorithm public lensAlgo;
+
+    mapping (uint => ILens) public lenses;
+    mapping (uint => address) public satellites;
+
+    uint[] public lensIds;
+    uint[] public satelliteIds;
+
+    uint public currentLensVar = 1;
+    bool public lensControlAlgorithmic;
+    bool public lensControlDelegated;
+    address public lensDelegate;
+
+    string private notAuth = "Not authorized";
+
+    constructor ()
+    {
+        Owner = msg.sender;
+        tokenContract = IERC721(0xb314BEC0F3c247c694f0F0F5d972d9D7c307C5b7);
+        svgExtention = ISVG(0x6B66eadF22b63E5a06179d7fCd8CeeF5d6ffe7D2);
+        fileStore = IFileStore(0xFe1411d6864592549AdE050215482e4385dFa0FB);
+        lenses[1] = ILens(0x57c8D600F80AA5334437c71848efD509C09290e9);
+
+        lensIds.push(1);
+    }
+
+    function tokenURI(uint256 _tokenId) external view returns(string memory) {
+        require(_tokenId == 1, "One.");
+        string memory svg = generateSVG();
+        string memory traits = tokenToTraits();
+        string memory htmlCode = generateHTMLwSVG(svg);
+        string memory json = Base64.encode(
+            bytes(
+                string(
+                    abi.encodePacked(
+                        '{"name":"Beginning to Believe', 
+                        '","image": "data:image/svg+xml;base64,',
+                        Base64.encode(bytes(svg)),
+                        '","animation_url":"data:text/html;base64,', htmlCode, 
+                        '","attributes": [',
+                            traits,
+                        ']}'
+                    )
+                )
+            )
+        );
+        return string(abi.encodePacked('data:application/json;base64,', json));
+    }
+
+    function tokenToTraits() private view returns (string memory) {
+        string memory traits = string(abi.encodePacked(
+            '{"trait_type": "Lens", "value": "', lenses[currentLens()].name(), '"} '
+        ));
+        return traits;
+    }
+
+    function generateSVG() public view returns (string memory) {
+        return svgExtention.generateSVG(lenses[currentLens()].text(), lenses[currentLens()].colors(), lenses[currentLens()].svgValues());
+    }
+
+    function generateScript() public view returns (string memory) {
+        return jsExtension.generateScript();
+    }
+
+    function generateHTMLwSVG(string memory _svg) private view returns (string memory) {
+        return Base64.encode(
+            abi.encodePacked(
+                "<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Beginning to Believe</title><style>* {margin: 0; padding: 0; border: 0;} body{overflow:hidden;} #playArea{width:100%;height:100vh;display: flex;justify-content:center;align-items:center;cursor:pointer;position:relative;} .lighted {animation-name:light;animation-duration:0.2s;animation-iteration-count:infinite;} @keyframes light{0%{scale:1;}20%{scale:1.002;}40%{scale:1.004;}50%{scale:1.005;}60%{scale:1.004;}80%{scale:1.002;}100%{scale:1;}}</style></head><body>",
+                _svg,
+                getTonejs(),
+                "<script>",
+                generateScript(),
+                "</script></body></html>"
+            )
+        );
+    }
+    
+    function generateHTML() public view returns (string memory) {
+        string memory svg = generateSVG();
+        return generateHTMLwSVG(svg);
+    }
+
+    function currentLens() public view returns (uint) {
+        return lensControlAlgorithmic ? lensAlgo.currentLens() : currentLensVar;
+    }
+
+    function holderToggleLensCntrlDelegated() public {
+        require (msg.sender == tokenContract.ownerOf(1), notAuth);
+        lensControlDelegated = !lensControlDelegated;
+    }
+
+    function holderToggleLensCntrlAlgorithmic() public {
+        if (!lensControlDelegated) {require (msg.sender == tokenContract.ownerOf(1), notAuth);}
+        if (lensControlDelegated) {require (msg.sender == lensDelegate, notAuth);}
+        lensControlAlgorithmic = !lensControlAlgorithmic;
+    }
+
+    function setLensAlgorithm(address _algo) public {
+        require(msg.sender == Owner, notAuth);
+        lensAlgo = ILensAlgorithm(_algo);
+    }
+
+    function holderSetLensDelegate(address _delegate) public {
+        require (msg.sender == tokenContract.ownerOf(1), notAuth);
+        lensDelegate = _delegate;
+    }
+
+    function holderSetCurrentLens(uint _newLens) public {
+        if (!lensControlDelegated) {require (msg.sender == tokenContract.ownerOf(1), notAuth);}
+        if (lensControlDelegated) {require (msg.sender == lensDelegate, notAuth);}
+        require (indexOf(_newLens) != -1, "Lens doesn't exist");
+        currentLensVar = _newLens;
+        tokenContract.refreshMetadata(1);
+    }
+
+    function updateLenses(uint _id, address _newLens) public {
+        require(msg.sender == Owner, notAuth);
+
+        if (_newLens == address(0)) {
+            if (address(lenses[_id]) != address(0)) {
+                delete lenses[_id];
+                _removeLensId(_id);
+            }
+        } else {
+            if (address(lenses[_id]) == address(0)) {
+                lensIds.push(_id);
+            }
+            lenses[_id] = ILens(_newLens);
+        }
+    }
+
+    function _removeLensId(uint _id) private {
+        uint length = lensIds.length;
+        for (uint i = 0; i < length; i++) {
+            if (lensIds[i] == _id) {
+                lensIds[i] = lensIds[length - 1];
+                lensIds.pop();
+                break;
+            }
+        }
+    }
+
+    function updateSatellites(uint _id, address _newSat) public {
+        require(msg.sender == Owner, notAuth);
+
+        if (_newSat == address(0)) {
+            if (address(satellites[_id]) != address(0)) {
+                delete satellites[_id];
+                _removeSatId(_id);
+            }
+        } else {
+            if (address(satellites[_id]) == address(0)) {
+                satelliteIds.push(_id);
+            }
+            satellites[_id] = _newSat;
+        }
+    }
+
+    function _removeSatId(uint _id) private {
+        uint length = satelliteIds.length;
+        for (uint i = 0; i < length; i++) {
+            if (satelliteIds[i] == _id) {
+                satelliteIds[i] = satelliteIds[length - 1];
+                satelliteIds.pop();
+                break;
+            }
+        }
+    }
+
+    function transferOwnership(address _newOwner) public {
+        require (msg.sender == Owner, notAuth);
+        Owner = _newOwner;
+    }
+
+    function setJSExtension(address _js) public {
+        require (msg.sender == Owner, notAuth);
+        jsExtension = IJavaScript(_js);
+    }
+
+    function setSVGExtension(address _svg) public {
+        require (msg.sender == Owner, notAuth);
+        svgExtention = ISVG(_svg);
+    }
+
+    string toneString = "Tone.js.gz";
+
+    function updateToneString(string memory _new) public returns (string memory){
+        require (msg.sender == Owner, notAuth);
+        toneString = _new;
+        return toneString;
+    }
+
+    function getTonejs() public view returns (string memory) {
+        return string.concat(
+            "<script type=\"text/javascript+gzip\" src=\"data:text/javascript;base64,",
+            fileStore.getFile(toneString).read(),
+            "\"></script>",
+            getUNZIP()
+        );
+    }
+
+    function getUNZIP() internal view returns (string memory) {
+        return string.concat(
+            "<script src=\"data:text/javascript;base64,",
+            fileStore.getFile("gunzipScripts-0.0.1.js").read(),
+            "\"></script>"
+        );
+    }
+
+    function indexOf(uint _value) internal view returns (int) {
+        for (uint i = 0; i < lensIds.length; i++) {
+            if (lensIds[i] == _value) {
+                return int(i);
+            }
+        }
+        return -1;
+    }
+
+    function getLensIds() public view returns (uint[] memory) {
+        return lensIds;
+    }
+
+    function getSatelliteIds() public view returns (uint[] memory) {
+        return satelliteIds;
+    }
+
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "./IT0nev1.sol";
+
+interface ILens {
+    function name() external view returns (string memory);
+    function signalChainMelody1() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody2() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody3() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody4() external view returns (IT0neV1.Effect[] memory);
+    function signalChainBass() external view returns (IT0neV1.Effect[] memory);
+    function signalChainArp() external view returns (IT0neV1.Effect[] memory);
+    function signalChainChords1() external view returns (IT0neV1.Effect[] memory);
+    function signalChainChords2() external view returns (IT0neV1.Effect[] memory);
+    function notesBass() external view returns (uint8[4] memory);
+    function notesMelody1() external view returns (uint8[8] memory);
+    function notesMelody2() external view returns (uint8[32] memory);
+    function notesMelody3() external view returns (uint8[32] memory);
+    function notesMelody4() external view returns (uint8[32] memory);
+    function notesArp() external view returns (uint8[3][4] memory);
+    function notesChord() external view returns (uint8[3][4] memory);
+    function colors() external view returns (bytes[2] memory);
+    function paramsBass() external view returns (uint256[18][2] memory);
+    function paramsMelody1() external view returns (uint256[18][2] memory);
+    function paramsMelody2() external view returns (uint256[18][2] memory);
+    function paramsMelody3() external view returns (uint256[18] memory);
+    function paramsMelody4() external view returns (uint256[18] memory);
+    function paramsArp() external view returns (uint256[18] memory);
+    function paramsChord() external view returns (uint256[11] memory);
+    function paramsLFO() external view returns (uint256[5][3] memory);
+    function text() external view returns (string memory);
+    function svgValues () external view returns (uint[6][] memory);
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+interface IT0neV1 {
+    struct Effect {
+        uint8 id;
+        uint256[] params;
+    }
+    function getSynthName(uint _type, uint _label) external view returns (bytes memory);
+    function createMonoSynth(uint _index, uint256[18] memory _params) external pure returns (bytes memory);
+    function createDetunedPolySynth(uint _index, bool _declare, uint256[11] memory _params) external pure returns (bytes memory);
+    function generatePlayerCode(uint _partNum , uint[] memory _synthType, uint[] memory _synthLabels, uint8 startTime, uint8 loopTime, bool _loop) external view returns (bytes memory);
+    function generateFooterCode(string memory xtraCodeStart, string memory xtraCodeStop) external pure returns (bytes memory);
+    function generateLFO(uint _index, uint256[5] memory _params) external pure returns (bytes memory);
+    function generatePhaserCode(uint256[4] memory params, uint _index) external pure returns (bytes memory);
+    function generateDelayCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateReverbCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateDistortionCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateFilterCode(uint256[5] memory params, uint _index) external pure returns (bytes memory);
+    function generatePannerCode(uint256[1] memory params, uint _index) external pure returns (bytes memory);
+    function createSignalChain(Effect[] memory effects, uint _startingIndex, uint _synthType, uint _synthLabel)  external view returns (bytes memory);
+    function generateChaosArp(uint _synthType, uint _synthIndex, uint8[3][4] memory _notes, uint _octaveCount, uint _noteDuration, uint _noteInterval, uint _chordDuration) external view returns (bytes memory);
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.22;
+
+import {File, BytecodeSlice} from "./File.sol";
+
+/// @title EthFS FileStore interface
+/// @notice Specifies a content-addressable onchain file store
+interface IFileStore {
+    event Deployed();
+
+    /**
+     * @dev Emitted when a new file is created
+     * @param indexedFilename The indexed filename for easier finding by filename in logs
+     * @param pointer The pointer address of the file
+     * @param filename The name of the file
+     * @param size The total size of the file
+     * @param metadata Additional metadata of the file, only emitted for use in offchain indexers
+     */
+    event FileCreated(
+        string indexed indexedFilename,
+        address indexed pointer,
+        string filename,
+        uint256 size,
+        bytes metadata
+    );
+
+    /**
+     * @dev Error thrown when a requested file is not found
+     * @param filename The name of the file requested
+     */
+    error FileNotFound(string filename);
+
+    /**
+     * @dev Error thrown when a filename already exists
+     * @param filename The name of the file attempted to be created
+     */
+    error FilenameExists(string filename);
+
+    /**
+     * @dev Error thrown when attempting to create an empty file
+     */
+    error FileEmpty();
+
+    /**
+     * @dev Error thrown when a provided slice for a file is empty
+     * @param pointer The contract address where the bytecode lives
+     * @param start The byte offset to start the slice (inclusive)
+     * @param end The byte offset to end the slice (exclusive)
+     */
+    error SliceEmpty(address pointer, uint32 start, uint32 end);
+
+    /**
+     * @dev Error thrown when the provided pointer's bytecode does not have the expected STOP opcode prefix from SSTORE2
+     * @param pointer The SSTORE2 pointer address
+     */
+    error InvalidPointer(address pointer);
+
+    /**
+     * @notice Returns the address of the CREATE2 deterministic deployer used by this FileStore
+     * @return The address of the CREATE2 deterministic deployer
+     */
+    function deployer() external view returns (address);
+
+    /**
+     * @notice Retrieves the pointer address of a file by its filename
+     * @param filename The name of the file
+     * @return pointer The pointer address of the file
+     */
+    function files(
+        string memory filename
+    ) external view returns (address pointer);
+
+    /**
+     * @notice Checks if a file exists for a given filename
+     * @param filename The name of the file to check
+     * @return True if the file exists, false otherwise
+     */
+    function fileExists(string memory filename) external view returns (bool);
+
+    /**
+     * @notice Retrieves the pointer address for a given filename
+     * @param filename The name of the file
+     * @return pointer The pointer address of the file
+     */
+    function getPointer(
+        string memory filename
+    ) external view returns (address pointer);
+
+    /**
+     * @notice Retrieves a file by its filename
+     * @param filename The name of the file
+     * @return file The file associated with the filename
+     */
+    function getFile(
+        string memory filename
+    ) external view returns (File memory file);
+
+    /**
+     * @notice Creates a new file with the provided file contents
+     * @dev This is a convenience method to simplify small file uploads. It's recommended to use `createFileFromPointers` or `createFileFromSlices` for larger files. This particular method splits `contents` into 24575-byte chunks before storing them via SSTORE2.
+     * @param filename The name of the new file
+     * @param contents The contents of the file
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFile(
+        string memory filename,
+        string memory contents
+    ) external returns (address pointer, File memory file);
+
+    /**
+     * @notice Creates a new file with the provided file contents and file metadata
+     * @dev This is a convenience method to simplify small file uploads. It's recommended to use `createFileFromPointers` or `createFileFromSlices` for larger files. This particular method splits `contents` into 24575-byte chunks before storing them via SSTORE2.
+     * @param filename The name of the new file
+     * @param contents The contents of the file
+     * @param metadata Additional file metadata, usually a JSON-encoded string, for offchain indexers
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFile(
+        string memory filename,
+        string memory contents,
+        bytes memory metadata
+    ) external returns (address pointer, File memory file);
+
+    /**
+     * @notice Creates a new file where its content is composed of the provided string chunks
+     * @dev This is a convenience method to simplify small and nuanced file uploads. It's recommended to use `createFileFromPointers` or `createFileFromSlices` for larger files. This particular will store each chunk separately via SSTORE2. For best gas efficiency, each chunk should be as large as possible (up to the contract size limit) and at least 32 bytes.
+     * @param filename The name of the new file
+     * @param chunks The string chunks composing the file
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFileFromChunks(
+        string memory filename,
+        string[] memory chunks
+    ) external returns (address pointer, File memory file);
+
+    /**
+     * @notice Creates a new file with the provided string chunks and file metadata
+     * @dev This is a convenience method to simplify small and nuanced file uploads. It's recommended to use `createFileFromPointers` or `createFileFromSlices` for larger files. This particular will store each chunk separately via SSTORE2. For best gas efficiency, each chunk should be as large as possible (up to the contract size limit) and at least 32 bytes.
+     * @param filename The name of the new file
+     * @param chunks The string chunks composing the file
+     * @param metadata Additional file metadata, usually a JSON-encoded string, for offchain indexers
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFileFromChunks(
+        string memory filename,
+        string[] memory chunks,
+        bytes memory metadata
+    ) external returns (address pointer, File memory file);
+
+    /**
+     * @notice Creates a new file where its content is composed of the provided SSTORE2 pointers
+     * @param filename The name of the new file
+     * @param pointers The SSTORE2 pointers composing the file
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFileFromPointers(
+        string memory filename,
+        address[] memory pointers
+    ) external returns (address pointer, File memory file);
+
+    /**
+     * @notice Creates a new file with the provided SSTORE2 pointers and file metadata
+     * @param filename The name of the new file
+     * @param pointers The SSTORE2 pointers composing the file
+     * @param metadata Additional file metadata, usually a JSON-encoded string, for offchain indexers
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFileFromPointers(
+        string memory filename,
+        address[] memory pointers,
+        bytes memory metadata
+    ) external returns (address pointer, File memory file);
+
+    /**
+     * @notice Creates a new file where its content is composed of the provided bytecode slices
+     * @param filename The name of the new file
+     * @param slices The bytecode slices composing the file
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFileFromSlices(
+        string memory filename,
+        BytecodeSlice[] memory slices
+    ) external returns (address pointer, File memory file);
+
+    /**
+     * @notice Creates a new file with the provided bytecode slices and file metadata
+     * @param filename The name of the new file
+     * @param slices The bytecode slices composing the file
+     * @param metadata Additional file metadata, usually a JSON-encoded string, for offchain indexers
+     * @return pointer The pointer address of the new file
+     * @return file The newly created file
+     */
+    function createFileFromSlices(
+        string memory filename,
+        BytecodeSlice[] memory slices,
+        bytes memory metadata
+    ) external returns (address pointer, File memory file);
+}
+
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Contracts (last updated v5.0.2) (utils/Base64.sol)
+
+pragma solidity ^0.8.20;
+
+/**
+ * @dev Provides a set of functions to operate with Base64 strings.
+ */
+library Base64 {
+    /**
+     * @dev Base64 Encoding/Decoding Table
+     * See sections 4 and 5 of https://datatracker.ietf.org/doc/html/rfc4648
+     */
+    string internal constant _TABLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    string internal constant _TABLE_URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+
+    /**
+     * @dev Converts a `bytes` to its Bytes64 `string` representation.
+     */
+    function encode(bytes memory data) internal pure returns (string memory) {
+        return _encode(data, _TABLE, true);
+    }
+
+    /**
+     * @dev Converts a `bytes` to its Bytes64Url `string` representation.
+     */
+    function encodeURL(bytes memory data) internal pure returns (string memory) {
+        return _encode(data, _TABLE_URL, false);
+    }
+
+    /**
+     * @dev Internal table-agnostic conversion
+     */
+    function _encode(bytes memory data, string memory table, bool withPadding) private pure returns (string memory) {
+        /**
+         * Inspired by Brecht Devos (Brechtpd) implementation - MIT licence
+         * https://github.com/Brechtpd/base64/blob/e78d9fd951e7b0977ddca77d92dc85183770daf4/base64.sol
+         */
+        if (data.length == 0) return "";
+
+        // If padding is enabled, the final length should be `bytes` data length divided by 3 rounded up and then
+        // multiplied by 4 so that it leaves room for padding the last chunk
+        // - `data.length + 2`  -> Round up
+        // - `/ 3`              -> Number of 3-bytes chunks
+        // - `4 *`              -> 4 characters for each chunk
+        // If padding is disabled, the final length should be `bytes` data length multiplied by 4/3 rounded up as
+        // opposed to when padding is required to fill the last chunk.
+        // - `4 *`              -> 4 characters for each chunk
+        // - `data.length + 2`  -> Round up
+        // - `/ 3`              -> Number of 3-bytes chunks
+        uint256 resultLength = withPadding ? 4 * ((data.length + 2) / 3) : (4 * data.length + 2) / 3;
+
+        string memory result = new string(resultLength);
+
+        /// @solidity memory-safe-assembly
+        assembly {
+            // Prepare the lookup table (skip the first "length" byte)
+            let tablePtr := add(table, 1)
+
+            // Prepare result pointer, jump over length
+            let resultPtr := add(result, 0x20)
+            let dataPtr := data
+            let endPtr := add(data, mload(data))
+
+            // In some cases, the last iteration will read bytes after the end of the data. We cache the value, and
+            // set it to zero to make sure no dirty bytes are read in that section.
+            let afterPtr := add(endPtr, 0x20)
+            let afterCache := mload(afterPtr)
+            mstore(afterPtr, 0x00)
+
+            // Run over the input, 3 bytes at a time
+            for {
+
+            } lt(dataPtr, endPtr) {
+
+            } {
+                // Advance 3 bytes
+                dataPtr := add(dataPtr, 3)
+                let input := mload(dataPtr)
+
+                // To write each character, shift the 3 byte (24 bits) chunk
+                // 4 times in blocks of 6 bits for each character (18, 12, 6, 0)
+                // and apply logical AND with 0x3F to bitmask the least significant 6 bits.
+                // Use this as an index into the lookup table, mload an entire word
+                // so the desired character is in the least significant byte, and
+                // mstore8 this least significant byte into the result and continue.
+
+                mstore8(resultPtr, mload(add(tablePtr, and(shr(18, input), 0x3F))))
+                resultPtr := add(resultPtr, 1) // Advance
+
+                mstore8(resultPtr, mload(add(tablePtr, and(shr(12, input), 0x3F))))
+                resultPtr := add(resultPtr, 1) // Advance
+
+                mstore8(resultPtr, mload(add(tablePtr, and(shr(6, input), 0x3F))))
+                resultPtr := add(resultPtr, 1) // Advance
+
+                mstore8(resultPtr, mload(add(tablePtr, and(input, 0x3F))))
+                resultPtr := add(resultPtr, 1) // Advance
+            }
+
+            // Reset the value that was cached
+            mstore(afterPtr, afterCache)
+
+            if withPadding {
+                // When data `bytes` is not exactly 3 bytes long
+                // it is padded with `=` characters at the end
+                switch mod(mload(data), 3)
+                case 1 {
+                    mstore8(sub(resultPtr, 1), 0x3d)
+                    mstore8(sub(resultPtr, 2), 0x3d)
+                }
+                case 2 {
+                    mstore8(sub(resultPtr, 1), 0x3d)
+                }
+            }
+        }
+
+        return result;
+    }
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.22;
+
+/**
+ * @title EthFS File
+ * @notice A representation of an onchain file, composed of slices of contract bytecode and utilities to construct the file contents from those slices.
+ * @dev For best gas efficiency, it's recommended using `File.read()` as close to the output returned by the contract call as possible. Lots of gas is consumed every time a large data blob is passed between functions.
+ */
+
+/**
+ * @dev Represents a reference to a slice of bytecode in a contract
+ */
+struct BytecodeSlice {
+    address pointer;
+    uint32 start;
+    uint32 end;
+}
+
+/**
+ * @dev Represents a file composed of one or more bytecode slices
+ */
+struct File {
+    // Total length of file contents (sum of all slice sizes). Useful when you want to use DynamicBuffer to build the file contents from the slices.
+    uint256 size;
+    BytecodeSlice[] slices;
+}
+// extend File struct with read functions
+using {read} for File global;
+using {readUnchecked} for File global;
+
+/**
+ * @dev Error thrown when a slice is out of the bounds of the contract's bytecode
+ */
+error SliceOutOfBounds(
+    address pointer,
+    uint32 codeSize,
+    uint32 sliceStart,
+    uint32 sliceEnd
+);
+
+/**
+ * @notice Reads the contents of a file by concatenating its slices
+ * @param file The file to read
+ * @return contents The concatenated contents of the file
+ */
+function read(File memory file) view returns (string memory contents) {
+    BytecodeSlice[] memory slices = file.slices;
+    bytes4 sliceOutOfBoundsSelector = SliceOutOfBounds.selector;
+
+    assembly {
+        let len := mload(slices)
+        let size := 0x20
+        contents := mload(0x40)
+        let slice
+        let pointer
+        let start
+        let end
+        let codeSize
+
+        for {
+            let i := 0
+        } lt(i, len) {
+            i := add(i, 1)
+        } {
+            slice := mload(add(slices, add(0x20, mul(i, 0x20))))
+            pointer := mload(slice)
+            start := mload(add(slice, 0x20))
+            end := mload(add(slice, 0x40))
+
+            codeSize := extcodesize(pointer)
+            if gt(end, codeSize) {
+                mstore(0x00, sliceOutOfBoundsSelector)
+                mstore(0x04, pointer)
+                mstore(0x24, codeSize)
+                mstore(0x44, start)
+                mstore(0x64, end)
+                revert(0x00, 0x84)
+            }
+
+            extcodecopy(pointer, add(contents, size), start, sub(end, start))
+            size := add(size, sub(end, start))
+        }
+
+        // update contents size
+        mstore(contents, sub(size, 0x20))
+        // store contents
+        mstore(0x40, add(contents, and(add(size, 0x1f), not(0x1f))))
+    }
+}
+
+/**
+ * @notice Reads the contents of a file without reverting on unreadable/invalid slices. Skips any slices that are out of bounds or invalid. Useful if you are composing contract bytecode where a contract can still selfdestruct (which would result in an invalid slice) and want to avoid reverts but still output potentially "corrupted" file contents (due to missing data).
+ * @param file The file to read
+ * @return contents The concatenated contents of the file, skipping invalid slices
+ */
+function readUnchecked(File memory file) view returns (string memory contents) {
+    BytecodeSlice[] memory slices = file.slices;
+
+    assembly {
+        let len := mload(slices)
+        let size := 0x20
+        contents := mload(0x40)
+        let slice
+        let pointer
+        let start
+        let end
+        let codeSize
+
+        for {
+            let i := 0
+        } lt(i, len) {
+            i := add(i, 1)
+        } {
+            slice := mload(add(slices, add(0x20, mul(i, 0x20))))
+            pointer := mload(slice)
+            start := mload(add(slice, 0x20))
+            end := mload(add(slice, 0x40))
+
+            codeSize := extcodesize(pointer)
+            if lt(end, codeSize) {
+                extcodecopy(
+                    pointer,
+                    add(contents, size),
+                    start,
+                    sub(end, start)
+                )
+                size := add(size, sub(end, start))
+            }
+        }
+
+        // update contents size
+        mstore(contents, sub(size, 0x20))
+        // store contents
+        mstore(0x40, add(contents, and(add(size, 0x1f), not(0x1f))))
+    }
+}
+
+2. 
+
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.20;
+
+import "./ILens.sol";
+
+interface IBeginningRenderer {
+    function generateSVG(string memory _text, bytes[2] memory _colors) external view returns (string memory);
+    function lenses(uint) external view returns (ILens);
+    function currentLens() external view returns (uint);
+}
+
+interface IN0tesV1 {
+    function getNotesArrayMono(
+        uint8[] memory notes,
+        uint _rate, 
+        string memory _duration, 
+        bool _addLabel, 
+        uint _partNum
+    ) external pure returns (string memory);
+
+    function getNotesArrayPoly(
+        uint8[][] memory chords,
+        uint _rate,
+        string memory _duration,
+        bool _addLabel,
+        uint _partNum
+    ) external pure returns (string memory);
+}
+
+contract beginningJS {
+
+    IBeginningRenderer public mainRenderer;
+    IT0neV1 public t0neV1;
+    IN0tesV1 public n0tesV1;
+
+    uint[] _playerCode1Type;
+    uint[] _playerCode2Type;
+    uint[] _playerCode3Type;
+
+    uint[] _playerCodeLabel1;    //BASS
+    uint[] _playerCodeLabel2;    //MELODY 1
+    uint[] _playerCodeLabel3;    //MELODY 2
+    uint[] _playerCodeLabel5;    //MELODY 3
+    uint[] _playerCodeLabel6;    //MELODY 4
+    uint[] _playerCodeLabel7;    //CHORDS
+
+    constructor ()
+    {
+        t0neV1 = IT0neV1(0xC7C69be443404aa8CA9889914231e06d5631D32e);
+        n0tesV1 = IN0tesV1(0x2bbE3DFc621Bb068d912f824de090fd47A5BaE1C);
+        mainRenderer = IBeginningRenderer(0x6B7E07cE896c7DFfDC936BAe8060A0F7fF71A3b2);
+
+        
+        _playerCode1Type.push(0);                        //monosynth
+        _playerCode1Type.push(0);                        //monosynth
+        _playerCode2Type.push(1);                        //polysynth
+        _playerCode2Type.push(1);                        //polysynth
+        _playerCode3Type.push(0);                        //monosynth
+
+        _playerCodeLabel1.push(1);
+        _playerCodeLabel1.push(2);
+        _playerCodeLabel2.push(3);
+        _playerCodeLabel2.push(4);
+        _playerCodeLabel3.push(5);
+        _playerCodeLabel3.push(6);
+        _playerCodeLabel5.push(8);
+        _playerCodeLabel6.push(9);
+        _playerCodeLabel7.push(1);
+        _playerCodeLabel7.push(2);
+    }
+
+    function generateScript() public view returns (string memory) {
+
+        return string(abi.encodePacked(
+            "const canvas = document.getElementById('mySVG');const animations = canvas.querySelectorAll('.textAnimation');animations.forEach(anim => anim.setAttribute('begin', 'indefinite'));canvas.pauseAnimations();",
+            generateNotes(),
+            generateSynths(),
+            generateSignalChains(),
+            generateLFOs(),
+            "lfo1.connect(monoSynth3.detune);lfo1.connect(monoSynth5.detune);lfo2.connect(monoSynth1.filter.frequency);lfo3.connect(monoSynth8.filter.frequency);lfo3.connect(monoSynth9.filter.frequency);",
+            generatePlayers(),
+            t0neV1.generateFooterCode("startSVGAnimation();canvas.unpauseAnimations();", "stopSVGAnimation();"),
+            "function startSVGAnimation() {animations.forEach(animation => {animation.beginElement();});} function stopSVGAnimation() {animations.forEach(animation => {animation.endElement();});}"
+        ));
+    }
+
+    function getCurrentLens() private view returns (ILens) {
+        return mainRenderer.lenses(mainRenderer.currentLens());
+    }
+
+    function generateNotes() public view returns (string memory) {
+
+        ILens lens = getCurrentLens();
+
+        uint8[] memory notesBassTemp = new uint8[](4);
+        for (uint i = 0; i < 4; i++) {
+            notesBassTemp[i] = lens.notesBass()[i];
+        }
+        uint8[] memory notesMel1Temp = new uint8[](8);
+        for (uint i = 0; i < 8; i++) {
+            notesMel1Temp[i] = lens.notesMelody1()[i];
+        }
+        uint8[] memory notesMel2Temp = new uint8[](32);
+        for (uint i = 0; i < 32; i++) {
+            notesMel2Temp[i] = lens.notesMelody2()[i];
+        }
+        uint8[] memory notesMel3Temp = new uint8[](32);
+        for (uint i = 0; i < 32; i++) {
+            notesMel3Temp[i] = lens.notesMelody3()[i];
+        }
+        uint8[] memory notesMel4Temp = new uint8[](32);
+        for (uint i = 0; i < 32; i++) {
+            notesMel4Temp[i] = lens.notesMelody4()[i];
+        }
+
+        uint8[][] memory chords = new uint8[][](4); // Outer array of length 4
+
+        for (uint i = 0; i < 4; i++) {
+            chords[i] = new uint8[](3); // Allocate an inner array of length 3
+
+            for (uint j = 0; j < 3; j++) {
+                chords[i][j] = lens.notesChord()[i][j];
+            }
+        }
+
+        return string(abi.encodePacked(
+            n0tesV1.getNotesArrayMono(notesBassTemp,32, "2:0:0", true,1),
+            n0tesV1.getNotesArrayMono(notesMel1Temp,16, "1:0:0", true,2),
+            n0tesV1.getNotesArrayMono(notesMel2Temp,4, "0:1:0", true,3),
+            n0tesV1.getNotesArrayMono(notesMel3Temp,4, "0:1:0", true,4),
+            n0tesV1.getNotesArrayMono(notesMel4Temp,4, "0:1:0", true,5),
+            n0tesV1.getNotesArrayPoly(chords,32, "2:0:0", true,6)
+        ));
+    }
+
+    function generateSynths() public view returns (string memory) {
+        
+        ILens lens = getCurrentLens();
+
+        return string(abi.encodePacked(
+            t0neV1.createMonoSynth(1, lens.paramsBass()[0]),            //bass osc1
+            t0neV1.createMonoSynth(2, lens.paramsBass()[1]),            //bass osc2
+            t0neV1.createMonoSynth(3, lens.paramsMelody1()[0]),         //mel1 osc1
+            t0neV1.createMonoSynth(4, lens.paramsMelody1()[1]),         //mel1 osc2
+            t0neV1.createMonoSynth(5, lens.paramsMelody2()[0]),         //mel2 osc1
+            t0neV1.createMonoSynth(6, lens.paramsMelody2()[1]),         //mel2 osc2
+            t0neV1.createMonoSynth(7, lens.paramsArp()),                //chaos arp
+            t0neV1.createMonoSynth(8, lens.paramsMelody3()),            //mel3
+            t0neV1.createMonoSynth(9, lens.paramsMelody4()),            //mel4
+            t0neV1.createDetunedPolySynth(1, true, lens.paramsChord()), //chords
+            t0neV1.createDetunedPolySynth(2, false, lens.paramsChord()) //chords
+        ));
+    }
+        
+    function generateSignalChains() public view returns (string memory) {
+
+        ILens lens = getCurrentLens();
+
+        return string(abi.encodePacked(
+            t0neV1.createSignalChain(lens.signalChainMelody1(), 1, 0, 3),   //fx index start, synth type, synth index
+            "monoSynth4.connect(effect1);",
+            t0neV1.createSignalChain(lens.signalChainMelody2(), 5, 0, 5),
+            "monoSynth6.connect(effect5);",
+            t0neV1.createSignalChain(lens.signalChainMelody3(), 7, 0, 8),
+            t0neV1.createSignalChain(lens.signalChainMelody4(), 8, 0, 9),
+            t0neV1.createSignalChain(lens.signalChainArp(), 9, 0, 7),
+            t0neV1.createSignalChain(lens.signalChainChords1(), 10, 1, 1),
+            t0neV1.createSignalChain(lens.signalChainChords2(), 12, 1, 2),
+            t0neV1.createSignalChain(lens.signalChainBass(), 14, 0, 1),
+            "monoSynth2.connect(effect14);"
+        ));
+    }
+
+    function generateLFOs() public view returns (string memory) {
+
+        ILens lens = getCurrentLens();
+
+        return string(abi.encodePacked(
+            t0neV1.generateLFO(1, lens.paramsLFO()[0]),
+            t0neV1.generateLFO(2, lens.paramsLFO()[1]),
+            t0neV1.generateLFO(3, lens.paramsLFO()[2])
+        ));
+    }
+
+    function generatePlayers() public view returns (string memory) {
+
+        bytes memory p1 =  abi.encodePacked(
+            t0neV1.generatePlayerCode(1, _playerCode1Type, _playerCodeLabel1, 0, 8, true),      //BASS
+            t0neV1.generatePlayerCode(2, _playerCode1Type, _playerCodeLabel2, 0, 8, true),      //MELODY 1
+            t0neV1.generatePlayerCode(3, _playerCode1Type, _playerCodeLabel3, 8, 24, true),     //MELODY 2
+            t0neV1.generatePlayerCode(4, _playerCode3Type, _playerCodeLabel5, 16, 32, true),    //MELODY 3
+            t0neV1.generatePlayerCode(5, _playerCode3Type, _playerCodeLabel6, 48, 48, true)     //MELODY 4
+        );
+
+        bytes memory p2 =  abi.encodePacked(
+            t0neV1.generatePlayerCode(6, _playerCode2Type, _playerCodeLabel7, 0, 8, true),
+            generateChaosArp()
+        );
+
+        return string(abi.encodePacked(p1, p2));
+    }
+
+    function generateChaosArp() internal view returns (bytes memory) {
+        ILens lens = getCurrentLens();
+        uint8[3][4] memory arpNotesTemp = lens.notesArp();
+        return t0neV1.generateChaosArp(0,7, arpNotesTemp, 4, 32, 63, 2);
+    }
+
+    bool t0neLocked;
+
+    function setT0neContract(address _t0ne) public {
+        require (msg.sender == 0xCB7504C4cb986E80AB4983b44263381F21273482, "Not authorized");
+        require (!t0neLocked, "Locked");
+        t0neV1 = IT0neV1(_t0ne);
+    }
+
+    function lockT0ne() public {
+        require (msg.sender == 0xCB7504C4cb986E80AB4983b44263381F21273482, "Not authorized");
+        t0neLocked = true;
+    }
+
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "./IT0nev1.sol";
+
+interface ILens {
+    function name() external view returns (string memory);
+    function signalChainMelody1() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody2() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody3() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody4() external view returns (IT0neV1.Effect[] memory);
+    function signalChainBass() external view returns (IT0neV1.Effect[] memory);
+    function signalChainArp() external view returns (IT0neV1.Effect[] memory);
+    function signalChainChords1() external view returns (IT0neV1.Effect[] memory);
+    function signalChainChords2() external view returns (IT0neV1.Effect[] memory);
+    function notesBass() external view returns (uint8[4] memory);
+    function notesMelody1() external view returns (uint8[8] memory);
+    function notesMelody2() external view returns (uint8[32] memory);
+    function notesMelody3() external view returns (uint8[32] memory);
+    function notesMelody4() external view returns (uint8[32] memory);
+    function notesArp() external view returns (uint8[3][4] memory);
+    function notesChord() external view returns (uint8[3][4] memory);
+    function colors() external view returns (bytes[2] memory);
+    function paramsBass() external view returns (uint256[18][2] memory);
+    function paramsMelody1() external view returns (uint256[18][2] memory);
+    function paramsMelody2() external view returns (uint256[18][2] memory);
+    function paramsMelody3() external view returns (uint256[18] memory);
+    function paramsMelody4() external view returns (uint256[18] memory);
+    function paramsArp() external view returns (uint256[18] memory);
+    function paramsChord() external view returns (uint256[11] memory);
+    function paramsLFO() external view returns (uint256[5][3] memory);
+    function text() external view returns (string memory);
+    function svgValues () external view returns (uint[6][] memory);
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+interface IT0neV1 {
+    struct Effect {
+        uint8 id;
+        uint256[] params;
+    }
+    function getSynthName(uint _type, uint _label) external view returns (bytes memory);
+    function createMonoSynth(uint _index, uint256[18] memory _params) external pure returns (bytes memory);
+    function createDetunedPolySynth(uint _index, bool _declare, uint256[11] memory _params) external pure returns (bytes memory);
+    function generatePlayerCode(uint _partNum , uint[] memory _synthType, uint[] memory _synthLabels, uint8 startTime, uint8 loopTime, bool _loop) external view returns (bytes memory);
+    function generateFooterCode(string memory xtraCodeStart, string memory xtraCodeStop) external pure returns (bytes memory);
+    function generateLFO(uint _index, uint256[5] memory _params) external pure returns (bytes memory);
+    function generatePhaserCode(uint256[4] memory params, uint _index) external pure returns (bytes memory);
+    function generateDelayCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateReverbCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateDistortionCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateFilterCode(uint256[5] memory params, uint _index) external pure returns (bytes memory);
+    function generatePannerCode(uint256[1] memory params, uint _index) external pure returns (bytes memory);
+    function createSignalChain(Effect[] memory effects, uint _startingIndex, uint _synthType, uint _synthLabel)  external view returns (bytes memory);
+    function generateChaosArp(uint _synthType, uint _synthIndex, uint8[3][4] memory _notes, uint _octaveCount, uint _noteDuration, uint _noteInterval, uint _chordDuration) external view returns (bytes memory);
+}
+
+{
+  "optimizer": {
+    "enabled": false,
+    "runs": 200
+  },
+  "outputSelection": {
+    "*": {
+      "*": [
+        "evm.bytecode",
+        "evm.deployedBytecode",
+        "devdoc",
+        "userdoc",
+        "metadata",
+        "abi"
+      ]
+    }
+  },
+  "remappings": []
+}
+
+3
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "./LibString.sol";
+import "./ILens.sol";
+
+
+interface IERC721 {
+    function ownerOf(uint tokenId) external view returns (address);
+}
+
+contract lens_init is ILens{
+
+    IERC721 tokenContract = IERC721(0xb314BEC0F3c247c694f0F0F5d972d9D7c307C5b7);
+
+    IT0neV1.Effect[] chain1;
+    IT0neV1.Effect[] chain2;
+    IT0neV1.Effect[] chain3;
+    IT0neV1.Effect[] chain4;
+    IT0neV1.Effect[] chain5;
+    IT0neV1.Effect[] chain6;
+    IT0neV1.Effect[] chain7;
+    IT0neV1.Effect[] chain8;
+
+    uint[6][] values;
+
+    constructor () {
+
+        chain1.push(IT0neV1.Effect({id:0, params: new uint256[](3)}));  //melody 1
+        chain1[0].params[0] = 460;
+        chain1[0].params[1] = 0;
+        chain1[0].params[2] = 28;
+        chain1.push(IT0neV1.Effect({id:1, params: new uint256[](4)}));
+        chain1[1].params[0] = 100;
+        chain1[1].params[1] = 2;
+        chain1[1].params[2] = 500;
+        chain1[1].params[3] = 50;
+        chain1.push(IT0neV1.Effect({id:2, params: new uint256[](3)}));
+        chain1[2].params[0] = 100;
+        chain1[2].params[1] = 2;
+        chain1[2].params[2] = 20;
+        chain1.push(IT0neV1.Effect({id:3, params: new uint256[](3)}));
+        chain1[3].params[0] = 300;
+        chain1[3].params[1] = 10;
+        chain1[3].params[2] = 30;
+
+        chain2.push(IT0neV1.Effect({id:0, params: new uint256[](3)}));  //melody 2 - distortion and delay
+        chain2[0].params[0] = 120;
+        chain2[0].params[1] = 0;
+        chain2[0].params[2] = 22;
+        chain2.push(IT0neV1.Effect({id:2, params: new uint256[](3)}));
+        chain2[1].params[0] = 63;
+        chain2[1].params[1] = 2;
+        chain2[1].params[2] = 10;
+
+        chain3.push(IT0neV1.Effect({id:5, params: new uint256[](1)}));  //melody3 - pan
+        chain3[0].params[0] = 350;
+
+        chain4.push(IT0neV1.Effect({id:5, params: new uint256[](1)}));  //melody4 - pan
+        chain4[0].params[0] = 1650;
+
+        chain5.push(IT0neV1.Effect({id:4, params: new uint256[](5)}));  //chords1 - filter and pan
+        chain5[0].params[0] = 0;
+        chain5[0].params[1] = 800;
+        chain5[0].params[2] = 0;
+        chain5[0].params[3] = 50;
+        chain5[0].params[4] = 1;
+        chain5.push(IT0neV1.Effect({id:5, params: new uint256[](1)}));
+        chain5[1].params[0] = 200;
+
+        chain6.push(IT0neV1.Effect({id:4, params: new uint256[](5)}));  //chords2 - filter and pan
+        chain6[0].params[0] = 0;
+        chain6[0].params[1] = 1800;
+        chain6[0].params[2] = 0;
+        chain6[0].params[3] = 50;
+        chain6[0].params[4] = 1;
+        chain6.push(IT0neV1.Effect({id:5, params: new uint256[](1)}));
+        chain6[1].params[0] = 1800;
+
+        chain7.push(IT0neV1.Effect({id:5, params: new uint256[](1)}));  //arp - pan
+        chain7[0].params[0] = 1000;
+
+        chain8.push(IT0neV1.Effect({id:0, params: new uint256[](3)}));  //bass - distortion
+        chain8[0].params[0] = 120;
+        chain8[0].params[1] = 0;
+        chain8[0].params[2] = 15;
+
+        //[font size, blur filter, x, start y, end y, time] for each column of text
+        values.push([8,1,10,2800,1300,8]);
+        values.push([10,1,75,1800,620,6]);
+        values.push([156,2,100,8800,900,6]);
+        values.push([8,3,175,3200,300,5]);
+        values.push([34,1,200,2500,2700,8]);
+        values.push([20,1,250,1800,850,4]);
+        values.push([8,3,260,2800,600,5]);
+        values.push([12,1,270,6800,700,9]);
+        values.push([30,1,300,4800,850,7]);
+        values.push([15,1,325,2800,1700,8]);
+        values.push([24,1,350,3800,2600,16]);
+        values.push([8,3,375,2800,700,5]);
+        values.push([16,1,400,2400,700,6]);
+        values.push([400,3,450,30000,1600,9]);
+        values.push([24,1,460,2200,700,8]);
+    }
+
+    function signalChainMelody1() public view returns (IT0neV1.Effect[] memory) {
+        return chain1;
+    }
+
+    function signalChainChords1() public view returns (IT0neV1.Effect[] memory) {
+        return chain5;
+    }
+
+    function signalChainChords2() public view returns (IT0neV1.Effect[] memory) {
+        return chain6;
+    }
+
+    function signalChainBass() public view returns (IT0neV1.Effect[] memory) {
+        return chain8;
+    }
+    function signalChainMelody2() public view returns (IT0neV1.Effect[] memory) {
+        return chain2;
+    }
+    function signalChainMelody3() public view returns (IT0neV1.Effect[] memory) {
+        return chain3;
+    }
+    function signalChainMelody4() public view returns (IT0neV1.Effect[] memory) {
+        return chain4;
+    }
+    function signalChainArp() public view returns (IT0neV1.Effect[] memory) {
+        return chain7;
+    }
+
+    function name() public pure returns (string memory) {
+        return "[ init ]";
+    }
+
+    function notesBass() public pure returns (uint8[4] memory) {
+        return [29,32,27,31];
+    }  
+
+    function notesMelody1() public pure returns (uint8[8] memory) {
+        return [77,84,75,82,79,86,79,84];
+    } 
+
+    function notesMelody2() public pure returns (uint8[32] memory) {
+        return [255,255,91,89,87,86,87,89,255,255,91,89,87,86,87,82,255,255,79,89,87,86,87,89,255,255,94,89,92,91,89,86];
+    } 
+
+    function notesMelody3() public pure returns (uint8[32] memory) {
+        return [62,63,62,63,62,63,62,63,58,60,62,63,58,60,62,55,62,63,62,63,62,63,62,63,62,63,62,63,65,67,62,63];
+    } 
+
+    function notesMelody4() public pure returns (uint8[32] memory) {
+        return [70,72,70,72,70,72,70,72,74,75,70,72,74,75,70,72,70,72,70,72,70,72,70,72,74,75,70,72,74,75,77,79];
+    } 
+       
+    function notesChord() public pure returns (uint8[3][4] memory) {
+        return [[53,56,60],[51,56,60],[55,58,63],[55,58,62]];
+    }
+
+    function colors() public pure returns (bytes[2] memory) {
+        return [bytes("#111111"), bytes("#9bf2aa")];
+    }
+
+    function paramsBass() public pure returns (uint[18][2] memory) {
+        return [
+            [uint(10),0,3,10,0,1000,300,0,0,0,10,2000,1000,10,255,1,9,0],
+            [uint(10),14,3,10,0,1000,200,0,0,0,10,2000,1000,10,255,1,9,0]
+        ];
+    }
+
+    function paramsMelody1() public pure returns (uint[18][2] memory) {
+        return [
+            [uint(25),0,3,200,2000,1000,2000,0,0,0,600,15000,500,5000,1200,4,4,19],
+            [uint(25),10,3,50,2000,1000,2000,0,0,0,600,15000,500,5000,1200,4,4,19]
+        ];
+    }   
+
+    function paramsMelody2() public pure returns (uint[18][2] memory) {
+        return [
+            [uint(20),0,3,50,2000,1000,800,0,0,0,50,100,0,800,1500,3,4,0],
+            [uint(20),10,3,50,2000,1000,800,0,0,0,60,100,0,800,1500,3,4,0]
+        ];
+    } 
+    
+    function paramsMelody3() public pure returns (uint[18] memory) {
+        return [uint(10),0,3,380,1,1,1,0,0,0,10,2000,1000,10,255,1,9,0];
+    }
+
+    function paramsMelody4() public pure returns (uint[18] memory) {
+        return [uint(10),0,3,380,1,1,1,0,0,0,10,2000,1000,10,255,1,9,0];
+    }
+    
+    function paramsArp() public pure returns (uint[18] memory) {
+        return [uint(10),0,3,10,0,1000,300,0,0,0,10,2000,1000,10,200,2,9,0];
+    }
+
+    function paramsChord() public pure returns (uint[11] memory) {
+        return [uint(3),18,3,3,10,10,870,10,12,0,12];
+    }
+
+    function paramsLFO() public pure returns (uint[5][3] memory) {
+        return [
+            [uint(200),65,65,55,0],
+            [uint(80),30,30,100,0],
+            [uint(1000),100,100,100,0]
+        ];
+    }
+
+    function notesArp() public pure returns (uint8[3][4] memory) {
+        return [[77,80,91],[80,84,91],[82,87,91],[79,86,91]];
+    }
+
+    function text() public view returns (string memory) {
+        address localOwner = tokenContract.ownerOf(1);
+        string memory addrStr = LibString.toHexString(uint256(uint160(localOwner)), 20);
+        return addrStr;
+    }
+    
+    function svgValues () public view returns (uint[6][] memory){ 
+        return values;
+    }
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "./IT0nev1.sol";
+
+interface ILens {
+    function name() external view returns (string memory);
+    function signalChainMelody1() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody2() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody3() external view returns (IT0neV1.Effect[] memory);
+    function signalChainMelody4() external view returns (IT0neV1.Effect[] memory);
+    function signalChainBass() external view returns (IT0neV1.Effect[] memory);
+    function signalChainArp() external view returns (IT0neV1.Effect[] memory);
+    function signalChainChords1() external view returns (IT0neV1.Effect[] memory);
+    function signalChainChords2() external view returns (IT0neV1.Effect[] memory);
+    function notesBass() external view returns (uint8[4] memory);
+    function notesMelody1() external view returns (uint8[8] memory);
+    function notesMelody2() external view returns (uint8[32] memory);
+    function notesMelody3() external view returns (uint8[32] memory);
+    function notesMelody4() external view returns (uint8[32] memory);
+    function notesArp() external view returns (uint8[3][4] memory);
+    function notesChord() external view returns (uint8[3][4] memory);
+    function colors() external view returns (bytes[2] memory);
+    function paramsBass() external view returns (uint256[18][2] memory);
+    function paramsMelody1() external view returns (uint256[18][2] memory);
+    function paramsMelody2() external view returns (uint256[18][2] memory);
+    function paramsMelody3() external view returns (uint256[18] memory);
+    function paramsMelody4() external view returns (uint256[18] memory);
+    function paramsArp() external view returns (uint256[18] memory);
+    function paramsChord() external view returns (uint256[11] memory);
+    function paramsLFO() external view returns (uint256[5][3] memory);
+    function text() external view returns (string memory);
+    function svgValues () external view returns (uint[6][] memory);
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
+/// @notice Library for converting numbers into strings and other string operations.
+/// @author Solady (https://github.com/vectorized/solady/blob/main/src/utils/LibString.sol)
+/// @author Modified from Solmate (https://github.com/transmissions11/solmate/blob/main/src/utils/LibString.sol)
+///
+/// @dev Note:
+/// For performance and bytecode compactness, most of the string operations are restricted to
+/// byte strings (7-bit ASCII), except where otherwise specified.
+/// Usage of byte string operations on charsets with runes spanning two or more bytes
+/// can lead to undefined behavior.
+library LibString {
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                        CUSTOM ERRORS                       */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    /// @dev The length of the output is too small to contain all the hex digits.
+    error HexLengthInsufficient();
+
+    /// @dev The length of the string is more than 32 bytes.
+    error TooBigForSmallString();
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                         CONSTANTS                          */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    /// @dev The constant returned when the `search` is not found in the string.
+    uint256 internal constant NOT_FOUND = type(uint256).max;
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                     DECIMAL OPERATIONS                     */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    /// @dev Returns the base 10 decimal representation of `value`.
+    function toString(uint256 value) internal pure returns (string memory str) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // The maximum value of a uint256 contains 78 digits (1 byte per digit), but
+            // we allocate 0xa0 bytes to keep the free memory pointer 32-byte word aligned.
+            // We will need 1 word for the trailing zeros padding, 1 word for the length,
+            // and 3 words for a maximum of 78 digits.
+            str := add(mload(0x40), 0x80)
+            // Update the free memory pointer to allocate.
+            mstore(0x40, add(str, 0x20))
+            // Zeroize the slot after the string.
+            mstore(str, 0)
+
+            // Cache the end of the memory to calculate the length later.
+            let end := str
+
+            let w := not(0) // Tsk.
+            // We write the string from rightmost digit to leftmost digit.
+            // The following is essentially a do-while loop that also handles the zero case.
+            for { let temp := value } 1 {} {
+                str := add(str, w) // `sub(str, 1)`.
+                // Write the character to the pointer.
+                // The ASCII index of the '0' character is 48.
+                mstore8(str, add(48, mod(temp, 10)))
+                // Keep dividing `temp` until zero.
+                temp := div(temp, 10)
+                if iszero(temp) { break }
+            }
+
+            let length := sub(end, str)
+            // Move the pointer 32 bytes leftwards to make room for the length.
+            str := sub(str, 0x20)
+            // Store the length.
+            mstore(str, length)
+        }
+    }
+
+    /// @dev Returns the base 10 decimal representation of `value`.
+    function toString(int256 value) internal pure returns (string memory str) {
+        if (value >= 0) {
+            return toString(uint256(value));
+        }
+        unchecked {
+            str = toString(~uint256(value) + 1);
+        }
+        /// @solidity memory-safe-assembly
+        assembly {
+            // We still have some spare memory space on the left,
+            // as we have allocated 3 words (96 bytes) for up to 78 digits.
+            let length := mload(str) // Load the string length.
+            mstore(str, 0x2d) // Store the '-' character.
+            str := sub(str, 1) // Move back the string pointer by a byte.
+            mstore(str, add(length, 1)) // Update the string length.
+        }
+    }
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                   HEXADECIMAL OPERATIONS                   */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    /// @dev Returns the hexadecimal representation of `value`,
+    /// left-padded to an input length of `length` bytes.
+    /// The output is prefixed with "0x" encoded using 2 hexadecimal digits per byte,
+    /// giving a total length of `length * 2 + 2` bytes.
+    /// Reverts if `length` is too small for the output to contain all the digits.
+    function toHexString(uint256 value, uint256 length) internal pure returns (string memory str) {
+        str = toHexStringNoPrefix(value, length);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let strLength := add(mload(str), 2) // Compute the length.
+            mstore(str, 0x3078) // Write the "0x" prefix.
+            str := sub(str, 2) // Move the pointer.
+            mstore(str, strLength) // Write the length.
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`,
+    /// left-padded to an input length of `length` bytes.
+    /// The output is prefixed with "0x" encoded using 2 hexadecimal digits per byte,
+    /// giving a total length of `length * 2` bytes.
+    /// Reverts if `length` is too small for the output to contain all the digits.
+    function toHexStringNoPrefix(uint256 value, uint256 length)
+        internal
+        pure
+        returns (string memory str)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // We need 0x20 bytes for the trailing zeros padding, `length * 2` bytes
+            // for the digits, 0x02 bytes for the prefix, and 0x20 bytes for the length.
+            // We add 0x20 to the total and round down to a multiple of 0x20.
+            // (0x20 + 0x20 + 0x02 + 0x20) = 0x62.
+            str := add(mload(0x40), and(add(shl(1, length), 0x42), not(0x1f)))
+            // Allocate the memory.
+            mstore(0x40, add(str, 0x20))
+            // Zeroize the slot after the string.
+            mstore(str, 0)
+
+            // Cache the end to calculate the length later.
+            let end := str
+            // Store "0123456789abcdef" in scratch space.
+            mstore(0x0f, 0x30313233343536373839616263646566)
+
+            let start := sub(str, add(length, length))
+            let w := not(1) // Tsk.
+            let temp := value
+            // We write the string from rightmost digit to leftmost digit.
+            // The following is essentially a do-while loop that also handles the zero case.
+            for {} 1 {} {
+                str := add(str, w) // `sub(str, 2)`.
+                mstore8(add(str, 1), mload(and(temp, 15)))
+                mstore8(str, mload(and(shr(4, temp), 15)))
+                temp := shr(8, temp)
+                if iszero(xor(str, start)) { break }
+            }
+
+            if temp {
+                mstore(0x00, 0x2194895a) // `HexLengthInsufficient()`.
+                revert(0x1c, 0x04)
+            }
+
+            // Compute the string's length.
+            let strLength := sub(end, str)
+            // Move the pointer and write the length.
+            str := sub(str, 0x20)
+            mstore(str, strLength)
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`.
+    /// The output is prefixed with "0x" and encoded using 2 hexadecimal digits per byte.
+    /// As address are 20 bytes long, the output will left-padded to have
+    /// a length of `20 * 2 + 2` bytes.
+    function toHexString(uint256 value) internal pure returns (string memory str) {
+        str = toHexStringNoPrefix(value);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let strLength := add(mload(str), 2) // Compute the length.
+            mstore(str, 0x3078) // Write the "0x" prefix.
+            str := sub(str, 2) // Move the pointer.
+            mstore(str, strLength) // Write the length.
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`.
+    /// The output is prefixed with "0x".
+    /// The output excludes leading "0" from the `toHexString` output.
+    /// `0x00: "0x0", 0x01: "0x1", 0x12: "0x12", 0x123: "0x123"`.
+    function toMinimalHexString(uint256 value) internal pure returns (string memory str) {
+        str = toHexStringNoPrefix(value);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let o := eq(byte(0, mload(add(str, 0x20))), 0x30) // Whether leading zero is present.
+            let strLength := add(mload(str), 2) // Compute the length.
+            mstore(add(str, o), 0x3078) // Write the "0x" prefix, accounting for leading zero.
+            str := sub(add(str, o), 2) // Move the pointer, accounting for leading zero.
+            mstore(str, sub(strLength, o)) // Write the length, accounting for leading zero.
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`.
+    /// The output excludes leading "0" from the `toHexStringNoPrefix` output.
+    /// `0x00: "0", 0x01: "1", 0x12: "12", 0x123: "123"`.
+    function toMinimalHexStringNoPrefix(uint256 value) internal pure returns (string memory str) {
+        str = toHexStringNoPrefix(value);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let o := eq(byte(0, mload(add(str, 0x20))), 0x30) // Whether leading zero is present.
+            let strLength := mload(str) // Get the length.
+            str := add(str, o) // Move the pointer, accounting for leading zero.
+            mstore(str, sub(strLength, o)) // Write the length, accounting for leading zero.
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`.
+    /// The output is encoded using 2 hexadecimal digits per byte.
+    /// As address are 20 bytes long, the output will left-padded to have
+    /// a length of `20 * 2` bytes.
+    function toHexStringNoPrefix(uint256 value) internal pure returns (string memory str) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // We need 0x20 bytes for the trailing zeros padding, 0x20 bytes for the length,
+            // 0x02 bytes for the prefix, and 0x40 bytes for the digits.
+            // The next multiple of 0x20 above (0x20 + 0x20 + 0x02 + 0x40) is 0xa0.
+            str := add(mload(0x40), 0x80)
+            // Allocate the memory.
+            mstore(0x40, add(str, 0x20))
+            // Zeroize the slot after the string.
+            mstore(str, 0)
+
+            // Cache the end to calculate the length later.
+            let end := str
+            // Store "0123456789abcdef" in scratch space.
+            mstore(0x0f, 0x30313233343536373839616263646566)
+
+            let w := not(1) // Tsk.
+            // We write the string from rightmost digit to leftmost digit.
+            // The following is essentially a do-while loop that also handles the zero case.
+            for { let temp := value } 1 {} {
+                str := add(str, w) // `sub(str, 2)`.
+                mstore8(add(str, 1), mload(and(temp, 15)))
+                mstore8(str, mload(and(shr(4, temp), 15)))
+                temp := shr(8, temp)
+                if iszero(temp) { break }
+            }
+
+            // Compute the string's length.
+            let strLength := sub(end, str)
+            // Move the pointer and write the length.
+            str := sub(str, 0x20)
+            mstore(str, strLength)
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`.
+    /// The output is prefixed with "0x", encoded using 2 hexadecimal digits per byte,
+    /// and the alphabets are capitalized conditionally according to
+    /// https://eips.ethereum.org/EIPS/eip-55
+    function toHexStringChecksummed(address value) internal pure returns (string memory str) {
+        str = toHexString(value);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let mask := shl(6, div(not(0), 255)) // `0b010000000100000000 ...`
+            let o := add(str, 0x22)
+            let hashed := and(keccak256(o, 40), mul(34, mask)) // `0b10001000 ... `
+            let t := shl(240, 136) // `0b10001000 << 240`
+            for { let i := 0 } 1 {} {
+                mstore(add(i, i), mul(t, byte(i, hashed)))
+                i := add(i, 1)
+                if eq(i, 20) { break }
+            }
+            mstore(o, xor(mload(o), shr(1, and(mload(0x00), and(mload(o), mask)))))
+            o := add(o, 0x20)
+            mstore(o, xor(mload(o), shr(1, and(mload(0x20), and(mload(o), mask)))))
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`.
+    /// The output is prefixed with "0x" and encoded using 2 hexadecimal digits per byte.
+    function toHexString(address value) internal pure returns (string memory str) {
+        str = toHexStringNoPrefix(value);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let strLength := add(mload(str), 2) // Compute the length.
+            mstore(str, 0x3078) // Write the "0x" prefix.
+            str := sub(str, 2) // Move the pointer.
+            mstore(str, strLength) // Write the length.
+        }
+    }
+
+    /// @dev Returns the hexadecimal representation of `value`.
+    /// The output is encoded using 2 hexadecimal digits per byte.
+    function toHexStringNoPrefix(address value) internal pure returns (string memory str) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            str := mload(0x40)
+
+            // Allocate the memory.
+            // We need 0x20 bytes for the trailing zeros padding, 0x20 bytes for the length,
+            // 0x02 bytes for the prefix, and 0x28 bytes for the digits.
+            // The next multiple of 0x20 above (0x20 + 0x20 + 0x02 + 0x28) is 0x80.
+            mstore(0x40, add(str, 0x80))
+
+            // Store "0123456789abcdef" in scratch space.
+            mstore(0x0f, 0x30313233343536373839616263646566)
+
+            str := add(str, 2)
+            mstore(str, 40)
+
+            let o := add(str, 0x20)
+            mstore(add(o, 40), 0)
+
+            value := shl(96, value)
+
+            // We write the string from rightmost digit to leftmost digit.
+            // The following is essentially a do-while loop that also handles the zero case.
+            for { let i := 0 } 1 {} {
+                let p := add(o, add(i, i))
+                let temp := byte(i, value)
+                mstore8(add(p, 1), mload(and(temp, 15)))
+                mstore8(p, mload(shr(4, temp)))
+                i := add(i, 1)
+                if eq(i, 20) { break }
+            }
+        }
+    }
+
+    /// @dev Returns the hex encoded string from the raw bytes.
+    /// The output is encoded using 2 hexadecimal digits per byte.
+    function toHexString(bytes memory raw) internal pure returns (string memory str) {
+        str = toHexStringNoPrefix(raw);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let strLength := add(mload(str), 2) // Compute the length.
+            mstore(str, 0x3078) // Write the "0x" prefix.
+            str := sub(str, 2) // Move the pointer.
+            mstore(str, strLength) // Write the length.
+        }
+    }
+
+    /// @dev Returns the hex encoded string from the raw bytes.
+    /// The output is encoded using 2 hexadecimal digits per byte.
+    function toHexStringNoPrefix(bytes memory raw) internal pure returns (string memory str) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let length := mload(raw)
+            str := add(mload(0x40), 2) // Skip 2 bytes for the optional prefix.
+            mstore(str, add(length, length)) // Store the length of the output.
+
+            // Store "0123456789abcdef" in scratch space.
+            mstore(0x0f, 0x30313233343536373839616263646566)
+
+            let o := add(str, 0x20)
+            let end := add(raw, length)
+
+            for {} iszero(eq(raw, end)) {} {
+                raw := add(raw, 1)
+                mstore8(add(o, 1), mload(and(mload(raw), 15)))
+                mstore8(o, mload(and(shr(4, mload(raw)), 15)))
+                o := add(o, 2)
+            }
+            mstore(o, 0) // Zeroize the slot after the string.
+            mstore(0x40, add(o, 0x20)) // Allocate the memory.
+        }
+    }
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                   RUNE STRING OPERATIONS                   */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    /// @dev Returns the number of UTF characters in the string.
+    function runeCount(string memory s) internal pure returns (uint256 result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            if mload(s) {
+                mstore(0x00, div(not(0), 255))
+                mstore(0x20, 0x0202020202020202020202020202020202020202020202020303030304040506)
+                let o := add(s, 0x20)
+                let end := add(o, mload(s))
+                for { result := 1 } 1 { result := add(result, 1) } {
+                    o := add(o, byte(0, mload(shr(250, mload(o)))))
+                    if iszero(lt(o, end)) { break }
+                }
+            }
+        }
+    }
+
+    /// @dev Returns if this string is a 7-bit ASCII string.
+    /// (i.e. all characters codes are in [0..127])
+    function is7BitASCII(string memory s) internal pure returns (bool result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let mask := shl(7, div(not(0), 255))
+            result := 1
+            let n := mload(s)
+            if n {
+                let o := add(s, 0x20)
+                let end := add(o, n)
+                let last := mload(end)
+                mstore(end, 0)
+                for {} 1 {} {
+                    if and(mask, mload(o)) {
+                        result := 0
+                        break
+                    }
+                    o := add(o, 0x20)
+                    if iszero(lt(o, end)) { break }
+                }
+                mstore(end, last)
+            }
+        }
+    }
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                   BYTE STRING OPERATIONS                   */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    // For performance and bytecode compactness, byte string operations are restricted
+    // to 7-bit ASCII strings. All offsets are byte offsets, not UTF character offsets.
+    // Usage of byte string operations on charsets with runes spanning two or more bytes
+    // can lead to undefined behavior.
+
+    /// @dev Returns `subject` all occurrences of `search` replaced with `replacement`.
+    function replace(string memory subject, string memory search, string memory replacement)
+        internal
+        pure
+        returns (string memory result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let subjectLength := mload(subject)
+            let searchLength := mload(search)
+            let replacementLength := mload(replacement)
+
+            subject := add(subject, 0x20)
+            search := add(search, 0x20)
+            replacement := add(replacement, 0x20)
+            result := add(mload(0x40), 0x20)
+
+            let subjectEnd := add(subject, subjectLength)
+            if iszero(gt(searchLength, subjectLength)) {
+                let subjectSearchEnd := add(sub(subjectEnd, searchLength), 1)
+                let h := 0
+                if iszero(lt(searchLength, 0x20)) { h := keccak256(search, searchLength) }
+                let m := shl(3, sub(0x20, and(searchLength, 0x1f)))
+                let s := mload(search)
+                for {} 1 {} {
+                    let t := mload(subject)
+                    // Whether the first `searchLength % 32` bytes of
+                    // `subject` and `search` matches.
+                    if iszero(shr(m, xor(t, s))) {
+                        if h {
+                            if iszero(eq(keccak256(subject, searchLength), h)) {
+                                mstore(result, t)
+                                result := add(result, 1)
+                                subject := add(subject, 1)
+                                if iszero(lt(subject, subjectSearchEnd)) { break }
+                                continue
+                            }
+                        }
+                        // Copy the `replacement` one word at a time.
+                        for { let o := 0 } 1 {} {
+                            mstore(add(result, o), mload(add(replacement, o)))
+                            o := add(o, 0x20)
+                            if iszero(lt(o, replacementLength)) { break }
+                        }
+                        result := add(result, replacementLength)
+                        subject := add(subject, searchLength)
+                        if searchLength {
+                            if iszero(lt(subject, subjectSearchEnd)) { break }
+                            continue
+                        }
+                    }
+                    mstore(result, t)
+                    result := add(result, 1)
+                    subject := add(subject, 1)
+                    if iszero(lt(subject, subjectSearchEnd)) { break }
+                }
+            }
+
+            let resultRemainder := result
+            result := add(mload(0x40), 0x20)
+            let k := add(sub(resultRemainder, result), sub(subjectEnd, subject))
+            // Copy the rest of the string one word at a time.
+            for {} lt(subject, subjectEnd) {} {
+                mstore(resultRemainder, mload(subject))
+                resultRemainder := add(resultRemainder, 0x20)
+                subject := add(subject, 0x20)
+            }
+            result := sub(result, 0x20)
+            let last := add(add(result, 0x20), k) // Zeroize the slot after the string.
+            mstore(last, 0)
+            mstore(0x40, add(last, 0x20)) // Allocate the memory.
+            mstore(result, k) // Store the length.
+        }
+    }
+
+    /// @dev Returns the byte index of the first location of `search` in `subject`,
+    /// searching from left to right, starting from `from`.
+    /// Returns `NOT_FOUND` (i.e. `type(uint256).max`) if the `search` is not found.
+    function indexOf(string memory subject, string memory search, uint256 from)
+        internal
+        pure
+        returns (uint256 result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            for { let subjectLength := mload(subject) } 1 {} {
+                if iszero(mload(search)) {
+                    if iszero(gt(from, subjectLength)) {
+                        result := from
+                        break
+                    }
+                    result := subjectLength
+                    break
+                }
+                let searchLength := mload(search)
+                let subjectStart := add(subject, 0x20)
+
+                result := not(0) // Initialize to `NOT_FOUND`.
+
+                subject := add(subjectStart, from)
+                let end := add(sub(add(subjectStart, subjectLength), searchLength), 1)
+
+                let m := shl(3, sub(0x20, and(searchLength, 0x1f)))
+                let s := mload(add(search, 0x20))
+
+                if iszero(and(lt(subject, end), lt(from, subjectLength))) { break }
+
+                if iszero(lt(searchLength, 0x20)) {
+                    for { let h := keccak256(add(search, 0x20), searchLength) } 1 {} {
+                        if iszero(shr(m, xor(mload(subject), s))) {
+                            if eq(keccak256(subject, searchLength), h) {
+                                result := sub(subject, subjectStart)
+                                break
+                            }
+                        }
+                        subject := add(subject, 1)
+                        if iszero(lt(subject, end)) { break }
+                    }
+                    break
+                }
+                for {} 1 {} {
+                    if iszero(shr(m, xor(mload(subject), s))) {
+                        result := sub(subject, subjectStart)
+                        break
+                    }
+                    subject := add(subject, 1)
+                    if iszero(lt(subject, end)) { break }
+                }
+                break
+            }
+        }
+    }
+
+    /// @dev Returns the byte index of the first location of `search` in `subject`,
+    /// searching from left to right.
+    /// Returns `NOT_FOUND` (i.e. `type(uint256).max`) if the `search` is not found.
+    function indexOf(string memory subject, string memory search)
+        internal
+        pure
+        returns (uint256 result)
+    {
+        result = indexOf(subject, search, 0);
+    }
+
+    /// @dev Returns the byte index of the first location of `search` in `subject`,
+    /// searching from right to left, starting from `from`.
+    /// Returns `NOT_FOUND` (i.e. `type(uint256).max`) if the `search` is not found.
+    function lastIndexOf(string memory subject, string memory search, uint256 from)
+        internal
+        pure
+        returns (uint256 result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            for {} 1 {} {
+                result := not(0) // Initialize to `NOT_FOUND`.
+                let searchLength := mload(search)
+                if gt(searchLength, mload(subject)) { break }
+                let w := result
+
+                let fromMax := sub(mload(subject), searchLength)
+                if iszero(gt(fromMax, from)) { from := fromMax }
+
+                let end := add(add(subject, 0x20), w)
+                subject := add(add(subject, 0x20), from)
+                if iszero(gt(subject, end)) { break }
+                // As this function is not too often used,
+                // we shall simply use keccak256 for smaller bytecode size.
+                for { let h := keccak256(add(search, 0x20), searchLength) } 1 {} {
+                    if eq(keccak256(subject, searchLength), h) {
+                        result := sub(subject, add(end, 1))
+                        break
+                    }
+                    subject := add(subject, w) // `sub(subject, 1)`.
+                    if iszero(gt(subject, end)) { break }
+                }
+                break
+            }
+        }
+    }
+
+    /// @dev Returns the byte index of the first location of `search` in `subject`,
+    /// searching from right to left.
+    /// Returns `NOT_FOUND` (i.e. `type(uint256).max`) if the `search` is not found.
+    function lastIndexOf(string memory subject, string memory search)
+        internal
+        pure
+        returns (uint256 result)
+    {
+        result = lastIndexOf(subject, search, uint256(int256(-1)));
+    }
+
+    /// @dev Returns true if `search` is found in `subject`, false otherwise.
+    function contains(string memory subject, string memory search) internal pure returns (bool) {
+        return indexOf(subject, search) != NOT_FOUND;
+    }
+
+    /// @dev Returns whether `subject` starts with `search`.
+    function startsWith(string memory subject, string memory search)
+        internal
+        pure
+        returns (bool result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let searchLength := mload(search)
+            // Just using keccak256 directly is actually cheaper.
+            // forgefmt: disable-next-item
+            result := and(
+                iszero(gt(searchLength, mload(subject))),
+                eq(
+                    keccak256(add(subject, 0x20), searchLength),
+                    keccak256(add(search, 0x20), searchLength)
+                )
+            )
+        }
+    }
+
+    /// @dev Returns whether `subject` ends with `search`.
+    function endsWith(string memory subject, string memory search)
+        internal
+        pure
+        returns (bool result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let searchLength := mload(search)
+            let subjectLength := mload(subject)
+            // Whether `search` is not longer than `subject`.
+            let withinRange := iszero(gt(searchLength, subjectLength))
+            // Just using keccak256 directly is actually cheaper.
+            // forgefmt: disable-next-item
+            result := and(
+                withinRange,
+                eq(
+                    keccak256(
+                        // `subject + 0x20 + max(subjectLength - searchLength, 0)`.
+                        add(add(subject, 0x20), mul(withinRange, sub(subjectLength, searchLength))),
+                        searchLength
+                    ),
+                    keccak256(add(search, 0x20), searchLength)
+                )
+            )
+        }
+    }
+
+    /// @dev Returns `subject` repeated `times`.
+    function repeat(string memory subject, uint256 times)
+        internal
+        pure
+        returns (string memory result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let subjectLength := mload(subject)
+            if iszero(or(iszero(times), iszero(subjectLength))) {
+                subject := add(subject, 0x20)
+                result := mload(0x40)
+                let output := add(result, 0x20)
+                for {} 1 {} {
+                    // Copy the `subject` one word at a time.
+                    for { let o := 0 } 1 {} {
+                        mstore(add(output, o), mload(add(subject, o)))
+                        o := add(o, 0x20)
+                        if iszero(lt(o, subjectLength)) { break }
+                    }
+                    output := add(output, subjectLength)
+                    times := sub(times, 1)
+                    if iszero(times) { break }
+                }
+                mstore(output, 0) // Zeroize the slot after the string.
+                let resultLength := sub(output, add(result, 0x20))
+                mstore(result, resultLength) // Store the length.
+                // Allocate the memory.
+                mstore(0x40, add(result, add(resultLength, 0x20)))
+            }
+        }
+    }
+
+    /// @dev Returns a copy of `subject` sliced from `start` to `end` (exclusive).
+    /// `start` and `end` are byte offsets.
+    function slice(string memory subject, uint256 start, uint256 end)
+        internal
+        pure
+        returns (string memory result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let subjectLength := mload(subject)
+            if iszero(gt(subjectLength, end)) { end := subjectLength }
+            if iszero(gt(subjectLength, start)) { start := subjectLength }
+            if lt(start, end) {
+                result := mload(0x40)
+                let resultLength := sub(end, start)
+                mstore(result, resultLength)
+                subject := add(subject, start)
+                let w := not(0x1f)
+                // Copy the `subject` one word at a time, backwards.
+                for { let o := and(add(resultLength, 0x1f), w) } 1 {} {
+                    mstore(add(result, o), mload(add(subject, o)))
+                    o := add(o, w) // `sub(o, 0x20)`.
+                    if iszero(o) { break }
+                }
+                // Zeroize the slot after the string.
+                mstore(add(add(result, 0x20), resultLength), 0)
+                // Allocate memory for the length and the bytes,
+                // rounded up to a multiple of 32.
+                mstore(0x40, add(result, and(add(resultLength, 0x3f), w)))
+            }
+        }
+    }
+
+    /// @dev Returns a copy of `subject` sliced from `start` to the end of the string.
+    /// `start` is a byte offset.
+    function slice(string memory subject, uint256 start)
+        internal
+        pure
+        returns (string memory result)
+    {
+        result = slice(subject, start, uint256(int256(-1)));
+    }
+
+    /// @dev Returns all the indices of `search` in `subject`.
+    /// The indices are byte offsets.
+    function indicesOf(string memory subject, string memory search)
+        internal
+        pure
+        returns (uint256[] memory result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let subjectLength := mload(subject)
+            let searchLength := mload(search)
+
+            if iszero(gt(searchLength, subjectLength)) {
+                subject := add(subject, 0x20)
+                search := add(search, 0x20)
+                result := add(mload(0x40), 0x20)
+
+                let subjectStart := subject
+                let subjectSearchEnd := add(sub(add(subject, subjectLength), searchLength), 1)
+                let h := 0
+                if iszero(lt(searchLength, 0x20)) { h := keccak256(search, searchLength) }
+                let m := shl(3, sub(0x20, and(searchLength, 0x1f)))
+                let s := mload(search)
+                for {} 1 {} {
+                    let t := mload(subject)
+                    // Whether the first `searchLength % 32` bytes of
+                    // `subject` and `search` matches.
+                    if iszero(shr(m, xor(t, s))) {
+                        if h {
+                            if iszero(eq(keccak256(subject, searchLength), h)) {
+                                subject := add(subject, 1)
+                                if iszero(lt(subject, subjectSearchEnd)) { break }
+                                continue
+                            }
+                        }
+                        // Append to `result`.
+                        mstore(result, sub(subject, subjectStart))
+                        result := add(result, 0x20)
+                        // Advance `subject` by `searchLength`.
+                        subject := add(subject, searchLength)
+                        if searchLength {
+                            if iszero(lt(subject, subjectSearchEnd)) { break }
+                            continue
+                        }
+                    }
+                    subject := add(subject, 1)
+                    if iszero(lt(subject, subjectSearchEnd)) { break }
+                }
+                let resultEnd := result
+                // Assign `result` to the free memory pointer.
+                result := mload(0x40)
+                // Store the length of `result`.
+                mstore(result, shr(5, sub(resultEnd, add(result, 0x20))))
+                // Allocate memory for result.
+                // We allocate one more word, so this array can be recycled for {split}.
+                mstore(0x40, add(resultEnd, 0x20))
+            }
+        }
+    }
+
+    /// @dev Returns a arrays of strings based on the `delimiter` inside of the `subject` string.
+    function split(string memory subject, string memory delimiter)
+        internal
+        pure
+        returns (string[] memory result)
+    {
+        uint256[] memory indices = indicesOf(subject, delimiter);
+        /// @solidity memory-safe-assembly
+        assembly {
+            let w := not(0x1f)
+            let indexPtr := add(indices, 0x20)
+            let indicesEnd := add(indexPtr, shl(5, add(mload(indices), 1)))
+            mstore(add(indicesEnd, w), mload(subject))
+            mstore(indices, add(mload(indices), 1))
+            let prevIndex := 0
+            for {} 1 {} {
+                let index := mload(indexPtr)
+                mstore(indexPtr, 0x60)
+                if iszero(eq(index, prevIndex)) {
+                    let element := mload(0x40)
+                    let elementLength := sub(index, prevIndex)
+                    mstore(element, elementLength)
+                    // Copy the `subject` one word at a time, backwards.
+                    for { let o := and(add(elementLength, 0x1f), w) } 1 {} {
+                        mstore(add(element, o), mload(add(add(subject, prevIndex), o)))
+                        o := add(o, w) // `sub(o, 0x20)`.
+                        if iszero(o) { break }
+                    }
+                    // Zeroize the slot after the string.
+                    mstore(add(add(element, 0x20), elementLength), 0)
+                    // Allocate memory for the length and the bytes,
+                    // rounded up to a multiple of 32.
+                    mstore(0x40, add(element, and(add(elementLength, 0x3f), w)))
+                    // Store the `element` into the array.
+                    mstore(indexPtr, element)
+                }
+                prevIndex := add(index, mload(delimiter))
+                indexPtr := add(indexPtr, 0x20)
+                if iszero(lt(indexPtr, indicesEnd)) { break }
+            }
+            result := indices
+            if iszero(mload(delimiter)) {
+                result := add(indices, 0x20)
+                mstore(result, sub(mload(indices), 2))
+            }
+        }
+    }
+
+    /// @dev Returns a concatenated string of `a` and `b`.
+    /// Cheaper than `string.concat()` and does not de-align the free memory pointer.
+    function concat(string memory a, string memory b)
+        internal
+        pure
+        returns (string memory result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let w := not(0x1f)
+            result := mload(0x40)
+            let aLength := mload(a)
+            // Copy `a` one word at a time, backwards.
+            for { let o := and(add(aLength, 0x20), w) } 1 {} {
+                mstore(add(result, o), mload(add(a, o)))
+                o := add(o, w) // `sub(o, 0x20)`.
+                if iszero(o) { break }
+            }
+            let bLength := mload(b)
+            let output := add(result, aLength)
+            // Copy `b` one word at a time, backwards.
+            for { let o := and(add(bLength, 0x20), w) } 1 {} {
+                mstore(add(output, o), mload(add(b, o)))
+                o := add(o, w) // `sub(o, 0x20)`.
+                if iszero(o) { break }
+            }
+            let totalLength := add(aLength, bLength)
+            let last := add(add(result, 0x20), totalLength)
+            // Zeroize the slot after the string.
+            mstore(last, 0)
+            // Stores the length.
+            mstore(result, totalLength)
+            // Allocate memory for the length and the bytes,
+            // rounded up to a multiple of 32.
+            mstore(0x40, and(add(last, 0x1f), w))
+        }
+    }
+
+    /// @dev Returns a copy of the string in either lowercase or UPPERCASE.
+    /// WARNING! This function is only compatible with 7-bit ASCII strings.
+    function toCase(string memory subject, bool toUpper)
+        internal
+        pure
+        returns (string memory result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let length := mload(subject)
+            if length {
+                result := add(mload(0x40), 0x20)
+                subject := add(subject, 1)
+                let flags := shl(add(70, shl(5, toUpper)), 0x3ffffff)
+                let w := not(0)
+                for { let o := length } 1 {} {
+                    o := add(o, w)
+                    let b := and(0xff, mload(add(subject, o)))
+                    mstore8(add(result, o), xor(b, and(shr(b, flags), 0x20)))
+                    if iszero(o) { break }
+                }
+                result := mload(0x40)
+                mstore(result, length) // Store the length.
+                let last := add(add(result, 0x20), length)
+                mstore(last, 0) // Zeroize the slot after the string.
+                mstore(0x40, add(last, 0x20)) // Allocate the memory.
+            }
+        }
+    }
+
+    /// @dev Returns a string from a small bytes32 string.
+    /// `s` must be null-terminated, or behavior will be undefined.
+    function fromSmallString(bytes32 s) internal pure returns (string memory result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            result := mload(0x40)
+            let n := 0
+            for {} byte(n, s) { n := add(n, 1) } {} // Scan for '\0'.
+            mstore(result, n)
+            let o := add(result, 0x20)
+            mstore(o, s)
+            mstore(add(o, n), 0)
+            mstore(0x40, add(result, 0x40))
+        }
+    }
+
+    /// @dev Returns the small string, with all bytes after the first null byte zeroized.
+    function normalizeSmallString(bytes32 s) internal pure returns (bytes32 result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            for {} byte(result, s) { result := add(result, 1) } {} // Scan for '\0'.
+            mstore(0x00, s)
+            mstore(result, 0x00)
+            result := mload(0x00)
+        }
+    }
+
+    /// @dev Returns the string as a normalized null-terminated small string.
+    function toSmallString(string memory s) internal pure returns (bytes32 result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            result := mload(s)
+            if iszero(lt(result, 33)) {
+                mstore(0x00, 0xec92f9a3) // `TooBigForSmallString()`.
+                revert(0x1c, 0x04)
+            }
+            result := shl(shl(3, sub(32, result)), mload(add(s, result)))
+        }
+    }
+
+    /// @dev Returns a lowercased copy of the string.
+    /// WARNING! This function is only compatible with 7-bit ASCII strings.
+    function lower(string memory subject) internal pure returns (string memory result) {
+        result = toCase(subject, false);
+    }
+
+    /// @dev Returns an UPPERCASED copy of the string.
+    /// WARNING! This function is only compatible with 7-bit ASCII strings.
+    function upper(string memory subject) internal pure returns (string memory result) {
+        result = toCase(subject, true);
+    }
+
+    /// @dev Escapes the string to be used within HTML tags.
+    function escapeHTML(string memory s) internal pure returns (string memory result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let end := add(s, mload(s))
+            result := add(mload(0x40), 0x20)
+            // Store the bytes of the packed offsets and strides into the scratch space.
+            // `packed = (stride << 5) | offset`. Max offset is 20. Max stride is 6.
+            mstore(0x1f, 0x900094)
+            mstore(0x08, 0xc0000000a6ab)
+            // Store "&quot;&amp;&#39;&lt;&gt;" into the scratch space.
+            mstore(0x00, shl(64, 0x2671756f743b26616d703b262333393b266c743b2667743b))
+            for {} iszero(eq(s, end)) {} {
+                s := add(s, 1)
+                let c := and(mload(s), 0xff)
+                // Not in `["\"","'","&","<",">"]`.
+                if iszero(and(shl(c, 1), 0x500000c400000000)) {
+                    mstore8(result, c)
+                    result := add(result, 1)
+                    continue
+                }
+                let t := shr(248, mload(c))
+                mstore(result, mload(and(t, 0x1f)))
+                result := add(result, shr(5, t))
+            }
+            let last := result
+            mstore(last, 0) // Zeroize the slot after the string.
+            result := mload(0x40)
+            mstore(result, sub(last, add(result, 0x20))) // Store the length.
+            mstore(0x40, add(last, 0x20)) // Allocate the memory.
+        }
+    }
+
+    /// @dev Escapes the string to be used within double-quotes in a JSON.
+    /// If `addDoubleQuotes` is true, the result will be enclosed in double-quotes.
+    function escapeJSON(string memory s, bool addDoubleQuotes)
+        internal
+        pure
+        returns (string memory result)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let end := add(s, mload(s))
+            result := add(mload(0x40), 0x20)
+            if addDoubleQuotes {
+                mstore8(result, 34)
+                result := add(1, result)
+            }
+            // Store "\\u0000" in scratch space.
+            // Store "0123456789abcdef" in scratch space.
+            // Also, store `{0x08:"b", 0x09:"t", 0x0a:"n", 0x0c:"f", 0x0d:"r"}`.
+            // into the scratch space.
+            mstore(0x15, 0x5c75303030303031323334353637383961626364656662746e006672)
+            // Bitmask for detecting `["\"","\\"]`.
+            let e := or(shl(0x22, 1), shl(0x5c, 1))
+            for {} iszero(eq(s, end)) {} {
+                s := add(s, 1)
+                let c := and(mload(s), 0xff)
+                if iszero(lt(c, 0x20)) {
+                    if iszero(and(shl(c, 1), e)) {
+                        // Not in `["\"","\\"]`.
+                        mstore8(result, c)
+                        result := add(result, 1)
+                        continue
+                    }
+                    mstore8(result, 0x5c) // "\\".
+                    mstore8(add(result, 1), c)
+                    result := add(result, 2)
+                    continue
+                }
+                if iszero(and(shl(c, 1), 0x3700)) {
+                    // Not in `["\b","\t","\n","\f","\d"]`.
+                    mstore8(0x1d, mload(shr(4, c))) // Hex value.
+                    mstore8(0x1e, mload(and(c, 15))) // Hex value.
+                    mstore(result, mload(0x19)) // "\\u00XX".
+                    result := add(result, 6)
+                    continue
+                }
+                mstore8(result, 0x5c) // "\\".
+                mstore8(add(result, 1), mload(add(c, 8)))
+                result := add(result, 2)
+            }
+            if addDoubleQuotes {
+                mstore8(result, 34)
+                result := add(1, result)
+            }
+            let last := result
+            mstore(last, 0) // Zeroize the slot after the string.
+            result := mload(0x40)
+            mstore(result, sub(last, add(result, 0x20))) // Store the length.
+            mstore(0x40, add(last, 0x20)) // Allocate the memory.
+        }
+    }
+
+    /// @dev Escapes the string to be used within double-quotes in a JSON.
+    function escapeJSON(string memory s) internal pure returns (string memory result) {
+        result = escapeJSON(s, false);
+    }
+
+    /// @dev Returns whether `a` equals `b`.
+    function eq(string memory a, string memory b) internal pure returns (bool result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            result := eq(keccak256(add(a, 0x20), mload(a)), keccak256(add(b, 0x20), mload(b)))
+        }
+    }
+
+    /// @dev Returns whether `a` equals `b`, where `b` is a null-terminated small string.
+    function eqs(string memory a, bytes32 b) internal pure returns (bool result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // These should be evaluated on compile time, as far as possible.
+            let m := not(shl(7, div(not(iszero(b)), 255))) // `0x7f7f ...`.
+            let x := not(or(m, or(b, add(m, and(b, m)))))
+            let r := shl(7, iszero(iszero(shr(128, x))))
+            r := or(r, shl(6, iszero(iszero(shr(64, shr(r, x))))))
+            r := or(r, shl(5, lt(0xffffffff, shr(r, x))))
+            r := or(r, shl(4, lt(0xffff, shr(r, x))))
+            r := or(r, shl(3, lt(0xff, shr(r, x))))
+            // forgefmt: disable-next-item
+            result := gt(eq(mload(a), add(iszero(x), xor(31, shr(3, r)))),
+                xor(shr(add(8, r), b), shr(add(8, r), mload(add(a, 0x20)))))
+        }
+    }
+
+    /// @dev Packs a single string with its length into a single word.
+    /// Returns `bytes32(0)` if the length is zero or greater than 31.
+    function packOne(string memory a) internal pure returns (bytes32 result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // We don't need to zero right pad the string,
+            // since this is our own custom non-standard packing scheme.
+            result :=
+                mul(
+                    // Load the length and the bytes.
+                    mload(add(a, 0x1f)),
+                    // `length != 0 && length < 32`. Abuses underflow.
+                    // Assumes that the length is valid and within the block gas limit.
+                    lt(sub(mload(a), 1), 0x1f)
+                )
+        }
+    }
+
+    /// @dev Unpacks a string packed using {packOne}.
+    /// Returns the empty string if `packed` is `bytes32(0)`.
+    /// If `packed` is not an output of {packOne}, the output behavior is undefined.
+    function unpackOne(bytes32 packed) internal pure returns (string memory result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // Grab the free memory pointer.
+            result := mload(0x40)
+            // Allocate 2 words (1 for the length, 1 for the bytes).
+            mstore(0x40, add(result, 0x40))
+            // Zeroize the length slot.
+            mstore(result, 0)
+            // Store the length and bytes.
+            mstore(add(result, 0x1f), packed)
+            // Right pad with zeroes.
+            mstore(add(add(result, 0x20), mload(result)), 0)
+        }
+    }
+
+    /// @dev Packs two strings with their lengths into a single word.
+    /// Returns `bytes32(0)` if combined length is zero or greater than 30.
+    function packTwo(string memory a, string memory b) internal pure returns (bytes32 result) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            let aLength := mload(a)
+            // We don't need to zero right pad the strings,
+            // since this is our own custom non-standard packing scheme.
+            result :=
+                mul(
+                    // Load the length and the bytes of `a` and `b`.
+                    or(
+                        shl(shl(3, sub(0x1f, aLength)), mload(add(a, aLength))),
+                        mload(sub(add(b, 0x1e), aLength))
+                    ),
+                    // `totalLength != 0 && totalLength < 31`. Abuses underflow.
+                    // Assumes that the lengths are valid and within the block gas limit.
+                    lt(sub(add(aLength, mload(b)), 1), 0x1e)
+                )
+        }
+    }
+
+    /// @dev Unpacks strings packed using {packTwo}.
+    /// Returns the empty strings if `packed` is `bytes32(0)`.
+    /// If `packed` is not an output of {packTwo}, the output behavior is undefined.
+    function unpackTwo(bytes32 packed)
+        internal
+        pure
+        returns (string memory resultA, string memory resultB)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // Grab the free memory pointer.
+            resultA := mload(0x40)
+            resultB := add(resultA, 0x40)
+            // Allocate 2 words for each string (1 for the length, 1 for the byte). Total 4 words.
+            mstore(0x40, add(resultB, 0x40))
+            // Zeroize the length slots.
+            mstore(resultA, 0)
+            mstore(resultB, 0)
+            // Store the lengths and bytes.
+            mstore(add(resultA, 0x1f), packed)
+            mstore(add(resultB, 0x1f), mload(add(add(resultA, 0x20), mload(resultA))))
+            // Right pad with zeroes.
+            mstore(add(add(resultA, 0x20), mload(resultA)), 0)
+            mstore(add(add(resultB, 0x20), mload(resultB)), 0)
+        }
+    }
+
+    /// @dev Directly returns `a` without copying.
+    function directReturn(string memory a) internal pure {
+        assembly {
+            // Assumes that the string does not start from the scratch space.
+            let retStart := sub(a, 0x20)
+            let retUnpaddedSize := add(mload(a), 0x40)
+            // Right pad with zeroes. Just in case the string is produced
+            // by a method that doesn't zero right pad.
+            mstore(add(retStart, retUnpaddedSize), 0)
+            // Store the return offset.
+            mstore(retStart, 0x20)
+            // End the transaction, returning the string.
+            return(retStart, and(not(0x1f), add(0x1f, retUnpaddedSize)))
+        }
+    }
+}
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+interface IT0neV1 {
+    struct Effect {
+        uint8 id;
+        uint256[] params;
+    }
+    function getSynthName(uint _type, uint _label) external view returns (bytes memory);
+    function createMonoSynth(uint _index, uint256[18] memory _params) external pure returns (bytes memory);
+    function createDetunedPolySynth(uint _index, bool _declare, uint256[11] memory _params) external pure returns (bytes memory);
+    function generatePlayerCode(uint _partNum , uint[] memory _synthType, uint[] memory _synthLabels, uint8 startTime, uint8 loopTime, bool _loop) external view returns (bytes memory);
+    function generateFooterCode(string memory xtraCodeStart, string memory xtraCodeStop) external pure returns (bytes memory);
+    function generateLFO(uint _index, uint256[5] memory _params) external pure returns (bytes memory);
+    function generatePhaserCode(uint256[4] memory params, uint _index) external pure returns (bytes memory);
+    function generateDelayCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateReverbCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateDistortionCode(uint256[3] memory params, uint _index) external pure returns (bytes memory);
+    function generateFilterCode(uint256[5] memory params, uint _index) external pure returns (bytes memory);
+    function generatePannerCode(uint256[1] memory params, uint _index) external pure returns (bytes memory);
+    function createSignalChain(Effect[] memory effects, uint _startingIndex, uint _synthType, uint _synthLabel)  external view returns (bytes memory);
+    function generateChaosArp(uint _synthType, uint _synthIndex, uint8[3][4] memory _notes, uint _octaveCount, uint _noteDuration, uint _noteInterval, uint _chordDuration) external view returns (bytes memory);
+}
+
+{
+  "optimizer": {
+    "enabled": false,
+    "runs": 200
+  },
+  "outputSelection": {
+    "*": {
+      "*": [
+        "evm.bytecode",
+        "evm.deployedBytecode",
+        "devdoc",
+        "userdoc",
+        "metadata",
+        "abi"
+      ]
+    }
+  },
+  "remappings": []
+}

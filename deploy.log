@@ -1,0 +1,46 @@
+Compiling 2 files with Solc 0.8.30
+Solc 0.8.30 finished in 7.51s
+Compiler run successful with warnings:
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/core/SongAlgorithm.sol:375:9:
+    |
+375 |         uint32 position,
+    |         ^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> src/core/SongAlgorithm.sol:599:9:
+    |
+599 |         uint32 era = beat / 365;
+    |         ^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/render/post/MusicRenderer.sol:269:32:
+    |
+269 |     function _restTypeToString(MidiToStaff.NoteType noteType) private pure returns (string memory) {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Script ran successfully.
+
+== Logs ==
+  Deploying from: 0xAd9fDaD276AB1A430fD03177A07350CD7C61E897
+  Balance: 2 ETH
+  MillenniumSong deployed at: 0x4C2E628Da36970b0A569EfD0f699237Ba42eEBcA
+  Minted token #1 to: 0xAd9fDaD276AB1A430fD03177A07350CD7C61E897
+  Set seven words
+  Force revealed token #1
+  Token URI length: 19693
+  
+  === Deployment Complete ===
+  Contract: 0x4C2E628Da36970b0A569EfD0f699237Ba42eEBcA
+  Token ID: 1
+  
+  View on Rarible Testnet:
+  https://testnet.rarible.com/token/sepolia/ 0x4C2E628Da36970b0A569EfD0f699237Ba42eEBcA :1
+  
+  View on OpenSea Testnet:
+  https://testnets.opensea.io/assets/sepolia/ 0x4C2E628Da36970b0A569EfD0f699237Ba42eEBcA /1
+  
+  To verify on Etherscan:
+  forge verify-contract 0x4C2E628Da36970b0A569EfD0f699237Ba42eEBcA src/core/MillenniumSong.sol:MillenniumSong --chain sepolia --etherscan-api-key $ETHERSCAN_API_KEY
+Error: `MillenniumSong` is above the contract size limit (39905 > 24576).
+Error: IO error: not a terminal

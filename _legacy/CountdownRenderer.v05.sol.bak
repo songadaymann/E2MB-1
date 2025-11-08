@@ -1,0 +1,243 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "../IRenderTypes.sol";
+
+/**
+ * @title CountdownRenderer v0.5 - Fixed Flip Clock
+ * @notice Pure on-chain SVG countdown with proper digit alignment and 12s timing
+ * @dev Key fix: Base transform shows correct digit immediately, negative begin only aligns phase
+ * 
+ * Oracle's insight: Don't use negative begin to "pick" the digit. Set transform to correct row,
+ * then use negative begin to align the phase within current flip interval.
+ */
+library CountdownRenderer {
+    using Strings for uint256;
+    using RenderTypes for RenderTypes.RenderCtx;
+
+    struct PlaceParams {
+        int256 baseOffsetY;    // Initial Y position to show correct digit
+        int256 beginPhase;     // Negative seconds for phase alignment
+        uint256 duration;      // Full cycle duration
+    }
+
+    function render(RenderTypes.RenderCtx memory ctx) internal pure returns (string memory) {
+        // Calculate seconds until reveal
+        uint256 revealTimestamp = ctx.revealYear * 365 days + 1735689600; // Approximate Jan 1 timestamp
+        uint256 secondsRemaining = ctx.nowTs >= revealTimestamp ? 0 : (revealTimestamp - ctx.nowTs);
+        
+        // Cap at reasonable max (can adjust based on needs)
+        uint256 maxSeconds = 999999999; // ~31 years
+        if (secondsRemaining > maxSeconds) {
+            secondsRemaining = maxSeconds;
+        }
+
+        return string(abi.encodePacked(
+            _svgHeader(),
+            _svgDefs(),
+            _svgBackground(),
+            _digitBoxes(),
+            _splitBarSeam(),
+            _renderAllDigits(secondsRemaining),
+            _progressBar(secondsRemaining),
+            _footer(),
+            '</svg>'
+        ));
+    }
+
+    function _renderAllDigits(uint256 secondsRemaining) private pure returns (string memory) {
+        // 12 digits arranged in 3 rows of 4
+        // Row 1 (places 11-8): billions down to hundred-millions  
+        // Row 2 (places 7-4): ten-millions down to ten-thousands
+        // Row 3 (places 3-0): thousands down to ones
+        
+        return string(abi.encodePacked(
+            // Row 1
+            _renderDigitAtPos(50, 30, secondsRemaining, 11, "c11"),
+            _renderDigitAtPos(130, 30, secondsRemaining, 10, "c10"),
+            _renderDigitAtPos(210, 30, secondsRemaining, 9, "c9"),
+            _renderDigitAtPos(290, 30, secondsRemaining, 8, "c8"),
+            // Row 2
+            _renderDigitAtPos(50, 140, secondsRemaining, 7, "c7"),
+            _renderDigitAtPos(130, 140, secondsRemaining, 6, "c6"),
+            _renderDigitAtPos(210, 140, secondsRemaining, 5, "c5"),
+            _renderDigitAtPos(290, 140, secondsRemaining, 4, "c4"),
+            // Row 3  
+            _renderDigitAtPos(50, 250, secondsRemaining, 3, "c3"),
+            _renderDigitAtPos(130, 250, secondsRemaining, 2, "c2"),
+            _renderDigitAtPos(210, 250, secondsRemaining, 1, "c1"),
+            _renderDigitAtPos(290, 250, secondsRemaining, 0, "c0")
+        ));
+    }
+
+    function _renderDigitAtPos(
+        uint256 x,
+        uint256 y,
+        uint256 secondsRemaining,
+        uint256 place,
+        string memory clipId
+    ) private pure returns (string memory) {
+        PlaceParams memory params = _calculatePlace(secondsRemaining, place);
+        uint256 centerX = x + 36; // Center of 72px digit
+        uint256 centerY = y + 50; // Center of 100px box
+        
+        return _renderDigit(centerX, centerY, params, secondsRemaining, clipId);
+    }
+
+    /**
+     * @dev Calculate timing parameters for a digit place
+     * @param secondsRemaining Total seconds until reveal
+     * @param place Power of 10 (0=ones, 1=tens, 2=hundreds, 3=thousands)
+     * @return params Calculated timing and positioning
+     */
+    function _calculatePlace(uint256 secondsRemaining, uint256 place) private pure returns (PlaceParams memory params) {
+        // Step duration for this place (12, 120, 1200, 12000, ...)
+        uint256 stepSec = 12 * (10 ** place);
+        
+        // Full cycle duration (10 steps)
+        uint256 cycleSec = stepSec * 10;
+        
+        // Position within cycle
+        uint256 r = secondsRemaining % cycleSec;
+        
+        // Current digit (0-9)
+        uint256 digit = r / stepSec;
+        
+        // Stack index (9 at top, 0 at bottom; digits go 9,8,7,6,5,4,3,2,1,0)
+        uint256 stackIdx = 9 - digit;
+        
+        // Base Y offset to show this digit (100px per digit)
+        params.baseOffsetY = -int256(100 * stackIdx);
+        
+        // Phase within current step (for timing next flip)
+        params.beginPhase = -int256(r % stepSec);
+        
+        // Duration
+        params.duration = cycleSec;
+    }
+
+    function _renderDigit(
+        uint256 xPos,
+        PlaceParams memory params,
+        uint256 secondsRemaining,
+        string memory clipId
+    ) private pure returns (string memory) {
+        string memory baseYStr = _int256ToString(params.baseOffsetY);
+        string memory beginStr = _int256ToString(params.beginPhase);
+        string memory durStr = params.duration.toString();
+        string memory endStr = secondsRemaining.toString();
+        
+        // Only add animation if not at zero
+        string memory animation = secondsRemaining > 0 
+            ? string(abi.encodePacked(
+                '<animateTransform attributeName="transform" type="translate" additive="sum" calcMode="discrete" ',
+                'dur="', durStr, 's" begin="', beginStr, 's" repeatCount="indefinite" fill="freeze" ',
+                'values="0,0;0,-100;0,-200;0,-300;0,-400;0,-500;0,-600;0,-700;0,-800;0,-900;0,0"/>'
+            ))
+            : '';
+        
+        return string(abi.encodePacked(
+            '<g clip-path="url(#', clipId, ')">',
+            '<g transform="translate(0,', baseYStr, ')">',
+            _digitStack(xPos),
+            animation,
+            '</g>',
+            '</g>'
+        ));
+    }
+
+    function _digitStack(uint256 xPos) private pure returns (string memory) {
+        string memory x = xPos.toString();
+        return string(abi.encodePacked(
+            '<text class="digit-text" x="', x, '" y="74">9</text>',
+            '<text class="digit-text" x="', x, '" y="174">8</text>',
+            '<text class="digit-text" x="', x, '" y="274">7</text>',
+            '<text class="digit-text" x="', x, '" y="374">6</text>',
+            '<text class="digit-text" x="', x, '" y="474">5</text>',
+            '<text class="digit-text" x="', x, '" y="574">4</text>',
+            '<text class="digit-text" x="', x, '" y="674">3</text>',
+            '<text class="digit-text" x="', x, '" y="774">2</text>',
+            '<text class="digit-text" x="', x, '" y="874">1</text>',
+            '<text class="digit-text" x="', x, '" y="974">0</text>'
+        ));
+    }
+
+    function _progressBar(uint256 secondsRemaining) private pure returns (string memory) {
+        // Simple countdown bar: full width to zero over remaining time
+        string memory durStr = secondsRemaining > 0 ? secondsRemaining.toString() : "1";
+        
+        return string(abi.encodePacked(
+            '<g transform="translate(76, 170)">',
+            '<rect class="progress-track" x="0" y="0" width="420" height="8" rx="4" ry="4"/>',
+            '<rect class="progress-bar" x="0" y="0" width="420" height="8" rx="4" ry="4">',
+            secondsRemaining > 0 
+                ? string(abi.encodePacked(
+                    '<animate attributeName="width" from="420" to="0" dur="', durStr, 's" begin="0s" fill="freeze"/>'
+                ))
+                : '',
+            '</rect>',
+            '</g>'
+        ));
+    }
+
+    function _svgHeader() private pure returns (string memory) {
+        return '<?xml version="1.0" encoding="UTF-8"?>'
+               '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="260" viewBox="0 0 640 260" preserveAspectRatio="xMidYMid meet">';
+    }
+
+    function _svgDefs() private pure returns (string memory) {
+        return string(abi.encodePacked(
+            '<defs>',
+            '<style>'
+            '.bg { fill: #0a0a0f; }'
+            '.frame { fill: #12121a; stroke: #1e1e2a; stroke-width: 2; }'
+            '.digit-bg { fill: #171723; stroke: #2a2a3b; stroke-width: 2; rx: 10; ry: 10; }'
+            '.digit-text { fill: #e9eef7; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-weight: 700; font-size: 84px; text-anchor: middle; }'
+            '.seam-dark { stroke: rgba(0,0,0,0.55); stroke-width: 2; }'
+            '.seam-light { stroke: rgba(255,255,255,0.16); stroke-width: 1; }'
+            '.progress-track { fill: #232336; }'
+            '.progress-bar { fill: #4c9cff; }'
+            '</style>',
+            '<clipPath id="clip-thousands"><rect x="76" y="40" width="96" height="100" rx="10" ry="10"/></clipPath>',
+            '<clipPath id="clip-hundreds"><rect x="184" y="40" width="96" height="100" rx="10" ry="10"/></clipPath>',
+            '<clipPath id="clip-tens"><rect x="292" y="40" width="96" height="100" rx="10" ry="10"/></clipPath>',
+            '<clipPath id="clip-ones"><rect x="400" y="40" width="96" height="100" rx="10" ry="10"/></clipPath>',
+            '</defs>'
+        ));
+    }
+
+    function _svgBackground() private pure returns (string memory) {
+        return '<rect class="bg" x="0" y="0" width="640" height="260"/>'
+               '<rect class="frame" x="24" y="20" width="592" height="220" rx="14" ry="14"/>';
+    }
+
+    function _digitBoxes() private pure returns (string memory) {
+        return '<rect class="digit-bg" x="76" y="40" width="96" height="100"/>'
+               '<rect class="digit-bg" x="184" y="40" width="96" height="100"/>'
+               '<rect class="digit-bg" x="292" y="40" width="96" height="100"/>'
+               '<rect class="digit-bg" x="400" y="40" width="96" height="100"/>';
+    }
+
+    function _splitBarSeam() private pure returns (string memory) {
+        return '<g>'
+               '<line class="seam-dark" x1="76" y1="90" x2="496" y2="90"/>'
+               '<line class="seam-light" x1="76" y1="92" x2="496" y2="92"/>'
+               '</g>';
+    }
+
+    function _footer() private pure returns (string memory) {
+        return '<text x="320" y="210" fill="#9aa6be" '
+               'font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" '
+               'font-size="14" text-anchor="middle">Time remaining</text>';
+    }
+
+    // Helper to convert int256 to string (including negative values)
+    function _int256ToString(int256 value) private pure returns (string memory) {
+        if (value >= 0) {
+            return uint256(value).toString();
+        } else {
+            return string(abi.encodePacked('-', uint256(-value).toString()));
+        }
+    }
+}

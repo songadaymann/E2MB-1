@@ -1,0 +1,4 @@
+openzeppelin-contracts/=node_modules/@openzeppelin/contracts/
+forge-std/=lib/forge-std/src/
+@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/
+@chainlink/=node_modules/@chainlink/

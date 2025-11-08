@@ -1,0 +1,1508 @@
+X:1
+T:Millennium Song - Blockchain Simulation
+C:Collection: "half the battle's just gettin outta bed"
+M:4/4
+L:1/8
+K:Eb
+V:1 clef=treble name="Lead"
+V:2 clef=bass name="Bass"
+% Token 1000 - Year 2026 - Beat 0
+[V:1] G |
+[V:2] _B,,4 |
+% Token 1007 - Year 2027 - Beat 1
+[V:1] _B3 |
+[V:2] _B,,2 |
+% Token 1014 - Year 2028 - Beat 2
+[V:1] _E2 |
+[V:2] _D,,4 |
+% Token 1021 - Year 2029 - Beat 3
+[V:1] _E |
+[V:2] _E,, |
+% Token 1028 - Year 2030 - Beat 4
+[V:1] C2 |
+[V:2] _B,,4 |
+% Token 1035 - Year 2031 - Beat 5
+[V:1] _A |
+[V:2] D,,2 |
+% Token 1042 - Year 2032 - Beat 6
+[V:1] _A |
+[V:2] F,,4 |
+% Token 1049 - Year 2033 - Beat 7
+[V:1] _E2 |
+[V:2] F,, |
+% Token 1056 - Year 2034 - Beat 8
+[V:1] z3 |
+[V:2] F,4 |
+% Token 1063 - Year 2035 - Beat 9
+[V:1] _e3 |
+[V:2] _D,2 |
+% Token 1070 - Year 2036 - Beat 10
+[V:1] _a |
+[V:2] _B,4 |
+% Token 1077 - Year 2037 - Beat 11
+[V:1] b |
+[V:2] _A, |
+% Token 1084 - Year 2038 - Beat 12
+[V:1] f2 |
+[V:2] _D,4 |
+% Token 1091 - Year 2039 - Beat 13
+[V:1] c3 |
+[V:2] E,2 |
+% Token 1098 - Year 2040 - Beat 14
+[V:1] z2 |
+[V:2] G,4 |
+% Token 1105 - Year 2041 - Beat 15
+[V:1] f2 |
+[V:2] D, |
+% Token 1112 - Year 2042 - Beat 16
+[V:1] _E |
+[V:2] _B,,4 |
+% Token 1119 - Year 2043 - Beat 17
+[V:1] _B |
+[V:2] _E,,2 |
+% Token 1126 - Year 2044 - Beat 18
+[V:1] G/2 |
+[V:2] F,,4 |
+% Token 1133 - Year 2045 - Beat 19
+[V:1] D4 |
+[V:2] _A,, |
+% Token 1140 - Year 2046 - Beat 20
+[V:1] E/2 |
+[V:2] _B,,4 |
+% Token 1147 - Year 2047 - Beat 21
+[V:1] G4 |
+[V:2] _B,,2 |
+% Token 1154 - Year 2048 - Beat 22
+[V:1] G2 |
+[V:2] F,,4 |
+% Token 1161 - Year 2049 - Beat 23
+[V:1] G4 |
+[V:2] _B,, |
+% Token 1168 - Year 2050 - Beat 24
+[V:1] F |
+[V:2] C,,4 |
+% Token 1175 - Year 2051 - Beat 25
+[V:1] F2 |
+[V:2] F,,2 |
+% Token 1182 - Year 2052 - Beat 26
+[V:1] G |
+[V:2] _D,,4 |
+% Token 1189 - Year 2053 - Beat 27
+[V:1] _E2 |
+[V:2] C,, |
+% Token 1196 - Year 2054 - Beat 28
+[V:1] F2 |
+[V:2] _B,,4 |
+% Token 1203 - Year 2055 - Beat 29
+[V:1] _E3 |
+[V:2] _B,,2 |
+% Token 1210 - Year 2056 - Beat 30
+[V:1] E2 |
+[V:2] D,,4 |
+% Token 1217 - Year 2057 - Beat 31
+[V:1] _E3 |
+[V:2] A,, |
+% Token 1224 - Year 2058 - Beat 32
+[V:1] g |
+[V:2] _E,4 |
+% Token 1231 - Year 2059 - Beat 33
+[V:1] b2 |
+[V:2] D,2 |
+% Token 1238 - Year 2060 - Beat 34
+[V:1] _a3 |
+[V:2] _E,4 |
+% Token 1245 - Year 2061 - Beat 35
+[V:1] _e3 |
+[V:2] _D, |
+% Token 1252 - Year 2062 - Beat 36
+[V:1] _e2 |
+[V:2] D,4 |
+% Token 1259 - Year 2063 - Beat 37
+[V:1] f2 |
+[V:2] C,2 |
+% Token 1266 - Year 2064 - Beat 38
+[V:1] c |
+[V:2] _G,4 |
+% Token 1273 - Year 2065 - Beat 39
+[V:1] g2 |
+[V:2] F, |
+% Token 1280 - Year 2066 - Beat 40
+[V:1] g2 |
+[V:2] F,,4 |
+% Token 1287 - Year 2067 - Beat 41
+[V:1] f4 |
+[V:2] D,,2 |
+% Token 1294 - Year 2068 - Beat 42
+[V:1] g2 |
+[V:2] _A,,4 |
+% Token 1301 - Year 2069 - Beat 43
+[V:1] _e3 |
+[V:2] F,, |
+% Token 1308 - Year 2070 - Beat 44
+[V:1] f2 |
+[V:2] F,,4 |
+% Token 1315 - Year 2071 - Beat 45
+[V:1] z4 |
+[V:2] _E,,2 |
+% Token 1322 - Year 2072 - Beat 46
+[V:1] _e2 |
+[V:2] _B,,4 |
+% Token 1329 - Year 2073 - Beat 47
+[V:1] _e3 |
+[V:2] _A,, |
+% Token 1336 - Year 2074 - Beat 48
+[V:1] D2 |
+[V:2] _B,,4 |
+% Token 1343 - Year 2075 - Beat 49
+[V:1] D2 |
+[V:2] _E,,2 |
+% Token 1350 - Year 2076 - Beat 50
+[V:1] C2 |
+[V:2] _A,,4 |
+% Token 1357 - Year 2077 - Beat 51
+[V:1] C |
+[V:2] _D,, |
+% Token 1364 - Year 2078 - Beat 52
+[V:1] F |
+[V:2] F,,4 |
+% Token 1371 - Year 2079 - Beat 53
+[V:1] F2 |
+[V:2] _A,,2 |
+% Token 1378 - Year 2080 - Beat 54
+[V:1] C3 |
+[V:2] _A,,4 |
+% Token 1385 - Year 2081 - Beat 55
+[V:1] _E2 |
+[V:2] G,, |
+% Token 1392 - Year 2082 - Beat 56
+[V:1] _E2 |
+[V:2] _B,,4 |
+% Token 1399 - Year 2083 - Beat 57
+[V:1] F2 |
+[V:2] G,,2 |
+% Token 1406 - Year 2084 - Beat 58
+[V:1] _B2 |
+[V:2] A,,4 |
+% Token 1413 - Year 2085 - Beat 59
+[V:1] F |
+[V:2] C,, |
+% Token 1420 - Year 2086 - Beat 60
+[V:1] _E2 |
+[V:2] G,,4 |
+% Token 1427 - Year 2087 - Beat 61
+[V:1] E |
+[V:2] E,,2 |
+% Token 1434 - Year 2088 - Beat 62
+[V:1] C2 |
+[V:2] _B,,4 |
+% Token 1441 - Year 2089 - Beat 63
+[V:1] G2 |
+[V:2] C,, |
+% Token 1448 - Year 2090 - Beat 64
+[V:1] f3 |
+[V:2] _A,4 |
+% Token 1455 - Year 2091 - Beat 65
+[V:1] _a2 |
+[V:2] _D,2 |
+% Token 1462 - Year 2092 - Beat 66
+[V:1] g3 |
+[V:2] _B,4 |
+% Token 1469 - Year 2093 - Beat 67
+[V:1] _a3 |
+[V:2] _A, |
+% Token 1476 - Year 2094 - Beat 68
+[V:1] z3 |
+[V:2] G,4 |
+% Token 1483 - Year 2095 - Beat 69
+[V:1] _a3 |
+[V:2] _E,2 |
+% Token 1490 - Year 2096 - Beat 70
+[V:1] c |
+[V:2] _B,4 |
+% Token 1497 - Year 2097 - Beat 71
+[V:1] _e3 |
+[V:2] F, |
+% Token 1504 - Year 2098 - Beat 72
+[V:1] _A |
+[V:2] _B,,4 |
+% Token 1511 - Year 2099 - Beat 73
+[V:1] _B2 |
+[V:2] _B,,2 |
+% Token 1518 - Year 2100 - Beat 74
+[V:1] G2 |
+[V:2] C,,4 |
+% Token 1525 - Year 2101 - Beat 75
+[V:1] z4 |
+[V:2] G,, |
+% Token 1532 - Year 2102 - Beat 76
+[V:1] A2 |
+[V:2] _D,,4 |
+% Token 1539 - Year 2103 - Beat 77
+[V:1] z4 |
+[V:2] B,,2 |
+% Token 1546 - Year 2104 - Beat 78
+[V:1] _E |
+[V:2] D,,4 |
+% Token 1553 - Year 2105 - Beat 79
+[V:1] z3 |
+[V:2] A,, |
+% Token 1560 - Year 2106 - Beat 80
+[V:1] z2 |
+[V:2] _B,,4 |
+% Token 1567 - Year 2107 - Beat 81
+[V:1] _E |
+[V:2] C,,2 |
+% Token 1574 - Year 2108 - Beat 82
+[V:1] D2 |
+[V:2] D,,4 |
+% Token 1581 - Year 2109 - Beat 83
+[V:1] z2 |
+[V:2] _E,, |
+% Token 1588 - Year 2110 - Beat 84
+[V:1] C |
+[V:2] F,,4 |
+% Token 1595 - Year 2111 - Beat 85
+[V:1] F2 |
+[V:2] G,,2 |
+% Token 1602 - Year 2112 - Beat 86
+[V:1] F |
+[V:2] _G,,4 |
+% Token 1609 - Year 2113 - Beat 87
+[V:1] z3 |
+[V:2] _E,, |
+% Token 1616 - Year 2114 - Beat 88
+[V:1] _e2 |
+[V:2] _E,4 |
+% Token 1623 - Year 2115 - Beat 89
+[V:1] e2 |
+[V:2] C,2 |
+% Token 1630 - Year 2116 - Beat 90
+[V:1] _a |
+[V:2] _E,4 |
+% Token 1637 - Year 2117 - Beat 91
+[V:1] g2 |
+[V:2] F, |
+% Token 1644 - Year 2118 - Beat 92
+[V:1] _a |
+[V:2] C,4 |
+% Token 1651 - Year 2119 - Beat 93
+[V:1] c2 |
+[V:2] F,2 |
+% Token 1658 - Year 2120 - Beat 94
+[V:1] _e2 |
+[V:2] _A,4 |
+% Token 1665 - Year 2121 - Beat 95
+[V:1] _a |
+[V:2] E, |
+% Token 1672 - Year 2122 - Beat 96
+[V:1] _e4 |
+[V:2] _E,,4 |
+% Token 1679 - Year 2123 - Beat 97
+[V:1] f2 |
+[V:2] _B,,2 |
+% Token 1686 - Year 2124 - Beat 98
+[V:1] z2 |
+[V:2] _E,,4 |
+% Token 1693 - Year 2125 - Beat 99
+[V:1] _b2 |
+[V:2] F,, |
+% Token 1700 - Year 2126 - Beat 100
+[V:1] _a2 |
+[V:2] D,,4 |
+% Token 1707 - Year 2127 - Beat 101
+[V:1] _b3 |
+[V:2] _B,,2 |
+% Token 1714 - Year 2128 - Beat 102
+[V:1] _b2 |
+[V:2] _A,,4 |
+% Token 1721 - Year 2129 - Beat 103
+[V:1] _b3 |
+[V:2] _A,, |
+% Token 1728 - Year 2130 - Beat 104
+[V:1] _A2 |
+[V:2] F,,4 |
+% Token 1735 - Year 2131 - Beat 105
+[V:1] B3 |
+[V:2] E,,2 |
+% Token 1742 - Year 2132 - Beat 106
+[V:1] z2 |
+[V:2] F,,4 |
+% Token 1749 - Year 2133 - Beat 107
+[V:1] z3 |
+[V:2] _E,, |
+% Token 1756 - Year 2134 - Beat 108
+[V:1] D |
+[V:2] G,,4 |
+% Token 1763 - Year 2135 - Beat 109
+[V:1] C |
+[V:2] _E,,2 |
+% Token 1770 - Year 2136 - Beat 110
+[V:1] _B |
+[V:2] _A,,4 |
+% Token 1777 - Year 2137 - Beat 111
+[V:1] z3 |
+[V:2] _D,, |
+% Token 1784 - Year 2138 - Beat 112
+[V:1] _A |
+[V:2] B,,4 |
+% Token 1791 - Year 2139 - Beat 113
+[V:1] D |
+[V:2] _B,,2 |
+% Token 1798 - Year 2140 - Beat 114
+[V:1] C2 |
+[V:2] D,,4 |
+% Token 1805 - Year 2141 - Beat 115
+[V:1] _A3 |
+[V:2] C,, |
+% Token 1812 - Year 2142 - Beat 116
+[V:1] E |
+[V:2] F,,4 |
+% Token 1819 - Year 2143 - Beat 117
+[V:1] _B2 |
+[V:2] C,,2 |
+% Token 1826 - Year 2144 - Beat 118
+[V:1] G3 |
+[V:2] _B,,4 |
+% Token 1833 - Year 2145 - Beat 119
+[V:1] _E |
+[V:2] _A,, |
+% Token 1840 - Year 2146 - Beat 120
+[V:1] e2 |
+[V:2] _B,4 |
+% Token 1847 - Year 2147 - Beat 121
+[V:1] a2 |
+[V:2] A,2 |
+% Token 1854 - Year 2148 - Beat 122
+[V:1] _a3 |
+[V:2] _E,4 |
+% Token 1861 - Year 2149 - Beat 123
+[V:1] z2 |
+[V:2] C, |
+% Token 1868 - Year 2150 - Beat 124
+[V:1] z3 |
+[V:2] _E,4 |
+% Token 1875 - Year 2151 - Beat 125
+[V:1] g2 |
+[V:2] G,2 |
+% Token 1882 - Year 2152 - Beat 126
+[V:1] c |
+[V:2] E,4 |
+% Token 1889 - Year 2153 - Beat 127
+[V:1] z3 |
+[V:2] C, |
+% Token 1896 - Year 2154 - Beat 128
+[V:1] G2 |
+[V:2] _E,,4 |
+% Token 1903 - Year 2155 - Beat 129
+[V:1] D4 |
+[V:2] _A,,2 |
+% Token 1910 - Year 2156 - Beat 130
+[V:1] G/2 |
+[V:2] _B,,4 |
+% Token 1917 - Year 2157 - Beat 131
+[V:1] _A/2 |
+[V:2] D,, |
+% Token 1924 - Year 2158 - Beat 132
+[V:1] _B/2 |
+[V:2] G,,4 |
+% Token 1931 - Year 2159 - Beat 133
+[V:1] C/2 |
+[V:2] _D,,2 |
+% Token 1938 - Year 2160 - Beat 134
+[V:1] G/2 |
+[V:2] D,,4 |
+% Token 1945 - Year 2161 - Beat 135
+[V:1] z2 |
+[V:2] F,, |
+% Token 1952 - Year 2162 - Beat 136
+[V:1] D2 |
+[V:2] F,,4 |
+% Token 1959 - Year 2163 - Beat 137
+[V:1] _E2 |
+[V:2] B,,2 |
+% Token 1966 - Year 2164 - Beat 138
+[V:1] F2 |
+[V:2] _A,,4 |
+% Token 1973 - Year 2165 - Beat 139
+[V:1] _E |
+[V:2] F,, |
+% Token 1980 - Year 2166 - Beat 140
+[V:1] C2 |
+[V:2] A,,4 |
+% Token 1987 - Year 2167 - Beat 141
+[V:1] E2 |
+[V:2] F,,2 |
+% Token 1994 - Year 2168 - Beat 142
+[V:1] F3 |
+[V:2] _E,,4 |
+% Token 2001 - Year 2169 - Beat 143
+[V:1] C2 |
+[V:2] B,, |
+% Token 2008 - Year 2170 - Beat 144
+[V:1] z2 |
+[V:2] F,4 |
+% Token 2015 - Year 2171 - Beat 145
+[V:1] _b3 |
+[V:2] _D,2 |
+% Token 2022 - Year 2172 - Beat 146
+[V:1] b2 |
+[V:2] _A,4 |
+% Token 2029 - Year 2173 - Beat 147
+[V:1] c3 |
+[V:2] _A, |
+% Token 2036 - Year 2174 - Beat 148
+[V:1] c3 |
+[V:2] C,4 |
+% Token 2043 - Year 2175 - Beat 149
+[V:1] _a2 |
+[V:2] _B,2 |
+% Token 2050 - Year 2176 - Beat 150
+[V:1] _b3 |
+[V:2] _E,4 |
+% Token 2057 - Year 2177 - Beat 151
+[V:1] z2 |
+[V:2] D, |
+% Token 2064 - Year 2178 - Beat 152
+[V:1] g4 |
+[V:2] _D,,4 |
+% Token 2071 - Year 2179 - Beat 153
+[V:1] _b3 |
+[V:2] G,,2 |
+% Token 2078 - Year 2180 - Beat 154
+[V:1] _e3 |
+[V:2] _A,,4 |
+% Token 2085 - Year 2181 - Beat 155
+[V:1] g4 |
+[V:2] _D,, |
+% Token 2092 - Year 2182 - Beat 156
+[V:1] _b2 |
+[V:2] _E,,4 |
+% Token 2099 - Year 2183 - Beat 157
+[V:1] d3 |
+[V:2] _E,,2 |
+% Token 2106 - Year 2184 - Beat 158
+[V:1] g4 |
+[V:2] F,,4 |
+% Token 2113 - Year 2185 - Beat 159
+[V:1] _b3 |
+[V:2] _A,, |
+% Token 2120 - Year 2186 - Beat 160
+[V:1] _B2 |
+[V:2] _E,,4 |
+% Token 2127 - Year 2187 - Beat 161
+[V:1] E2 |
+[V:2] _E,,2 |
+% Token 2134 - Year 2188 - Beat 162
+[V:1] F2 |
+[V:2] _D,,4 |
+% Token 2141 - Year 2189 - Beat 163
+[V:1] _A2 |
+[V:2] G,, |
+% Token 2148 - Year 2190 - Beat 164
+[V:1] z3 |
+[V:2] F,,4 |
+% Token 2155 - Year 2191 - Beat 165
+[V:1] D2 |
+[V:2] _B,,2 |
+% Token 2162 - Year 2192 - Beat 166
+[V:1] G3 |
+[V:2] C,,4 |
+% Token 2169 - Year 2193 - Beat 167
+[V:1] z3 |
+[V:2] A,, |
+% Token 2176 - Year 2194 - Beat 168
+[V:1] A |
+[V:2] G,,4 |
+% Token 2183 - Year 2195 - Beat 169
+[V:1] _E |
+[V:2] B,,2 |
+% Token 2190 - Year 2196 - Beat 170
+[V:1] C2 |
+[V:2] F,,4 |
+% Token 2197 - Year 2197 - Beat 171
+[V:1] C2 |
+[V:2] D,, |
+% Token 2204 - Year 2198 - Beat 172
+[V:1] D2 |
+[V:2] D,,4 |
+% Token 2211 - Year 2199 - Beat 173
+[V:1] F2 |
+[V:2] _E,,2 |
+% Token 2218 - Year 2200 - Beat 174
+[V:1] _E |
+[V:2] _D,,4 |
+% Token 2225 - Year 2201 - Beat 175
+[V:1] _B3 |
+[V:2] _E,, |
+% Token 2232 - Year 2202 - Beat 176
+[V:1] _b |
+[V:2] _D,4 |
+% Token 2239 - Year 2203 - Beat 177
+[V:1] d2 |
+[V:2] C,2 |
+% Token 2246 - Year 2204 - Beat 178
+[V:1] _a |
+[V:2] G,4 |
+% Token 2253 - Year 2205 - Beat 179
+[V:1] _b3 |
+[V:2] G, |
+% Token 2260 - Year 2206 - Beat 180
+[V:1] a |
+[V:2] C,4 |
+% Token 2267 - Year 2207 - Beat 181
+[V:1] d2 |
+[V:2] _A,2 |
+% Token 2274 - Year 2208 - Beat 182
+[V:1] c3 |
+[V:2] _E,4 |
+% Token 2281 - Year 2209 - Beat 183
+[V:1] f3 |
+[V:2] F, |
+% Token 2288 - Year 2210 - Beat 184
+[V:1] C4 |
+[V:2] F,,4 |
+% Token 2295 - Year 2211 - Beat 185
+[V:1] _E2 |
+[V:2] _D,,2 |
+% Token 2302 - Year 2212 - Beat 186
+[V:1] _E4 |
+[V:2] B,,4 |
+% Token 2309 - Year 2213 - Beat 187
+[V:1] D4 |
+[V:2] F,, |
+% Token 2316 - Year 2214 - Beat 188
+[V:1] C |
+[V:2] F,,4 |
+% Token 2323 - Year 2215 - Beat 189
+[V:1] G2 |
+[V:2] E,,2 |
+% Token 2330 - Year 2216 - Beat 190
+[V:1] _B/2 |
+[V:2] F,,4 |
+% Token 2337 - Year 2217 - Beat 191
+[V:1] G/2 |
+[V:2] _E,, |
+% Token 2344 - Year 2218 - Beat 192
+[V:1] G3 |
+[V:2] _E,,4 |
+% Token 2351 - Year 2219 - Beat 193
+[V:1] _B |
+[V:2] F,,2 |
+% Token 2358 - Year 2220 - Beat 194
+[V:1] _A3 |
+[V:2] _B,,4 |
+% Token 2365 - Year 2221 - Beat 195
+[V:1] z2 |
+[V:2] _B,, |
+% Token 2372 - Year 2222 - Beat 196
+[V:1] G2 |
+[V:2] _E,,4 |
+% Token 2379 - Year 2223 - Beat 197
+[V:1] _E3 |
+[V:2] G,,2 |
+% Token 2386 - Year 2224 - Beat 198
+[V:1] E2 |
+[V:2] _E,,4 |
+% Token 2393 - Year 2225 - Beat 199
+[V:1] _E3 |
+[V:2] _B,, |
+% Token 2400 - Year 2226 - Beat 200
+[V:1] _e |
+[V:2] _A,4 |
+% Token 2407 - Year 2227 - Beat 201
+[V:1] g3 |
+[V:2] A,2 |
+% Token 2414 - Year 2228 - Beat 202
+[V:1] _e |
+[V:2] _A,4 |
+% Token 2421 - Year 2229 - Beat 203
+[V:1] g3 |
+[V:2] _B, |
+% Token 2428 - Year 2230 - Beat 204
+[V:1] f2 |
+[V:2] C,4 |
+% Token 2435 - Year 2231 - Beat 205
+[V:1] _a |
+[V:2] G,2 |
+% Token 2442 - Year 2232 - Beat 206
+[V:1] z2 |
+[V:2] C,4 |
+% Token 2449 - Year 2233 - Beat 207
+[V:1] _b |
+[V:2] _B, |
+% Token 2456 - Year 2234 - Beat 208
+[V:1] _e4 |
+[V:2] G,,4 |
+% Token 2463 - Year 2235 - Beat 209
+[V:1] _e2 |
+[V:2] _E,,2 |
+% Token 2470 - Year 2236 - Beat 210
+[V:1] z3 |
+[V:2] _A,,4 |
+% Token 2477 - Year 2237 - Beat 211
+[V:1] _b3 |
+[V:2] _A,, |
+% Token 2484 - Year 2238 - Beat 212
+[V:1] _b4 |
+[V:2] _B,,4 |
+% Token 2491 - Year 2239 - Beat 213
+[V:1] _b4 |
+[V:2] _B,,2 |
+% Token 2498 - Year 2240 - Beat 214
+[V:1] d3 |
+[V:2] F,,4 |
+% Token 2505 - Year 2241 - Beat 215
+[V:1] z2 |
+[V:2] _B,, |
+% Token 2512 - Year 2242 - Beat 216
+[V:1] G3 |
+[V:2] _E,,4 |
+% Token 2519 - Year 2243 - Beat 217
+[V:1] G2 |
+[V:2] F,,2 |
+% Token 2526 - Year 2244 - Beat 218
+[V:1] _B2 |
+[V:2] _E,,4 |
+% Token 2533 - Year 2245 - Beat 219
+[V:1] A2 |
+[V:2] F,, |
+% Token 2540 - Year 2246 - Beat 220
+[V:1] _E3 |
+[V:2] F,,4 |
+% Token 2547 - Year 2247 - Beat 221
+[V:1] _E3 |
+[V:2] D,,2 |
+% Token 2554 - Year 2248 - Beat 222
+[V:1] C |
+[V:2] _B,,4 |
+% Token 2561 - Year 2249 - Beat 223
+[V:1] E2 |
+[V:2] _E,, |
+% Token 2568 - Year 2250 - Beat 224
+[V:1] F2 |
+[V:2] _A,,4 |
+% Token 2575 - Year 2251 - Beat 225
+[V:1] _E |
+[V:2] C,,2 |
+% Token 2582 - Year 2252 - Beat 226
+[V:1] G |
+[V:2] _E,,4 |
+% Token 2589 - Year 2253 - Beat 227
+[V:1] C2 |
+[V:2] _B,, |
+% Token 2596 - Year 2254 - Beat 228
+[V:1] B |
+[V:2] _B,,4 |
+% Token 2603 - Year 2255 - Beat 229
+[V:1] A2 |
+[V:2] F,,2 |
+% Token 2610 - Year 2256 - Beat 230
+[V:1] G3 |
+[V:2] C,,4 |
+% Token 2617 - Year 2257 - Beat 231
+[V:1] _E2 |
+[V:2] _E,, |
+% Token 2624 - Year 2258 - Beat 232
+[V:1] d2 |
+[V:2] _B,4 |
+% Token 2631 - Year 2259 - Beat 233
+[V:1] _a2 |
+[V:2] E,2 |
+% Token 2638 - Year 2260 - Beat 234
+[V:1] d2 |
+[V:2] _E,4 |
+% Token 2645 - Year 2261 - Beat 235
+[V:1] c3 |
+[V:2] _D, |
+% Token 2652 - Year 2262 - Beat 236
+[V:1] _e |
+[V:2] A,4 |
+% Token 2659 - Year 2263 - Beat 237
+[V:1] _e2 |
+[V:2] F,2 |
+% Token 2666 - Year 2264 - Beat 238
+[V:1] f3 |
+[V:2] _A,4 |
+% Token 2673 - Year 2265 - Beat 239
+[V:1] _e |
+[V:2] _A, |
+% Token 2680 - Year 2266 - Beat 240
+[V:1] D2 |
+[V:2] B,,4 |
+% Token 2687 - Year 2267 - Beat 241
+[V:1] A |
+[V:2] G,,2 |
+% Token 2694 - Year 2268 - Beat 242
+[V:1] C |
+[V:2] _B,,4 |
+% Token 2701 - Year 2269 - Beat 243
+[V:1] _A/2 |
+[V:2] C,, |
+% Token 2708 - Year 2270 - Beat 244
+[V:1] _B2 |
+[V:2] A,,4 |
+% Token 2715 - Year 2271 - Beat 245
+[V:1] C/2 |
+[V:2] _B,,2 |
+% Token 2722 - Year 2272 - Beat 246
+[V:1] _E/2 |
+[V:2] _E,,4 |
+% Token 2729 - Year 2273 - Beat 247
+[V:1] z2 |
+[V:2] _B,, |
+% Token 2736 - Year 2274 - Beat 248
+[V:1] _E2 |
+[V:2] F,,4 |
+% Token 2743 - Year 2275 - Beat 249
+[V:1] G2 |
+[V:2] D,,2 |
+% Token 2750 - Year 2276 - Beat 250
+[V:1] _B2 |
+[V:2] F,,4 |
+% Token 2757 - Year 2277 - Beat 251
+[V:1] _A |
+[V:2] C,, |
+% Token 2764 - Year 2278 - Beat 252
+[V:1] F2 |
+[V:2] F,,4 |
+% Token 2771 - Year 2279 - Beat 253
+[V:1] _B2 |
+[V:2] _D,,2 |
+% Token 2778 - Year 2280 - Beat 254
+[V:1] z2 |
+[V:2] _A,,4 |
+% Token 2785 - Year 2281 - Beat 255
+[V:1] B3 |
+[V:2] _B,, |
+% Token 2792 - Year 2282 - Beat 256
+[V:1] f |
+[V:2] C,4 |
+% Token 2799 - Year 2283 - Beat 257
+[V:1] _e3 |
+[V:2] E,2 |
+% Token 2806 - Year 2284 - Beat 258
+[V:1] _a |
+[V:2] B,4 |
+% Token 2813 - Year 2285 - Beat 259
+[V:1] _a3 |
+[V:2] F, |
+% Token 2820 - Year 2286 - Beat 260
+[V:1] z2 |
+[V:2] D,4 |
+% Token 2827 - Year 2287 - Beat 261
+[V:1] c |
+[V:2] B,2 |
+% Token 2834 - Year 2288 - Beat 262
+[V:1] f |
+[V:2] _E,4 |
+% Token 2841 - Year 2289 - Beat 263
+[V:1] z3 |
+[V:2] A, |
+% Token 2848 - Year 2290 - Beat 264
+[V:1] _e4 |
+[V:2] _E,,4 |
+% Token 2855 - Year 2291 - Beat 265
+[V:1] d3 |
+[V:2] _E,,2 |
+% Token 2862 - Year 2292 - Beat 266
+[V:1] _b3 |
+[V:2] _B,,4 |
+% Token 2869 - Year 2293 - Beat 267
+[V:1] _e2 |
+[V:2] _B,, |
+% Token 2876 - Year 2294 - Beat 268
+[V:1] g3 |
+[V:2] _A,,4 |
+% Token 2883 - Year 2295 - Beat 269
+[V:1] _e4 |
+[V:2] _B,,2 |
+% Token 2890 - Year 2296 - Beat 270
+[V:1] _b3 |
+[V:2] _D,,4 |
+% Token 2897 - Year 2297 - Beat 271
+[V:1] _a2 |
+[V:2] _A,, |
+% Token 2904 - Year 2298 - Beat 272
+[V:1] _E2 |
+[V:2] G,,4 |
+% Token 2911 - Year 2299 - Beat 273
+[V:1] G |
+[V:2] _E,,2 |
+% Token 2918 - Year 2300 - Beat 274
+[V:1] z2 |
+[V:2] E,,4 |
+% Token 2925 - Year 2301 - Beat 275
+[V:1] D2 |
+[V:2] _E,, |
+% Token 2932 - Year 2302 - Beat 276
+[V:1] _E2 |
+[V:2] F,,4 |
+% Token 2939 - Year 2303 - Beat 277
+[V:1] D2 |
+[V:2] _D,,2 |
+% Token 2946 - Year 2304 - Beat 278
+[V:1] _A3 |
+[V:2] _E,,4 |
+% Token 2953 - Year 2305 - Beat 279
+[V:1] z3 |
+[V:2] _E,, |
+% Token 2960 - Year 2306 - Beat 280
+[V:1] _B3 |
+[V:2] F,,4 |
+% Token 2967 - Year 2307 - Beat 281
+[V:1] _A2 |
+[V:2] G,,2 |
+% Token 2974 - Year 2308 - Beat 282
+[V:1] G |
+[V:2] _B,,4 |
+% Token 2981 - Year 2309 - Beat 283
+[V:1] _E |
+[V:2] _B,, |
+% Token 2988 - Year 2310 - Beat 284
+[V:1] _B |
+[V:2] _E,,4 |
+% Token 2995 - Year 2311 - Beat 285
+[V:1] D2 |
+[V:2] A,,2 |
+% Token 3002 - Year 2312 - Beat 286
+[V:1] G3 |
+[V:2] G,,4 |
+% Token 3009 - Year 2313 - Beat 287
+[V:1] z2 |
+[V:2] _D,, |
+% Token 3016 - Year 2314 - Beat 288
+[V:1] z2 |
+[V:2] E,4 |
+% Token 3023 - Year 2315 - Beat 289
+[V:1] c |
+[V:2] _B,2 |
+% Token 3030 - Year 2316 - Beat 290
+[V:1] d |
+[V:2] F,4 |
+% Token 3037 - Year 2317 - Beat 291
+[V:1] _a2 |
+[V:2] G, |
+% Token 3044 - Year 2318 - Beat 292
+[V:1] f3 |
+[V:2] G,4 |
+% Token 3051 - Year 2319 - Beat 293
+[V:1] _e3 |
+[V:2] G,2 |
+% Token 3058 - Year 2320 - Beat 294
+[V:1] g3 |
+[V:2] A,4 |
+% Token 3065 - Year 2321 - Beat 295
+[V:1] _e2 |
+[V:2] B, |
+% Token 3072 - Year 2322 - Beat 296
+[V:1] C2 |
+[V:2] F,,4 |
+% Token 3079 - Year 2323 - Beat 297
+[V:1] F/2 |
+[V:2] F,,2 |
+% Token 3086 - Year 2324 - Beat 298
+[V:1] E |
+[V:2] G,,4 |
+% Token 3093 - Year 2325 - Beat 299
+[V:1] D2 |
+[V:2] B,, |
+% Token 3100 - Year 2326 - Beat 300
+[V:1] _E |
+[V:2] G,,4 |
+% Token 3107 - Year 2327 - Beat 301
+[V:1] G2 |
+[V:2] _E,,2 |
+% Token 3114 - Year 2328 - Beat 302
+[V:1] D2 |
+[V:2] _B,,4 |
+% Token 3121 - Year 2329 - Beat 303
+[V:1] D2 |
+[V:2] D,, |
+% Token 3128 - Year 2330 - Beat 304
+[V:1] _E2 |
+[V:2] F,,4 |
+% Token 3135 - Year 2331 - Beat 305
+[V:1] D2 |
+[V:2] G,,2 |
+% Token 3142 - Year 2332 - Beat 306
+[V:1] C3 |
+[V:2] A,,4 |
+% Token 3149 - Year 2333 - Beat 307
+[V:1] _E2 |
+[V:2] _E,, |
+% Token 3156 - Year 2334 - Beat 308
+[V:1] _B2 |
+[V:2] B,,4 |
+% Token 3163 - Year 2335 - Beat 309
+[V:1] C2 |
+[V:2] _B,,2 |
+% Token 3170 - Year 2336 - Beat 310
+[V:1] A |
+[V:2] D,,4 |
+% Token 3177 - Year 2337 - Beat 311
+[V:1] _B2 |
+[V:2] F,, |
+% Token 3184 - Year 2338 - Beat 312
+[V:1] f2 |
+[V:2] F,4 |
+% Token 3191 - Year 2339 - Beat 313
+[V:1] _e2 |
+[V:2] _B,2 |
+% Token 3198 - Year 2340 - Beat 314
+[V:1] c2 |
+[V:2] G,4 |
+% Token 3205 - Year 2341 - Beat 315
+[V:1] f |
+[V:2] C, |
+% Token 3212 - Year 2342 - Beat 316
+[V:1] g3 |
+[V:2] _E,4 |
+% Token 3219 - Year 2343 - Beat 317
+[V:1] z3 |
+[V:2] _E,2 |
+% Token 3226 - Year 2344 - Beat 318
+[V:1] _a2 |
+[V:2] D,4 |
+% Token 3233 - Year 2345 - Beat 319
+[V:1] z3 |
+[V:2] C, |
+% Token 3240 - Year 2346 - Beat 320
+[V:1] _a2 |
+[V:2] _B,,4 |
+% Token 3247 - Year 2347 - Beat 321
+[V:1] f4 |
+[V:2] _B,,2 |
+% Token 3254 - Year 2348 - Beat 322
+[V:1] _b3 |
+[V:2] G,,4 |
+% Token 3261 - Year 2349 - Beat 323
+[V:1] _b3 |
+[V:2] _E,, |
+% Token 3268 - Year 2350 - Beat 324
+[V:1] f4 |
+[V:2] _A,,4 |
+% Token 3275 - Year 2351 - Beat 325
+[V:1] g3 |
+[V:2] _E,,2 |
+% Token 3282 - Year 2352 - Beat 326
+[V:1] _e4 |
+[V:2] _E,,4 |
+% Token 3289 - Year 2353 - Beat 327
+[V:1] _b2 |
+[V:2] _A,, |
+% Token 3296 - Year 2354 - Beat 328
+[V:1] G2 |
+[V:2] G,,4 |
+% Token 3303 - Year 2355 - Beat 329
+[V:1] F2 |
+[V:2] A,,2 |
+% Token 3310 - Year 2356 - Beat 330
+[V:1] z2 |
+[V:2] _A,,4 |
+% Token 3317 - Year 2357 - Beat 331
+[V:1] z2 |
+[V:2] C,, |
+% Token 3324 - Year 2358 - Beat 332
+[V:1] C2 |
+[V:2] F,,4 |
+% Token 3331 - Year 2359 - Beat 333
+[V:1] z2 |
+[V:2] _A,,2 |
+% Token 3338 - Year 2360 - Beat 334
+[V:1] _B2 |
+[V:2] _E,,4 |
+% Token 3345 - Year 2361 - Beat 335
+[V:1] _E2 |
+[V:2] G,, |
+% Token 3352 - Year 2362 - Beat 336
+[V:1] _E2 |
+[V:2] F,,4 |
+% Token 3359 - Year 2363 - Beat 337
+[V:1] G2 |
+[V:2] _E,,2 |
+% Token 3366 - Year 2364 - Beat 338
+[V:1] G |
+[V:2] _E,,4 |
+% Token 3373 - Year 2365 - Beat 339
+[V:1] _E2 |
+[V:2] _A,, |
+% Token 3380 - Year 2366 - Beat 340
+[V:1] F2 |
+[V:2] G,,4 |
+% Token 3387 - Year 2367 - Beat 341
+[V:1] F3 |
+[V:2] C,,2 |
+% Token 3394 - Year 2368 - Beat 342
+[V:1] _A3 |
+[V:2] _E,,4 |
+% Token 3401 - Year 2369 - Beat 343
+[V:1] C |
+[V:2] _E,, |
+% Token 3408 - Year 2370 - Beat 344
+[V:1] e2 |
+[V:2] _D,4 |
+% Token 3415 - Year 2371 - Beat 345
+[V:1] _e2 |
+[V:2] B,2 |
+% Token 3422 - Year 2372 - Beat 346
+[V:1] c3 |
+[V:2] _E,4 |
+% Token 3429 - Year 2373 - Beat 347
+[V:1] z2 |
+[V:2] _E, |
+% Token 3436 - Year 2374 - Beat 348
+[V:1] z2 |
+[V:2] C,4 |
+% Token 3443 - Year 2375 - Beat 349
+[V:1] f3 |
+[V:2] A,2 |
+% Token 3450 - Year 2376 - Beat 350
+[V:1] _b |
+[V:2] G,4 |
+% Token 3457 - Year 2377 - Beat 351
+[V:1] _e |
+[V:2] _D, |
+% Token 3464 - Year 2378 - Beat 352
+[V:1] G4 |
+[V:2] A,,4 |
+% Token 3471 - Year 2379 - Beat 353
+[V:1] G |
+[V:2] F,,2 |
+% Token 3478 - Year 2380 - Beat 354
+[V:1] _E/2 |
+[V:2] B,,4 |
+% Token 3485 - Year 2381 - Beat 355
+[V:1] _E/2 |
+[V:2] G,, |
+% Token 3492 - Year 2382 - Beat 356
+[V:1] _E/2 |
+[V:2] F,,4 |
+% Token 3499 - Year 2383 - Beat 357
+[V:1] D |
+[V:2] G,,2 |
+% Token 3506 - Year 2384 - Beat 358
+[V:1] _A |
+[V:2] _D,,4 |
+% Token 3513 - Year 2385 - Beat 359
+[V:1] D2 |
+[V:2] G,, |
+% Token 3520 - Year 2386 - Beat 360
+[V:1] _B |
+[V:2] _A,,4 |
+% Token 3527 - Year 2387 - Beat 361
+[V:1] _A2 |
+[V:2] _A,,2 |
+% Token 3534 - Year 2388 - Beat 362
+[V:1] B2 |
+[V:2] _A,,4 |
+% Token 3541 - Year 2389 - Beat 363
+[V:1] G2 |
+[V:2] F,, |
+% Token 3548 - Year 2390 - Beat 364
+[V:1] A2 |
+[V:2] C,,4 |
+% Token 3555 - Year 2391 - Beat 365
+[V:1] _E2 |
+[V:2] _B,,2 |
+% Token 3562 - Year 2392 - Beat 366
+[V:1] C3 |
+[V:2] D,,4 |
+% Token 3569 - Year 2393 - Beat 367
+[V:1] F |
+[V:2] A,, |
+% Token 3576 - Year 2394 - Beat 368
+[V:1] c3 |
+[V:2] _B,4 |
+% Token 3583 - Year 2395 - Beat 369
+[V:1] _a2 |
+[V:2] F,2 |
+% Token 3590 - Year 2396 - Beat 370
+[V:1] _b |
+[V:2] _A,4 |
+% Token 3597 - Year 2397 - Beat 371
+[V:1] _e |
+[V:2] _D, |
+% Token 3604 - Year 2398 - Beat 372
+[V:1] _b2 |
+[V:2] G,4 |
+% Token 3611 - Year 2399 - Beat 373
+[V:1] _e3 |
+[V:2] _B,2 |
+% Token 3618 - Year 2400 - Beat 374
+[V:1] c3 |
+[V:2] _B,4 |
+% Token 3625 - Year 2401 - Beat 375
+[V:1] z2 |
+[V:2] _E, |
+% Token 3632 - Year 2402 - Beat 376
+[V:1] _a4 |
+[V:2] _A,,4 |
+% Token 3639 - Year 2403 - Beat 377
+[V:1] d4 |
+[V:2] _B,,2 |
+% Token 3646 - Year 2404 - Beat 378
+[V:1] g4 |
+[V:2] C,,4 |
+% Token 3653 - Year 2405 - Beat 379
+[V:1] z4 |
+[V:2] _E,, |
+% Token 3660 - Year 2406 - Beat 380
+[V:1] g2 |
+[V:2] _B,,4 |
+% Token 3667 - Year 2407 - Beat 381
+[V:1] _e4 |
+[V:2] D,,2 |
+% Token 3674 - Year 2408 - Beat 382
+[V:1] c4 |
+[V:2] _A,,4 |
+% Token 3681 - Year 2409 - Beat 383
+[V:1] z2 |
+[V:2] _E,, |
+% Token 3688 - Year 2410 - Beat 384
+[V:1] _B3 |
+[V:2] _B,,4 |
+% Token 3695 - Year 2411 - Beat 385
+[V:1] _A2 |
+[V:2] E,,2 |
+% Token 3702 - Year 2412 - Beat 386
+[V:1] D2 |
+[V:2] A,,4 |
+% Token 3709 - Year 2413 - Beat 387
+[V:1] C2 |
+[V:2] _E,, |
+% Token 3716 - Year 2414 - Beat 388
+[V:1] _A2 |
+[V:2] _A,,4 |
+% Token 3723 - Year 2415 - Beat 389
+[V:1] _A |
+[V:2] _B,,2 |
+% Token 3730 - Year 2416 - Beat 390
+[V:1] C3 |
+[V:2] _E,,4 |
+% Token 3737 - Year 2417 - Beat 391
+[V:1] C2 |
+[V:2] _A,, |
+% Token 3744 - Year 2418 - Beat 392
+[V:1] E |
+[V:2] C,,4 |
+% Token 3751 - Year 2419 - Beat 393
+[V:1] C2 |
+[V:2] _B,,2 |
+% Token 3758 - Year 2420 - Beat 394
+[V:1] F3 |
+[V:2] _E,,4 |
+% Token 3765 - Year 2421 - Beat 395
+[V:1] _B2 |
+[V:2] E,, |
+% Token 3772 - Year 2422 - Beat 396
+[V:1] C |
+[V:2] _E,,4 |
+% Token 3779 - Year 2423 - Beat 397
+[V:1] A |
+[V:2] _G,,2 |
+% Token 3786 - Year 2424 - Beat 398
+[V:1] C2 |
+[V:2] _B,,4 |
+% Token 3793 - Year 2425 - Beat 399
+[V:1] _B |
+[V:2] B,, |
+% Token 3800 - Year 2426 - Beat 400
+[V:1] e2 |
+[V:2] A,4 |
+% Token 3807 - Year 2427 - Beat 401
+[V:1] _b2 |
+[V:2] _A,2 |
+% Token 3814 - Year 2428 - Beat 402
+[V:1] _e2 |
+[V:2] _A,4 |
+% Token 3821 - Year 2429 - Beat 403
+[V:1] _b |
+[V:2] F, |
+% Token 3828 - Year 2430 - Beat 404
+[V:1] _e3 |
+[V:2] F,4 |
+% Token 3835 - Year 2431 - Beat 405
+[V:1] c |
+[V:2] D,2 |
+% Token 3842 - Year 2432 - Beat 406
+[V:1] g3 |
+[V:2] F,4 |
+% Token 3849 - Year 2433 - Beat 407
+[V:1] e |
+[V:2] D, |
+% Token 3856 - Year 2434 - Beat 408
+[V:1] C2 |
+[V:2] _E,,4 |
+% Token 3863 - Year 2435 - Beat 409
+[V:1] G |
+[V:2] _A,,2 |
+% Token 3870 - Year 2436 - Beat 410
+[V:1] G2 |
+[V:2] _B,,4 |
+% Token 3877 - Year 2437 - Beat 411
+[V:1] A |
+[V:2] _B,, |
+% Token 3884 - Year 2438 - Beat 412
+[V:1] z4 |
+[V:2] _E,,4 |
+% Token 3891 - Year 2439 - Beat 413
+[V:1] _E |
+[V:2] _D,,2 |
+% Token 3898 - Year 2440 - Beat 414
+[V:1] G/2 |
+[V:2] _B,,4 |
+% Token 3905 - Year 2441 - Beat 415
+[V:1] F/2 |
+[V:2] A,, |
+% Token 3912 - Year 2442 - Beat 416
+[V:1] G |
+[V:2] G,,4 |
+% Token 3919 - Year 2443 - Beat 417
+[V:1] G2 |
+[V:2] _A,,2 |
+% Token 3926 - Year 2444 - Beat 418
+[V:1] A2 |
+[V:2] E,,4 |
+% Token 3933 - Year 2445 - Beat 419
+[V:1] _B3 |
+[V:2] _B,, |
+% Token 3940 - Year 2446 - Beat 420
+[V:1] G2 |
+[V:2] _E,,4 |
+% Token 3947 - Year 2447 - Beat 421
+[V:1] B2 |
+[V:2] _B,,2 |
+% Token 3954 - Year 2448 - Beat 422
+[V:1] _B2 |
+[V:2] _E,,4 |
+% Token 3961 - Year 2449 - Beat 423
+[V:1] _A |
+[V:2] C,, |
+% Token 3968 - Year 2450 - Beat 424
+[V:1] _e |
+[V:2] E,4 |
+% Token 3975 - Year 2451 - Beat 425
+[V:1] d |
+[V:2] F,2 |
+% Token 3982 - Year 2452 - Beat 426
+[V:1] _b2 |
+[V:2] D,4 |
+% Token 3989 - Year 2453 - Beat 427
+[V:1] c3 |
+[V:2] F, |
+% Token 3996 - Year 2454 - Beat 428
+[V:1] _a2 |
+[V:2] _B,4 |
+% Token 4003 - Year 2455 - Beat 429
+[V:1] c |
+[V:2] _D,2 |
+% Token 4010 - Year 2456 - Beat 430
+[V:1] d2 |
+[V:2] F,4 |
+% Token 4017 - Year 2457 - Beat 431
+[V:1] z2 |
+[V:2] _B, |
+% Token 4024 - Year 2458 - Beat 432
+[V:1] _e2 |
+[V:2] _A,,4 |
+% Token 4031 - Year 2459 - Beat 433
+[V:1] g2 |
+[V:2] F,,2 |
+% Token 4038 - Year 2460 - Beat 434
+[V:1] _b3 |
+[V:2] F,,4 |
+% Token 4045 - Year 2461 - Beat 435
+[V:1] c2 |
+[V:2] _B,, |
+% Token 4052 - Year 2462 - Beat 436
+[V:1] z2 |
+[V:2] _D,,4 |
+% Token 4059 - Year 2463 - Beat 437
+[V:1] z3 |
+[V:2] _A,,2 |
+% Token 4066 - Year 2464 - Beat 438
+[V:1] g3 |
+[V:2] _A,,4 |
+% Token 4073 - Year 2465 - Beat 439
+[V:1] _b2 |
+[V:2] _A,, |
+% Token 4080 - Year 2466 - Beat 440
+[V:1] F |
+[V:2] F,,4 |
+% Token 4087 - Year 2467 - Beat 441
+[V:1] _B3 |
+[V:2] C,,2 |
+% Token 4094 - Year 2468 - Beat 442
+[V:1] D |
+[V:2] C,,4 |
+% Token 4101 - Year 2469 - Beat 443
+[V:1] E3 |
+[V:2] D,, |
+% Token 4108 - Year 2470 - Beat 444
+[V:1] _A |
+[V:2] A,,4 |
+% Token 4115 - Year 2471 - Beat 445
+[V:1] z2 |
+[V:2] C,,2 |
+% Token 4122 - Year 2472 - Beat 446
+[V:1] _B2 |
+[V:2] C,,4 |
+% Token 4129 - Year 2473 - Beat 447
+[V:1] z3 |
+[V:2] _B,, |
+% Token 4136 - Year 2474 - Beat 448
+[V:1] C2 |
+[V:2] C,,4 |
+% Token 4143 - Year 2475 - Beat 449
+[V:1] _B3 |
+[V:2] G,,2 |
+% Token 4150 - Year 2476 - Beat 450
+[V:1] _E2 |
+[V:2] G,,4 |
+% Token 4157 - Year 2477 - Beat 451
+[V:1] G |
+[V:2] _E,, |
+% Token 4164 - Year 2478 - Beat 452
+[V:1] C3 |
+[V:2] A,,4 |
+% Token 4171 - Year 2479 - Beat 453
+[V:1] _A2 |
+[V:2] F,,2 |
+% Token 4178 - Year 2480 - Beat 454
+[V:1] D2 |
+[V:2] G,,4 |
+% Token 4185 - Year 2481 - Beat 455
+[V:1] E |
+[V:2] _G,, |
+% Token 4192 - Year 2482 - Beat 456
+[V:1] e3 |
+[V:2] F,4 |
+% Token 4199 - Year 2483 - Beat 457
+[V:1] e2 |
+[V:2] E,2 |
+% Token 4206 - Year 2484 - Beat 458
+[V:1] c2 |
+[V:2] _B,4 |
+% Token 4213 - Year 2485 - Beat 459
+[V:1] _e3 |
+[V:2] G, |
+% Token 4220 - Year 2486 - Beat 460
+[V:1] c3 |
+[V:2] F,4 |
+% Token 4227 - Year 2487 - Beat 461
+[V:1] _b |
+[V:2] F,2 |
+% Token 4234 - Year 2488 - Beat 462
+[V:1] g3 |
+[V:2] _A,4 |
+% Token 4241 - Year 2489 - Beat 463
+[V:1] g3 |
+[V:2] F, |
+% Token 4248 - Year 2490 - Beat 464
+[V:1] F |
+[V:2] D,,4 |
+% Token 4255 - Year 2491 - Beat 465
+[V:1] D4 |
+[V:2] D,,2 |
+% Token 4262 - Year 2492 - Beat 466
+[V:1] E |
+[V:2] _A,,4 |
+% Token 4269 - Year 2493 - Beat 467
+[V:1] B2 |
+[V:2] G,, |
+% Token 4276 - Year 2494 - Beat 468
+[V:1] C4 |
+[V:2] G,,4 |
+% Token 4283 - Year 2495 - Beat 469
+[V:1] _E |
+[V:2] G,,2 |
+% Token 4290 - Year 2496 - Beat 470
+[V:1] C4 |
+[V:2] A,,4 |
+% Token 4297 - Year 2497 - Beat 471
+[V:1] A |
+[V:2] C,, |
+% Token 4304 - Year 2498 - Beat 472
+[V:1] _E3 |
+[V:2] A,,4 |
+% Token 4311 - Year 2499 - Beat 473
+[V:1] _B |
+[V:2] A,,2 |
+% Token 4318 - Year 2500 - Beat 474
+[V:1] _E2 |
+[V:2] _A,,4 |
+% Token 4325 - Year 2501 - Beat 475
+[V:1] _E2 |
+[V:2] _E,, |
+% Token 4332 - Year 2502 - Beat 476
+[V:1] _B |
+[V:2] G,,4 |
+% Token 4339 - Year 2503 - Beat 477
+[V:1] z3 |
+[V:2] A,,2 |
+% Token 4346 - Year 2504 - Beat 478
+[V:1] _E3 |
+[V:2] _E,,4 |
+% Token 4353 - Year 2505 - Beat 479
+[V:1] _A2 |
+[V:2] D,, |
+% Token 4360 - Year 2506 - Beat 480
+[V:1] f |
+[V:2] G,4 |
+% Token 4367 - Year 2507 - Beat 481
+[V:1] _e2 |
+[V:2] G,2 |
+% Token 4374 - Year 2508 - Beat 482
+[V:1] c |
+[V:2] _D,4 |
+% Token 4381 - Year 2509 - Beat 483
+[V:1] _a2 |
+[V:2] _D, |
+% Token 4388 - Year 2510 - Beat 484
+[V:1] c3 |
+[V:2] A,4 |
+% Token 4395 - Year 2511 - Beat 485
+[V:1] d |
+[V:2] C,2 |
+% Token 4402 - Year 2512 - Beat 486
+[V:1] c |
+[V:2] F,4 |
+% Token 4409 - Year 2513 - Beat 487
+[V:1] b |
+[V:2] C, |
+% Token 4416 - Year 2514 - Beat 488
+[V:1] _a3 |
+[V:2] _E,,4 |
+% Token 4423 - Year 2515 - Beat 489
+[V:1] g3 |
+[V:2] _D,,2 |
+% Token 4430 - Year 2516 - Beat 490
+[V:1] d4 |
+[V:2] _E,,4 |
+% Token 4437 - Year 2517 - Beat 491
+[V:1] f2 |
+[V:2] _D,, |
+% Token 4444 - Year 2518 - Beat 492
+[V:1] z2 |
+[V:2] _E,,4 |
+% Token 4451 - Year 2519 - Beat 493
+[V:1] z2 |
+[V:2] _A,,2 |
+% Token 4458 - Year 2520 - Beat 494
+[V:1] _b3 |
+[V:2] G,,4 |
+% Token 4465 - Year 2521 - Beat 495
+[V:1] _b2 |
+[V:2] _A,, |
+% Token 4472 - Year 2522 - Beat 496
+[V:1] D |
+[V:2] F,,4 |
+% Token 4479 - Year 2523 - Beat 497
+[V:1] z3 |
+[V:2] _B,,2 |
+% Token 4486 - Year 2524 - Beat 498
+[V:1] _E3 |
+[V:2] _E,,4 |
+% Token 4493 - Year 2525 - Beat 499
+[V:1] _A2 |
+[V:2] C,, |

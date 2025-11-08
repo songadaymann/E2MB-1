@@ -1,0 +1,165 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "forge-std/Test.sol";
+
+import "forge-std/console.sol";
+import "../src/points/L1BurnCollector.sol";
+import "../src/points/PointsAggregator.sol";
+import "../src/points/PointsManager.sol";
+import "../src/core/EveryTwoMillionBlocks.sol";
+import "../src/interfaces/IPointsManager.sol";
+
+contract L1BurnFlowTest is Test {
+    L1BurnCollector collector;
+    PointsAggregator aggregator;
+    PointsManager pointsManager;
+    EveryTwoMillionBlocks nft;
+
+    address user = address(0x123);
+    address deployer = address(0x456);
+
+    // Mock contracts for testing
+    MockERC721 mockNFT;
+    MockERC20 mockERC20;
+
+    function setUp() public {
+        vm.startPrank(deployer);
+
+        // Deploy mock NFT and ERC20
+        mockNFT = new MockERC721();
+        mockERC20 = new MockERC20();
+
+        // Mint to user
+        mockNFT.mint(user, 1);
+        mockERC20.mint(user, 1000);
+
+        // Deploy PointsManager
+        pointsManager = new PointsManager(address(0)); // Mock NFT address, will set later
+
+        // Deploy PointsAggregator
+        aggregator = new PointsAggregator(address(pointsManager));
+
+        // Transfer PointsManager ownership to aggregator
+        pointsManager.transferOwnership(address(aggregator));
+
+        // Deploy L1BurnCollector
+        collector = new L1BurnCollector(address(aggregator));
+
+        // Set L1BurnCollector in aggregator
+        aggregator.setL1BurnCollector(address(collector));
+
+        // Add eligible assets
+        collector.addEligibleAsset(address(mockNFT), 1000);
+        collector.addEligibleAsset(address(mockERC20), 50);
+
+        // Set month weights (all 100% for testing)
+        uint256[12] memory weights;
+        for (uint256 i = 0; i < 12; i++) {
+            weights[i] = 100;
+        }
+        collector.setMonthWeights(weights);
+
+        vm.stopPrank();
+    }
+
+    function testERC20Burn() public {
+        vm.startPrank(user);
+
+        console.log("Approving collector for ERC20");
+        // Approve collector for ERC20
+        mockERC20.approve(address(collector), 50);
+
+        console.log("Burning ERC20");
+        // Burn ERC20
+        collector.burnERC20(address(mockERC20), 50, 1);
+
+        console.log("Checking accumulated points");
+        // Check accumulated points
+        uint256 points = collector.accumulatedPoints(user);
+        console.log("Accumulated points:", points);
+        assertEq(points, 2500); // 50 * 50 = 2500
+
+        vm.stopPrank();
+
+        // Checkpoint as owner
+        vm.prank(deployer);
+        uint256[] memory tokenIds = new uint256[](1);
+        tokenIds[0] = 1;
+        uint256[] memory amounts = new uint256[](1);
+        amounts[0] = 2500;
+        string[] memory sources = new string[](1);
+        sources[0] = "ERC20 burn";
+
+        collector.checkpoint(tokenIds, amounts, sources);
+
+        // Check points in manager
+        assertEq(pointsManager.pointsOf(1), 2500);
+    }
+
+    function testERC721Burn() public {
+        vm.startPrank(user);
+
+        // Approve collector for NFT
+        mockNFT.approve(address(collector), 1);
+
+        // Burn ERC721
+        collector.burnERC721(address(mockNFT), 1, 1);
+
+        // Check accumulated points
+        assertEq(collector.accumulatedPoints(user), 1000); // 1000 base
+
+        vm.stopPrank();
+    }
+}
+
+contract MockERC721 {
+    mapping(uint256 => address) owners;
+    mapping(uint256 => address) approved;
+
+    function mint(address to, uint256 id) public {
+        owners[id] = to;
+    }
+
+    function ownerOf(uint256 id) public view returns (address) {
+        return owners[id];
+    }
+
+    function approve(address to, uint256 id) public {
+        approved[id] = to;
+    }
+
+    function transferFrom(address from, address to, uint256 id) public {
+        require(owners[id] == from, "Not owner");
+        require(msg.sender == from || approved[id] == msg.sender, "Not approved");
+        owners[id] = to;
+        approved[id] = address(0);
+    }
+}
+
+contract MockERC20 {
+    mapping(address => uint256) balances;
+    mapping(address => mapping(address => uint256)) allowances;
+
+    function mint(address to, uint256 amount) public {
+        balances[to] += amount;
+    }
+
+    function approve(address spender, uint256 amount) public {
+        allowances[msg.sender][spender] = amount;
+    }
+
+    function transfer(address to, uint256 amount) public {
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        balances[msg.sender] -= amount;
+        balances[to] += amount;
+    }
+
+    function transferFrom(address from, address to, uint256 amount) public {
+        require(balances[from] >= amount, "Insufficient balance");
+        require(allowances[from][msg.sender] >= amount, "Not approved");
+        balances[from] -= amount;
+        balances[to] += amount;
+        allowances[from][msg.sender] -= amount;
+       }
+}

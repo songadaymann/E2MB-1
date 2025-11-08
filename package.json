@@ -1,0 +1,33 @@
+{
+  "name": "millennium-song-contracts",
+  "version": "1.0.0",
+  "description": "Solidity contracts for 1000-Year Song NFT project",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy": "npx hardhat run scripts/deploy.js",
+    "audit-security": "npm audit --audit-level high",
+    "clean-install": "rm -rf node_modules package-lock.json && npm install",
+    "secure-install": "npm ci --only=production"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "4.0.0",
+    "hardhat": "2.26.3"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "^1.5.0",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.0.0",
+    "@openzeppelin/contracts": "^5.0.0"
+  },
+  "overrides": {
+    "debug": "4.3.7",
+    "chalk": "5.3.0",
+    "ansi-styles": "6.2.1",
+    "tmp": "0.2.3",
+    "cookie": "0.7.2"
+  }
+}

@@ -1,0 +1,14 @@
+X:1
+T:blockchain_simulation_20251002_143126 - unknown
+C:Combined sequence from 1 individual beats
+M:4/4
+L:1/8
+Q:1/4=120
+K:Eb
+V:1 clef=treble name="Lead"
+V:2 clef=bass name="Bass"
+%%score (1 2)
+V:1
+z2 |
+V:2
+[V:2] _B |
