@@ -3,20 +3,9 @@ pragma solidity ^0.8.20;
 
 import "../interfaces/ISongAlgorithm.sol";
 
-/**
- * @title SongAlgorithm - Upgraded with Python Parity
- * @notice Complete port of full_musiclib_v3.py with all improvements:
- *         • Eb major key signature and diatonic harmony
- *         • Extended bass chord tones (8 tones vs 3)
- *         • Bass repetition logic and prescribed duration pattern
- *         • Structural resets every 50 beats
- *         • Oracle's rhythm improvements
- *         • Proper Eb major ABC notation with flats
- * @dev Converted from library to contract - now deployable separately
- */
 contract SongAlgorithm is ISongAlgorithm {
-    // ---------------- Types ----------------
-    // Event struct is defined in ISongAlgorithm interface
+    // ===== Types =====
+    // Event struct lives in ISongAlgorithm
 
     struct LeadState {
         uint8 chord;          // diatonic chord index (0-6)
@@ -30,7 +19,7 @@ contract SongAlgorithm is ISongAlgorithm {
         int16 previousPitch;  // for repetition logic
     }
 
-    // ---------------- Constants ----------------
+    // ===== Constants =====
     uint16 constant QUARTER       = 480;
     uint16 constant DOTTED_QUART  = 720;
     uint16 constant HALF_NOTE     = 960;
@@ -40,8 +29,7 @@ contract SongAlgorithm is ISongAlgorithm {
     uint8 constant PHRASE_LEN     = 8;
     uint8 constant BASE_KEY       = 3;  // Eb major (3 semitones up from C)
 
-    // DIATONIC CHORDS IN EB MAJOR (chord indices)
-    // I, ii, iii, IV, V, vi, vii° - can't use arrays as constants in Solidity
+    // Diatonic chord lookup for Eb major (arrays can't be constexpr in Solidity)
     function _getDiatonicChord(uint8 index) private pure returns (uint8) {
         if (index == 0) return 6;  // Eb major (I)
         if (index == 1) return 9;  // F minor (ii)  
@@ -50,10 +38,10 @@ contract SongAlgorithm is ISongAlgorithm {
         if (index == 4) return 20; // Bb major (V)
         if (index == 5) return 1;  // C minor (vi)
         if (index == 6) return 5;  // D diminished (vii°)
-        return 6; // Default to tonic
+        return 6; // tonic fallback
     }
 
-    // ---------------- Phrase Grammar ----------------
+    // ===== Phrase Grammar =====
     function _phraseType(uint32 position) private pure returns (uint8) {
         uint8 m = uint8((position / PHRASE_LEN) % 7);
         if (m == 0 || m == 3 || m == 6) return 0;  // A
@@ -62,7 +50,7 @@ contract SongAlgorithm is ISongAlgorithm {
         return 3;                                  // C
     }
 
-    // ---------------- RNG (LCG, 32-bit) ----------------
+    // ===== RNG (LCG, 32-bit) =====
     function _adv(uint32 state, uint32 seedMod) private pure returns (uint32) {
         unchecked {
             return state * 1664525 + 1013904223 + seedMod;
@@ -79,7 +67,7 @@ contract SongAlgorithm is ISongAlgorithm {
         }
     }
 
-    // ---------------- Diatonic Harmony System ----------------
+    // ===== Diatonic Harmony System =====
     function _diatonicNeighbors(uint8 chordIdx) private pure returns (uint8[6] memory out) {
         // Find position in diatonic sequence
         uint8 currentPos = 0;
@@ -197,7 +185,7 @@ contract SongAlgorithm is ISongAlgorithm {
         }
     }
 
-    // ---------------- Diatonic Scale Mapping ----------------
+    // ===== Diatonic Scale Mapping =====
     
     /// @notice Returns pitch class (0-11) for Eb major scale degree (0-6)
     /// @dev Eb major: Eb(3), F(5), G(7), Ab(8), Bb(10), C(0), D(2)
@@ -209,7 +197,7 @@ contract SongAlgorithm is ISongAlgorithm {
         if (degree == 4) return 10;  // Bb
         if (degree == 5) return 0;   // C
         if (degree == 6) return 2;   // D
-        return 3; // default to tonic
+        return 3; // tonic fallback
     }
     
     /// @notice Maps diatonic chord index to scale degree (0-6)
@@ -222,17 +210,17 @@ contract SongAlgorithm is ISongAlgorithm {
         if (chordIdx == 20) return 4;  // V (Bb)
         if (chordIdx == 1) return 5;   // vi (C)
         if (chordIdx == 5) return 6;   // vii (D)
-        return 0; // default to I
+        return 0; // tonic fallback
     }
 
-    // ---------------- Chord Conversion (Diatonic) ----------------
+    // ===== Chord Conversion (Diatonic) =====
     function _chordToPitches(uint8 chordIdx, uint8 octave)
         private pure returns (uint8[3] memory tones)
     {
         uint8 scaleDegree = _chordIdxToScaleDegree(chordIdx);
         uint8 base = octave * 12;
         
-        // Build chord from diatonic scale degrees (root, 3rd, 5th)
+        // Build chord from diatonic scale degrees (root, third, fifth)
         uint8 root = _ebMajorScale(scaleDegree);
         uint8 third = _ebMajorScale((scaleDegree + 2) % 7);  // Scale degree +2 = diatonic 3rd
         uint8 fifth = _ebMajorScale((scaleDegree + 4) % 7);  // Scale degree +4 = diatonic 5th
@@ -245,7 +233,7 @@ contract SongAlgorithm is ISongAlgorithm {
         if (tones[1] < tones[0]) tones[1] += 12;
         if (tones[2] < tones[1]) tones[2] += 12;
         
-        // ENFORCE LEAD BOUNDS: C3 (48) to Bb4 (70)
+        // Clamp lead register to C3..Bb4
         for (uint8 i = 0; i < 3; i++) {
             while (tones[i] < 48) tones[i] += 12;
             while (tones[i] > 70) tones[i] -= 12;
@@ -258,9 +246,7 @@ contract SongAlgorithm is ISongAlgorithm {
         uint8 scaleDegree = _chordIdxToScaleDegree(chordIdx);
         uint8 base = octave * 12;
         
-        // Build extended bass chord tones from diatonic scale degrees
-        // Original: root, 4th, 5th, 6th, 2nd, tritone, 3rd, 7th
-        // Diatonic: root, 4th, 5th, 6th, 2nd, b5/tritone, 3rd, 7th
+        // Extended bass chord tones (root, 4th, 5th, 6th, 2nd, b5, 3rd, 7th)
         tones[0] = base + _ebMajorScale(scaleDegree);                    // 1. root
         tones[1] = base + _ebMajorScale((scaleDegree + 3) % 7);          // 2. fourth
         tones[2] = base + _ebMajorScale((scaleDegree + 4) % 7);          // 3. fifth
@@ -270,19 +256,19 @@ contract SongAlgorithm is ISongAlgorithm {
         tones[6] = base + _ebMajorScale((scaleDegree + 2) % 7);          // 7. third
         tones[7] = base + _ebMajorScale((scaleDegree + 6) % 7);          // 8. seventh
         
-        // Handle octave wrapping for proper voicing
+        // Ensure each tone is above the root
         for (uint8 i = 1; i < 8; i++) {
             if (tones[i] < tones[0]) tones[i] += 12;
         }
         
-        // ENFORCE BASS BOUNDS: C1 (24) to Bb2 (46)
+        // Clamp bass register to C1..Bb2
         for (uint8 i = 0; i < 8; i++) {
             while (tones[i] < 24) tones[i] += 12;
             while (tones[i] > 46) tones[i] -= 12;
         }
     }
 
-    // ---------------- Duration Functions ----------------
+    // ===== Duration Helpers =====
     function _getDurationLead(uint8 phraseType, uint32 rngState) private pure returns (uint16) {
         if (phraseType == 0) { // A: Oracle's improved variety
             uint8 r = uint8(rngState % 6);
@@ -309,7 +295,7 @@ contract SongAlgorithm is ISongAlgorithm {
     }
 
     function _getDurationBass(uint32 position) private pure returns (uint16) {
-        // PRESCRIBED: Bass duration pattern - half, quarter, half, eighth (cycling)
+        // Bass duration cycle: half, quarter, half, eighth
         uint8 patternPos = uint8(position % 4);
         if (patternPos == 0) return HALF_NOTE;  // 1. half
         if (patternPos == 1) return QUARTER;    // 2. quarter
@@ -328,15 +314,15 @@ contract SongAlgorithm is ISongAlgorithm {
         }
     }
 
-    // ---------------- Lead Voice Logic ----------------
+    // ===== Lead Voice =====
     function _leadShouldRest(
         uint8 phraseType,
         uint8 posInPhrase,
         uint16 notesSinceRest,
         uint32 rngState
     ) private pure returns (bool) {
-        if (notesSinceRest >= 8) return true;  // max_len
-        if (notesSinceRest < 4)  return false; // min_len
+        if (notesSinceRest >= 8) return true;  // force rest
+        if (notesSinceRest < 4)  return false; // too early
 
         uint8 restChance;
         if (posInPhrase == 3) restChance = 6;
@@ -370,7 +356,7 @@ contract SongAlgorithm is ISongAlgorithm {
         }
     }
 
-    // ---------------- Bass Voice Logic ----------------
+    // ===== Bass Voice =====
     function _chooseBasstone(
         uint32 position,
         uint32 rngState,
@@ -379,7 +365,7 @@ contract SongAlgorithm is ISongAlgorithm {
     ) private pure returns (uint8) {
         uint8 r = uint8(rngState & 15); // More bits for variety
         
-        // REPETITION: 75% chance to repeat same note (bass foundation)
+        // Repeat previous bass tone 75% of the time
         if (previousPitch != -1) {
             for (uint8 i = 0; i < 8; i++) {
                 if (int16(int256(uint256(currentPitches[i]))) == previousPitch) {
@@ -391,7 +377,7 @@ contract SongAlgorithm is ISongAlgorithm {
             }
         }
         
-        // PREFERENCE ORDER: root=8, fifth=7, fourth=6, sixth=4, others=1-2
+        // Weighted preference: root=8, fifth=7, fourth=6, sixth=4, others=1-2
         uint8[8] memory weights = [8, 6, 7, 4, 2, 1, 2, 1];
         uint8 totalWeight = 31; // sum of weights
         
@@ -408,7 +394,7 @@ contract SongAlgorithm is ISongAlgorithm {
         return 0; // Fallback to root
     }
 
-    // ---------------- Voice Generation ----------------
+    // ===== Voice Generation =====
     function _leadGenerateStep(
         uint32 position,
         uint32 tokenSeed,
@@ -419,19 +405,19 @@ contract SongAlgorithm is ISongAlgorithm {
         uint8 phraseType = _phraseType(position);
         uint8 posInPhrase = uint8(position % PHRASE_LEN);
 
-        // STRUCTURAL RESET every 50 beats - return to tonic
+        // Hard reset every 50 beats back to tonic
         if (position % 50 == 0) {
-            out.chord = 0; // Index 0 = Eb major in DIATONIC_CHORDS
+            out.chord = 0; // index 0 = Eb
             out.rng = _adv(out.rng, tokenSeed ^ 0x5050);
         }
-        // Cadence trigger
+        // Cadential nudge on phrase boundaries / quarter grid
         else if (position % PHRASE_LEN == 0 || (position % 4 == 0)) {
             out.rng = _adv(out.rng, tokenSeed ^ 0x1234);
             uint8[6] memory nbrs = _diatonicNeighbors(_getDiatonicChord(out.chord));
             out.chord = uint8(_getDiatonicIndex(nbrs[out.rng % 6]));
         }
 
-        // Rest decision
+        // Optional rest
         bool restNow = _leadShouldRest(phraseType, posInPhrase, out.notesSinceRest, out.rng);
         if (restNow) {
             uint16 restDur = _getRestDuration(phraseType, out.rng);
@@ -440,13 +426,13 @@ contract SongAlgorithm is ISongAlgorithm {
             return (ev, out);
         }
 
-        // Harmonic movement
+        // Advance harmony
         uint8 currentChordIdx = _getDiatonicChord(out.chord);
         (uint8 newChord, uint32 newRng) = _chooseHarmonicMovement(currentChordIdx, phraseType, out.rng, tokenSeed);
         out.rng = newRng;
         out.chord = _getDiatonicIndex(newChord);
 
-        // Octave selection (shifted up 1 octave for proper playback range)
+        // Octave selection (slightly elevated vs. raw MIDI output)
         uint8 octave;
         if (phraseType == 0) octave = 5;      // A: low-middle
         else if (phraseType == 1) octave = 6; // A': high
@@ -455,7 +441,7 @@ contract SongAlgorithm is ISongAlgorithm {
 
         uint8[3] memory tones = _chordToPitches(_getDiatonicChord(out.chord), octave);
 
-        // Tone selection with phrase B bias toward higher tones
+        // Tone selection; phrase B leans toward upper chord members
         uint8 idx;
         if (phraseType == 2) { // B: bias toward third and fifth
             uint32 s;
@@ -492,29 +478,29 @@ contract SongAlgorithm is ISongAlgorithm {
         
         uint8 phraseType = _phraseType(position);
 
-        // STRUCTURAL RESET every 50 beats - return to tonic
+        // Hard reset every 50 beats
         if (position % 50 == 0) {
-            out.chord = 0; // Index 0 = Eb major in DIATONIC_CHORDS
+            out.chord = 0; // index 0 = Eb
             out.rng = _adv(out.rng, tokenSeed ^ 0x5050);
         }
-        // Cadence movement
+        // Cadential nudge
         else if (position % PHRASE_LEN == 0 || (position % 4 == 0)) {
             out.rng = _adv(out.rng, tokenSeed ^ 0x1234);
             uint8[6] memory nbrs = _diatonicNeighbors(_getDiatonicChord(out.chord));
             out.chord = uint8(_getDiatonicIndex(nbrs[out.rng % 6]));
         }
 
-        // Harmonic movement
+        // Advance harmony
         uint8 currentChordIdx = _getDiatonicChord(out.chord);
         (uint8 newChord, uint32 newRng) = _chooseHarmonicMovement(currentChordIdx, phraseType, out.rng, tokenSeed);
         out.rng = newRng;
         out.chord = _getDiatonicIndex(newChord);
 
-        // Bass octaves (shifted up 2 octaves for proper playback range)
+        // Bass octave choice (shifted for playback range)
         uint8 octave = (phraseType == 1) ? 5 : 4;
         uint8[8] memory pitches = _bassChordToPitches(_getDiatonicChord(out.chord), octave);
 
-        // Bass-specific tone choice with repetition
+        // Bass tone selection with repetition bias
         uint32 s;
         unchecked {
             s = _adv(out.rng, tokenSeed * 2);
@@ -530,7 +516,7 @@ contract SongAlgorithm is ISongAlgorithm {
         return (ev, out);
     }
 
-    // ---------------- Helper Functions ----------------
+    // ===== Helpers =====
     function _getDiatonicIndex(uint8 chordIdx) private pure returns (uint8) {
         for (uint8 i = 0; i < 7; i++) {
             if (_getDiatonicChord(i) == chordIdx) return i;
@@ -538,11 +524,11 @@ contract SongAlgorithm is ISongAlgorithm {
         return 0; // Default to tonic
     }
 
-    // ---------------- ABC Notation (Eb Major) ----------------
+    // ===== ABC Notation (Eb Major) =====
     function _pitchToAbcEb(int16 pitch) private pure returns (string memory) {
         if (pitch < 0) return "z";
         
-        // Eb major key signature: use flats
+        // Eb signature prefers flats
         string[12] memory noteNames = ["C","_D","D","_E","E","F","_G","G","_A","A","_B","B"];
         uint16 p = uint16(uint16(pitch));
         uint8 oct = uint8(p / 12);
@@ -552,7 +538,7 @@ contract SongAlgorithm is ISongAlgorithm {
         if (oct <= 3) {
             for (uint8 i = oct; i < 4; i++) note = string(abi.encodePacked(note, ","));
         } else if (oct == 4) {
-            // Uppercase, no modification
+            // Already uppercase
         } else if (oct == 5) {
             // Lowercase
             bytes memory b = bytes(note);
@@ -578,11 +564,11 @@ contract SongAlgorithm is ISongAlgorithm {
         return "/2";
     }
 
-    // ---------------- Public API ----------------
+    // ===== Public API =====
     function generateBeat(uint32 beat, uint32 tokenSeed)
         external pure override returns (Event memory lead, Event memory bass)
     {
-        // Initial states - START IN EB MAJOR
+        // Initialize deterministic state machines
         LeadState memory L = LeadState({
             chord: 0,  // Index 0 = Eb major
             rng: 0xCAFEBABE,
@@ -594,18 +580,18 @@ contract SongAlgorithm is ISongAlgorithm {
             previousPitch: -1
         });
 
-        // 365-year cycle system - restart every 365 beats
+        // Cycle every 365 beats (annual cadence)
         uint32 effectiveBeat = beat % 365;
         uint32 era = beat / 365;
         
-        // Simulate history up to effectiveBeat-1 within current era
+        // Run sequence up to the requested beat
         for (uint32 i = 0; i < effectiveBeat; i++) {
             uint32 seed = _mix(tokenSeed, i);
             (, L) = _leadGenerateStep(i, seed, L);
             (, B) = _bassGenerateStep(i, seed ^ 0x7777, B);
         }
 
-        // Generate current beat using effectiveBeat position
+        // Emit the requested beat
         uint32 sNow = _mix(tokenSeed, effectiveBeat);
         (lead, L) = _leadGenerateStep(effectiveBeat, sNow, L);
         (bass, B) = _bassGenerateStep(effectiveBeat, sNow ^ 0x7777, B);
@@ -614,7 +600,7 @@ contract SongAlgorithm is ISongAlgorithm {
     function generateAbcBeat(uint32 beat, uint32 tokenSeed)
         external pure override returns (string memory abc)
     {
-        // Inline generation to avoid external call
+        // Inline generation to avoid an external call
         LeadState memory L = LeadState({
             chord: 0, rng: 0xCAFEBABE, notesSinceRest: 0
         });
@@ -622,18 +608,18 @@ contract SongAlgorithm is ISongAlgorithm {
             chord: 0, rng: 0xDEAFBEEF, previousPitch: -1
         });
 
-        // 365-year cycle system - restart every 365 beats  
+        // Annual cycle (365 beats)
         uint32 effectiveBeat = beat % 365;
         uint32 era = beat / 365;
         
-        // Simulate history up to effectiveBeat-1 within current era
+        // Run sequence up to beat-1
         for (uint32 i = 0; i < effectiveBeat; i++) {
             uint32 seed = _mix(tokenSeed, i);
             (, L) = _leadGenerateStep(i, seed, L);
             (, B) = _bassGenerateStep(i, seed ^ 0x7777, B);
         }
 
-        // Current beat using effectiveBeat position
+        // Emit current beat and format ABC
         uint32 sNow = _mix(tokenSeed, effectiveBeat);
         Event memory lead; Event memory bass;
         (lead, L) = _leadGenerateStep(effectiveBeat, sNow, L);
@@ -655,7 +641,7 @@ contract SongAlgorithm is ISongAlgorithm {
         );
     }
 
-    // Helper for uint to string
+    // Decimal encoding helper
     function _u2s(uint256 v) private pure returns (string memory) {
         if (v == 0) return "0";
         uint256 t=v; uint256 d; while (t!=0){ d++; t/=10; }

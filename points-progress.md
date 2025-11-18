@@ -142,6 +142,17 @@ Baselines (Oct 20, 2025 21:53 UTC):
   - Restored base ratios (ERC721=100k, ERC1155=10k, ERC20=1), verified 680-point burn on token #3, fixed `PointsManager.currentRankOf` to skip phantom token 0, noted O(n) ranking risk.  
   - Base collector patched to inherit `ERC1155Holder` (needed for queued ERC1155 burns); redeploy pending. Reminded that L1 ERC1155 burns must use `safeTransferFrom` since the collector exposes no `queueERC1155` entrypoint.
 
+### Progress Log — Step 11 (Nov 14, 2025)
+
+- **Checkpoint Resilience Upgrade**
+  - Hardened `PointsAggregator.applyCheckpointFromBase` so each payload row is processed independently. Invalid rows now emit `CheckpointEntrySkipped` with a `SkipReason` enum (`InvalidTokenId`, `DeltaTooLarge`, `TokenNotMinted`, `TooManyEntries`, `PointsManagerRejected`) instead of reverting the entire LayerZero delivery.
+  - Snapshot `IRevealQueue.totalMinted()` via `try/catch`; if the reveal queue is offline the aggregator temporarily disables the minted-cap check rather than halting the batch.
+  - Wrapped `pointsManager.addPoints` in `try/catch` so downstream reverts (e.g., “Seven words not set”) log a skip and let valid burns continue crediting.
+- **Regression Coverage**
+  - Added `test/PointsAggregator.t.sol` exercising each skip path (zero token IDs, unminted IDs, seven-word enforcement, entry-cap overflow). Run locally with `forge test --match-contract PointsAggregatorTest`.
+- **Ops Playbook Update**
+  - Security remediation item **0.10** tracks this fix; LayerZero dashboards should alert on `CheckpointEntrySkipped` spikes so we notice malicious payloads or configuration drift early.
+
 #### 🚨 CRITICAL DEPLOYMENT NOTES FOR MAINNET 🚨
 - **Deployment Order (Immutable - Follow Exactly):**
   1. Deploy PointsManager (no args).
@@ -468,7 +479,7 @@ _Last updated: Oct 31, 2025_
   - Next chain targets: mirror the receiver/collector flow for Optimism and Arbitrum once Base scripts are baked-in.
 
 **Step 12 (Oct 31, 2025)**  
-  - Redeployed EveryTwoMillionBlocks with VRF v2.5 request plumbing, seven-word metadata naming, and a dedicated slot for the on-chain shuffle script (`setPermutationScript`).  
+  - Redeployed EveryTwoMillionBlocks with VRF v2.5 request plumbing, seven-word metadata naming, and staging hooks for an eventual on-chain shuffle script.  
   - Redeployed full points stack (PointsManager `0x8086be0A8aAa0c756C3729c36fCF65850fb00Cd1`, PointsAggregator `0xb311a1e74E558093c0F9057Ba740F9677362820e`, L1BurnCollector `0x75045e5d3052Fc2B065C52a8E32650A681fC32BD`) with seven-word gating on `addPoints`.  
   - Refreshed `deployed.env` / `ADDRESSES.md` to the new contract addresses and re-added dummy eligibility + approvals.  
   - Minted test tokens, ingested a mock permutation via new Forge scripts (`IngestPermutation.s.sol`, `InspectPermutation.s.sol`), and finalized the permutation.  
@@ -481,7 +492,7 @@ _Last updated: Oct 31, 2025_
   - Rewired points stack with normalized bases (ERC721 `100k`, ERC1155 `10k`, ERC20 `1 @ 18 decimals`) at addresses PointsManager `0x1D1B77b54E654b943ab5DAD3045d324Ab61492fB`, PointsAggregator `0xbFE5C4f0c0F8F64BC44f221cd8Ee8795aB58bb1f`, L1BurnCollector `0x7dE14312de1705f824290387E7102e1C28b0dC5f`. L1 burns now credit the expected totals, and Base→Sepolia LayerZero flow still checkpoints successfully.  
   - LayerZero-backed collectors/receivers deployed for Optimism (`OP_LAYERZERO_EID=40232`) and Arbitrum (`ARB_LAYERZERO_EID=40231`); dummy assets registered on both networks with normalized bases, approvals refreshed.  
   - Redeployed PointsAggregator with multi-collector authorization; direct L1 collector plus Base/OP/ARB receivers now sit in `authorizedCollectors`. End-to-end burns verified on Sepolia (direct), Base, Optimism, and Arbitrum.  
-  - Outstanding: deploy SSTORE2 permutation script and wire via `setPermutationScript`, integrate Zora bridge path, and extend production-ready wiring docs/checklists for the new receivers.  
+  - Outstanding: deploy SSTORE2 permutation script (future deployment/contract rev), integrate Zora bridge path, and extend production-ready wiring docs/checklists for the new receivers.  
 
 **Step 14 (Nov 2, 2025)**  
   - Fresh end-to-end redeploy to clear pointer drift: EveryTwoMillionBlocks → `0x29025680f88f8b98097AeD6fA625894f845413DC`, PointsManager retained at `0x7538Cf5d33283FfFE105A446ED85e1FA26Aa5640`, new PointsAggregator `0xC2ed19efE6400B740E588f1019cdcb87C57694dC`, L1BurnCollector `0xaf46D12550fB5D009fb0873453C64f3fFD7B00F9`. Updated `deployed.env`, `ADDRESSES.md`, `COMMANDS.md`.  

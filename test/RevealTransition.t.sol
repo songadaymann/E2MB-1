@@ -12,6 +12,7 @@ import "../src/render/post/AudioRenderer.sol";
 import "../src/core/SongAlgorithm.sol";
 import "../src/render/pre/CountdownSvgRenderer.sol";
 import "../src/render/pre/CountdownHtmlRenderer.sol";
+import "../src/render/pre/PreRevealRegistry.sol";
 
 /// @title RevealTransition Test
 /// @notice Test the REAL contract's reveal mechanism using time warping
@@ -22,6 +23,7 @@ contract RevealTransitionTest is Test {
     MusicRendererOrchestrator public musicRenderer;
     AudioRenderer public audioRenderer;
     SongAlgorithm public songAlgorithm;
+    PreRevealRegistry public registry;
     
     address public owner = address(this);
     address public user = address(0x1);
@@ -45,6 +47,9 @@ contract RevealTransitionTest is Test {
         
         // Deploy ACTUAL production contract
         nft = new EveryTwoMillionBlocks();
+        registry = new PreRevealRegistry(address(this));
+        registry.setController(address(nft));
+        nft.setPreRevealRegistry(address(registry));
         
         // Wire renderers
         nft.setRenderers(
@@ -55,9 +60,8 @@ contract RevealTransitionTest is Test {
 
         CountdownSvgRenderer countdownSvg = new CountdownSvgRenderer();
         CountdownHtmlRenderer countdownHtml = new CountdownHtmlRenderer();
-        nft.setCountdownRenderer(address(countdownSvg));
-        nft.setCountdownHtmlRenderer(address(countdownHtml));
-        nft.setDefaultPreRevealRenderer(0);
+        registry.addRenderer(address(countdownSvg), address(countdownHtml), true);
+        registry.setDefaultRenderer(0);
     }
     
     function testRevealTransitionSingleToken() public {

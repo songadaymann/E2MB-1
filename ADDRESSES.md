@@ -1,11 +1,11 @@
 # Deployed Addresses (Sepolia)
 
-**Latest Deployment:** Oct 30, 2025 22:21 UTC — Fresh Points Stack + VRF v2.5 E2MB
+**Latest Deployment:** Nov 15, 2025 17:06 UTC — Fresh E2MB + registry + Life lens wiring
 
 ## Points System Contracts ✅
-- **PointsManager:** `0x8086be0A8aAa0c756C3729c36fCF65850fb00Cd1`
-- **PointsAggregator:** `0xb311a1e74E558093c0F9057Ba740F9677362820e`
-- **L1BurnCollector:** `0x75045e5d3052Fc2B065C52a8E32650A681fC32BD`
+- **PointsManager:** `0x7538Cf5d33283FfFE105A446ED85e1FA26Aa5640`
+- **PointsAggregator:** `0xC2ed19efE6400B740E588f1019cdcb87C57694dC`
+- **L1BurnCollector:** `0xAf46d12550fb5D009FB0873453c64f3ffd7B00F9`
 - Base ratios: 1 ERC721 ≈ 10 ERC1155 ≈ 100k ERC20 (collector normalizes ERC20 amounts by decimals)
 - **LayerZero Receiver (Sepolia):** `0x90EA1d07c0d4C6bB73E94444554b0217A0FABF7D`
 - **LayerZero Endpoint (Ethereum Sepolia):** `0x6EDCE65403992e310A62460808c4b910D972f10f` (Endpoint ID `40161`)
@@ -26,24 +26,27 @@ _Other testnet endpoint IDs (for future collectors):_
 
 ## Dummy Burnable Assets
 - **DummyERC721 (100k pts per burn):** `0x614FE9079021688115A8Ec29b065344C033f9740`
-- **DummyERC20 (1 pt per token, decimals=18):** `0x7Ef7dF0F64A2591fd5bE9c1E88728e59CB5D362B`
-- **DummyERC1155 (10k pts per copy):** `0xD2DcB326F003DC8db194C74Db2749F8C653Df6aC`
+- **DummyERC1155 (10k pts per copy):** `0x7Ef7dF0F64A2591fd5bE9c1E88728e59CB5D362B`
+- **DummyERC20 (1 pt per token, decimals=18):** `0xD2DcB326F003DC8db194C74Db2749F8C653Df6aC`
 
 ## Main Contract ✅
-- **EveryTwoMillionBlocks:** `0x5D9116ee207C2bB2f378047AA506366F06D52605`
+- **EveryTwoMillionBlocks:** `0x18a09608810f87f76061f4E075Edc49115194B78`
   - Name: "Every Two Million Blocks"
   - Symbol: "E2MB"
-  - Fresh deploy (Oct 30 2025) wired to new points stack + VRF v2.5
-  - **Rarible:** https://testnet.rarible.com/token/sepolia/0x5d9116ee207c2bb2f378047aa506366f06d52605:1
+  - Fresh deploy (Nov 15 2025) wired to new points stack + VRF v2.5 + pre-reveal registry
+  - **Rarible:** https://testnet.rarible.com/token/sepolia/0x18a09608810f87f76061f4e075edc49115194b78:1
 
-## Rendering Stack
-- **SvgMusicGlyphs:** `0xd6DF883c23337B0925012Da2646a6E7bA5D9083f`
-- **StaffUtils:** `0xF0ac54C0D3Fe7FCd911776F9B83C99d440cEe2F1`
-- **MidiToStaff:** `0xd3bada9A75268fa43dd6F6F6891d8cfAA5DD8Ff0`
-- **NotePositioning:** `0x64935B6349bfbEc5fB960EAc1e34c19539AA70C2`
-- **MusicRendererOrchestrator:** `0x9EB5f4DA5Eb104dd34AAf9397B9b178AdFA2DC81`
-- **AudioRenderer:** `0xF68310926327B76b102ddc5e25500A42F83DE7af`
-- **SongAlgorithm:** `0xc0Da9A18f16807725dc0C6bEd7E49A2725D912A3`
+- **SvgMusicGlyphs:** `0x5976bee500cE9FbF5C73f5dBAB1d1737509566B7`
+- **StaffUtils:** `0x764D8ECE520c9B0a94ED901650935f49F673052B`
+- **MidiToStaff:** `0x0859654EEbcAF7f32c9Ec68efA0bb832a06c67F0`
+- **NotePositioning:** `0x089a03b1282D93ff7Ed59582c51772A4397e0531`
+- **MusicRenderer:** `0xAcAeef7C655665188E26d4F6570e0fc65c116830`
+- **AudioRenderer:** `0xBD0Af886ADA865573F95656E64BA38F4Ee94859b`
+- **SongAlgorithm:** `0xec0ECE1C903c4fE44C17178C8739e57A362CF2da`
+- **PreRevealRegistry:** `0x10C046CAC7Acc33D3fFEfEbbC3Ff630CDcC72910`
+- **LifeLensInit:** `0x396eFaF29792a829D6737b734328c7C20df1Da46`
+- **LifeLens SVG:** `0xC99880AA63B71DF17f1FEF1e00a37546D7ce993E`
+- **LifeLens HTML:** `0x83073cD0874b99F2962a9D0aA31eb84E988BA258`
 
 ## Status
 ✅ Points system deployed and wired (L1BurnCollector redeployed with burnERC721, all verified on Etherscan)

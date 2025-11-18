@@ -11,9 +11,11 @@ import "../src/contracts/MusicRendererOrchestrator.sol";
 import "../src/render/post/AudioRenderer.sol";
 import "../src/core/SongAlgorithm.sol";
 import "../test/mocks/MockCountdownRenderers.sol";
+import "../src/render/pre/PreRevealRegistry.sol";
 contract PreRevealRegistryTest is Test {
 
     EveryTwoMillionBlocks private nft;
+    PreRevealRegistry private registry;
     MusicRendererOrchestrator private musicRenderer;
     AudioRenderer private audioRenderer;
     SongAlgorithm private songAlgorithm;
@@ -41,18 +43,20 @@ contract PreRevealRegistryTest is Test {
         songAlgorithm = new SongAlgorithm();
 
         nft = new EveryTwoMillionBlocks();
+        registry = new PreRevealRegistry(address(this));
+        registry.setController(address(nft));
+        nft.setPreRevealRegistry(address(registry));
         nft.setRenderers(address(songAlgorithm), address(musicRenderer), address(audioRenderer));
 
         defaultSvg = new MockCountdownRenderer("default-");
         defaultHtml = new MockCountdownHtmlRenderer("default-html-");
-        nft.setCountdownRenderer(address(defaultSvg));
-        nft.setCountdownHtmlRenderer(address(defaultHtml));
-        nft.setDefaultPreRevealRenderer(0);
+        uint256 defaultId = registry.addRenderer(address(defaultSvg), address(defaultHtml), true);
+        registry.setDefaultRenderer(defaultId);
     }
 
     function testTokenUriUsesDefaultRendererWhenUnset() public {
         uint256 tokenId = nft.mint(user, 42);
-        (uint256 rendererId, bool isCustom) = nft.getTokenPreRevealRenderer(tokenId);
+        (uint256 rendererId, bool isCustom) = registry.getTokenRenderer(tokenId);
         assertEq(rendererId, 0);
         assertFalse(isCustom);
         string memory tokenUri = nft.tokenURI(tokenId);
@@ -62,7 +66,7 @@ contract PreRevealRegistryTest is Test {
     function testTokenUriUsesCustomRendererWhenSelected() public {
         MockCountdownRenderer customSvg = new MockCountdownRenderer("life-");
         MockCountdownHtmlRenderer customHtml = new MockCountdownHtmlRenderer("life-html-");
-        uint256 rendererId = nft.addPreRevealRenderer(address(customSvg), address(customHtml), true);
+        uint256 rendererId = registry.addRenderer(address(customSvg), address(customHtml), true);
 
         uint256 tokenId = nft.mint(user, 55);
 
@@ -78,7 +82,7 @@ contract PreRevealRegistryTest is Test {
     function testCustomRendererFallbacksWhenReverts() public {
         MockCountdownRenderer customSvg = new MockCountdownRenderer("life-");
         MockCountdownHtmlRenderer customHtml = new MockCountdownHtmlRenderer("life-html-");
-        uint256 rendererId = nft.addPreRevealRenderer(address(customSvg), address(customHtml), true);
+        uint256 rendererId = registry.addRenderer(address(customSvg), address(customHtml), true);
 
         uint256 tokenId = nft.mint(user, 77);
         string memory defaultUri = nft.tokenURI(tokenId);
@@ -97,15 +101,15 @@ contract PreRevealRegistryTest is Test {
     }
 
     function testFreezeRegistryPreventsUpdates() public {
-        nft.freezePreRevealRegistry();
+        registry.freeze();
         MockCountdownRenderer customSvg = new MockCountdownRenderer("frozen-");
-        vm.expectRevert("Pre-reveal registry frozen");
-        nft.addPreRevealRenderer(address(customSvg), address(0), true);
+        vm.expectRevert("Registry frozen");
+        registry.addRenderer(address(customSvg), address(0), true);
     }
 
     function testSetTokenRequiresAuthorization() public {
         MockCountdownRenderer customSvg = new MockCountdownRenderer("life-");
-        uint256 rendererId = nft.addPreRevealRenderer(address(customSvg), address(0), true);
+        uint256 rendererId = registry.addRenderer(address(customSvg), address(0), true);
 
         uint256 tokenId = nft.mint(user, 88);
 
@@ -115,9 +119,69 @@ contract PreRevealRegistryTest is Test {
 
     function testSetDefaultRequiresActiveRenderer() public {
         MockCountdownRenderer customSvg = new MockCountdownRenderer("life-");
-        uint256 rendererId = nft.addPreRevealRenderer(address(customSvg), address(0), false);
+        uint256 rendererId = registry.addRenderer(address(customSvg), address(0), false);
 
         vm.expectRevert("Renderer inactive");
-        nft.setDefaultPreRevealRenderer(rendererId);
+        registry.setDefaultRenderer(rendererId);
+    }
+
+    function testNonCuratorCannotAddRenderer() public {
+        address rando = address(0xABCD);
+        MockCountdownRenderer customSvg = new MockCountdownRenderer("blocked-");
+        vm.prank(rando);
+        vm.expectRevert("Not curator");
+        registry.addRenderer(address(customSvg), address(0), true);
+    }
+
+    function testCuratorCanAddRenderer() public {
+        address curator = address(0xCAFE);
+        registry.setCurator(curator, true);
+        MockCountdownRenderer customSvg = new MockCountdownRenderer("cur-");
+        vm.prank(curator);
+        uint256 rendererId = registry.addRenderer(address(customSvg), address(0), true);
+        assertEq(rendererId, 1);
+    }
+
+    function testSetCuratorRequiresValidAddress() public {
+        vm.expectRevert("Invalid curator");
+        registry.setCurator(address(0), true);
+    }
+
+    function testAdminCanRemoveCurator() public {
+        address curator = address(0x1234);
+        registry.setCurator(curator, true);
+        assertTrue(registry.isCurator(curator));
+        registry.setCurator(curator, false);
+        assertFalse(registry.isCurator(curator));
+    }
+
+    function testControllerCannotBeChangedOnceSet() public {
+        assertTrue(registry.controllerLocked());
+        vm.expectRevert("Controller locked");
+        registry.setController(address(0x1234));
+    }
+
+    function testControllerRequiresNonZeroAddress() public {
+        PreRevealRegistry newRegistry = new PreRevealRegistry(address(this));
+        vm.expectRevert("Controller required");
+        newRegistry.setController(address(0));
+    }
+
+    function testRendererRequiresSevenWords() public {
+        MockCountdownRenderer customSvg = new MockCountdownRenderer("life-");
+        uint256 rendererId = registry.addRenderer(address(customSvg), address(0), true);
+        registry.setRendererRequiresSevenWords(rendererId, true);
+
+        uint256 tokenId = nft.mint(user, 90);
+
+        vm.prank(user);
+        vm.expectRevert(bytes("Seven words not set"));
+        nft.setTokenPreRevealRenderer(tokenId, rendererId);
+
+        vm.prank(user);
+        nft.setSevenWords(tokenId, "eternal sound resonance time memory future song");
+
+        vm.prank(user);
+        nft.setTokenPreRevealRenderer(tokenId, rendererId);
     }
 }

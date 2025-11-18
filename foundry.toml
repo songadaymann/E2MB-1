@@ -6,7 +6,10 @@ test = "test"
 optimizer = true
 optimizer_runs = 1
 via_ir = true
-fs_permissions = [{ access = "read-write", path = "./OUTPUTS" }]
+fs_permissions = [
+    { access = "read-write", path = "./OUTPUTS" },
+    { access = "read", path = "./script/data" }
+]
 
  
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

@@ -9,19 +9,14 @@ import "../interfaces/ISvgMusicGlyphs.sol";
 import "../interfaces/IMidiToStaff.sol";
 import "../interfaces/INotePositioning.sol";
 
-/// @title MusicRendererOrchestrator
-/// @notice Orchestrates external rendering contracts to build final SVG
-/// @dev Keeps all string assembly in one place, calls submodules for data
 contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
     using Strings for uint256;
     
-    // External module addresses
     IStaffUtils public staff;
     ISvgMusicGlyphs public glyphs;
     IMidiToStaff public midi;
     INotePositioning public positioning;
     
-    // Freeze mechanism
     bool public frozen;
     
     event ModulesUpdated(address staff, address glyphs, address midi, address positioning);
@@ -44,7 +39,6 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
         positioning = INotePositioning(_positioning);
     }
     
-    /// @notice Update module addresses (only before freeze)
     function setModules(
         address _staff,
         address _glyphs,
@@ -58,22 +52,17 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
         emit ModulesUpdated(_staff, _glyphs, _midi, _positioning);
     }
     
-    /// @notice Freeze module addresses permanently
     function freeze() external onlyOwner {
         frozen = true;
         emit Frozen();
     }
     
-    /// @notice Render complete SVG for a beat
-    /// @dev Calls external modules but assembles string only once
     function render(BeatData memory data) external view override returns (string memory) {
         IStaffUtils.StaffGeometry memory geom = staff.largeGeometry();
         
-        // Hardcoded theme: black background, white notes
         string memory bgColor = "#000";
         string memory fgColor = "#fff";
         
-        // SVG header with 600x600 canvas
         string memory header = string(abi.encodePacked(
             '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ',
             'viewBox="0 0 600 600" width="600" height="600">',
@@ -81,15 +70,12 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
             '<rect width="100%" height="100%" fill="', bgColor, '"/>'
         ));
         
-        // Generate grand staff (treble + bass with clefs)
         string memory grandStaff = staff.generateGrandStaff(geom, fgColor, fgColor);
         
-        // Center position for notes
         uint256 noteX = 300;
         
         string memory notes = "";
         
-        // Process lead note (or rest)
         IMidiToStaff.StaffPosition memory leadPos = midi.midiToStaffPosition(
             data.leadPitch >= 0 ? uint8(uint16(data.leadPitch)) : 255,  // 255 = rest
             data.leadDuration
@@ -97,11 +83,9 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
         uint256 leadY = _getStaffY(leadPos.clef, int8(leadPos.staffStep), geom);
         string memory leadSymbol = midi.noteTypeToString(leadPos.noteType);
         
-        // Check if this is a dotted note
         bool isDotted = _isDottedDuration(data.leadDuration);
         
         if (leadPos.noteType != IMidiToStaff.NoteType.REST) {
-            // Add ledger lines if needed
             string memory leadLedgers = positioning.getLedgerLines(
                 noteX, 
                 geom.trebleTop, 
@@ -109,7 +93,6 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
             );
             notes = string(abi.encodePacked(notes, leadLedgers));
             
-            // Render note
             INotePositioning.PositionResult memory leadNote = _getPositionForNoteType(
                 leadPos.noteType, noteX, leadY, leadSymbol
             );
@@ -123,7 +106,6 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
                 'height="', leadNote.height.toString(), '"/> '
             ));
             
-            // Add dot if dotted note
             if (isDotted) {
                 INotePositioning.PositionResult memory dot = positioning.getDotPosition(
                     noteX, 
@@ -141,12 +123,11 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
                 ));
             }
         } else {
-            // Render rest - centered in treble staff at middle position
-            uint256 restY = geom.trebleTop + 80;  // Middle of treble staff
+            uint256 restY = geom.trebleTop + 80;
             string memory restSymbol = _restTypeToString(leadPos.noteType);
             
             INotePositioning.PositionResult memory leadRest = positioning.getRestPosition(
-                noteX + 38, restY, restSymbol  // +38 to align with note heads
+                noteX + 38, restY, restSymbol
             );
             
             notes = string(abi.encodePacked(
@@ -160,7 +141,6 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
             ));
         }
         
-        // Process bass note (or rest)
         IMidiToStaff.StaffPosition memory bassPos = midi.midiToStaffPosition(
             data.bassPitch >= 0 ? uint8(uint16(data.bassPitch)) : 255,  // 255 = rest
             data.bassDuration
@@ -168,11 +148,9 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
         uint256 bassY = _getStaffY(bassPos.clef, int8(bassPos.staffStep), geom);
         string memory bassSymbol = midi.noteTypeToString(bassPos.noteType);
         
-        // Check if this is a dotted note
         bool bassDotted = _isDottedDuration(data.bassDuration);
         
         if (bassPos.noteType != IMidiToStaff.NoteType.REST) {
-            // Add ledger lines if needed
             string memory bassLedgers = positioning.getLedgerLines(
                 noteX, 
                 geom.bassTop, 
@@ -180,7 +158,6 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
             );
             notes = string(abi.encodePacked(notes, bassLedgers));
             
-            // Render note
             INotePositioning.PositionResult memory bassNote = _getPositionForNoteType(
                 bassPos.noteType, noteX, bassY, bassSymbol
             );
@@ -195,7 +172,6 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
                 'fill="', fgColor, '"/> '
             ));
             
-            // Add dot if dotted note
             if (bassDotted) {
                 INotePositioning.PositionResult memory dot = positioning.getDotPosition(
                     noteX, 
@@ -213,12 +189,11 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
                 ));
             }
         } else {
-            // Render rest - centered in bass staff at middle position
-            uint256 restY = geom.bassTop + 80;  // Middle of bass staff
+            uint256 restY = geom.bassTop + 80;
             string memory restSymbol = _restTypeToString(bassPos.noteType);
             
             INotePositioning.PositionResult memory bassRest = positioning.getRestPosition(
-                noteX + 38, restY, restSymbol  // +38 to align with note heads  
+                noteX + 38, restY, restSymbol
             );
             
             notes = string(abi.encodePacked(
@@ -231,8 +206,6 @@ contract MusicRendererOrchestrator is IMusicRenderer, Ownable {
                 'fill="', fgColor, '"/> '
             ));
         }
-        
-        // No metadata text overlays - clean staff only
         
         return string(abi.encodePacked(
             header,

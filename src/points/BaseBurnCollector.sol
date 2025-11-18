@@ -3,13 +3,15 @@ pragma solidity ^0.8.30;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import { ILayerZeroEndpointV2, MessagingFee, MessagingParams, MessagingReceipt } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
+import { BokkyPooBahsDateTimeLibrary as DateTime } from "../../lib/bokkypon/BokkyPooBahsDateTimeLibrary.sol";
 
-/// @notice Base L2 burn collector. Tracks burns locally and relays checkpoints to L1 via LayerZero.
 contract BaseBurnCollector is Ownable, ERC1155Holder {
+    using SafeERC20 for IERC20;
     struct PendingDelta {
         uint256 tokenId;
         uint256 amount;
@@ -30,6 +32,8 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
     bytes public checkpointOptions;
 
     uint256[12] public monthWeights = [100, 95, 92, 88, 85, 82, 78, 75, 72, 68, 65, 60];
+    uint256 public maxTokensPerCheckpoint = 100;
+    uint256 public maxDeltaPerToken = 1_000_000;
 
     event BurnQueued(
         address indexed burner,
@@ -49,11 +53,14 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
         uint256 nativeFee
     );
     event LayerZeroConfigured(address endpoint, uint32 dstEid, bytes32 peer, bytes options);
+    event CheckpointLimitsUpdated(uint256 maxTokensPerCheckpoint, uint256 maxDeltaPerToken);
 
     error LayerZeroNotConfigured();
     error IncorrectMsgValue(uint256 required, uint256 provided);
     error EmptyCheckpoint();
     error NoPendingPoints();
+    error CheckpointTokenLimitExceeded(uint256 requested, uint256 limit);
+    error CheckpointDeltaTooLarge(uint256 tokenId, uint256 delta, uint256 limit);
 
     constructor(
         address _endpoint,
@@ -91,6 +98,14 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
     function setCheckpointOptions(bytes calldata newOptions) external onlyOwner {
         checkpointOptions = newOptions.length == 0 ? _defaultCheckpointOptions() : newOptions;
         emit LayerZeroConfigured(address(endpoint), l1EndpointId, l1AggregatorPeer, checkpointOptions);
+    }
+
+    function setCheckpointLimits(uint256 maxTokens, uint256 maxDelta) external onlyOwner {
+        require(maxTokens > 0, "Max tokens must be > 0");
+        require(maxDelta > 0, "Max delta must be > 0");
+        maxTokensPerCheckpoint = maxTokens;
+        maxDeltaPerToken = maxDelta;
+        emit CheckpointLimitsUpdated(maxTokens, maxDelta);
     }
 
     function addEligibleAsset(address asset, uint256 baseValue) external onlyOwner {
@@ -133,7 +148,7 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
 
     function queueERC20(address asset, uint256 amount, uint256 msongTokenId) external {
         require(eligibleAssets[asset] > 0, "Asset not eligible");
-        IERC20(asset).transferFrom(msg.sender, address(this), amount);
+        IERC20(asset).safeTransferFrom(msg.sender, address(this), amount);
         uint256 normalized = _normalizeMultiplier(asset, amount);
         uint256 points = calculatePoints(asset, normalized, msg.sender);
         pending[msongTokenId].push(PendingDelta(msongTokenId, points, "BASE_ERC20"));
@@ -144,6 +159,7 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
         if (l1EndpointId == 0 || l1AggregatorPeer == bytes32(0)) revert LayerZeroNotConfigured();
         uint256 length = tokenIds.length;
         if (length == 0) revert EmptyCheckpoint();
+        if (length > maxTokensPerCheckpoint) revert CheckpointTokenLimitExceeded(length, maxTokensPerCheckpoint);
         uint256 entryCount;
         uint256[] memory ids = new uint256[](length);
         uint256[] memory deltas = new uint256[](length);
@@ -156,6 +172,9 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
             for (uint256 j = 0; j < items.length; j++) {
                 aggregate += items[j].amount;
                 source = items[j].source;
+            }
+            if (aggregate > maxDeltaPerToken) {
+                revert CheckpointDeltaTooLarge(tokenIds[i], aggregate, maxDeltaPerToken);
             }
             ids[i] = tokenIds[i];
             deltas[i] = aggregate;
@@ -183,6 +202,7 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
         if (l1EndpointId == 0 || l1AggregatorPeer == bytes32(0)) revert LayerZeroNotConfigured();
         uint256 length = tokenIds.length;
         if (length == 0) revert EmptyCheckpoint();
+        if (length > maxTokensPerCheckpoint) revert CheckpointTokenLimitExceeded(length, maxTokensPerCheckpoint);
         uint256 totalPoints;
         uint256 entryCount;
         uint256[] memory ids = new uint256[](length);
@@ -196,6 +216,9 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
             for (uint256 j = 0; j < items.length; j++) {
                 aggregate += items[j].amount;
                 source = items[j].source;
+            }
+            if (aggregate > maxDeltaPerToken) {
+                revert CheckpointDeltaTooLarge(tokenIds[i], aggregate, maxDeltaPerToken);
             }
             ids[i] = tokenIds[i];
             deltas[i] = aggregate;
@@ -218,9 +241,14 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
         });
 
         MessagingFee memory fee = endpoint.quote(params, address(this));
-        if (msg.value != fee.nativeFee) revert IncorrectMsgValue(fee.nativeFee, msg.value);
+        if (msg.value < fee.nativeFee) revert IncorrectMsgValue(fee.nativeFee, msg.value);
 
-        receipt = endpoint.send{value: msg.value}(params, msg.sender);
+        receipt = endpoint.send{value: fee.nativeFee}(params, msg.sender);
+        uint256 refund = msg.value - fee.nativeFee;
+        if (refund > 0) {
+            (bool success, ) = msg.sender.call{value: refund}("");
+            require(success, "Refund failed");
+        }
         emit CheckpointSent(entryCount, totalPoints, payload, receipt.guid, receipt.nonce, fee.nativeFee);
     }
 
@@ -230,7 +258,8 @@ contract BaseBurnCollector is Ownable, ERC1155Holder {
     }
 
     function getMonth() internal view returns (uint256) {
-        return (block.timestamp / 2629743) % 12;
+        (, uint256 month, ) = DateTime.timestampToDate(block.timestamp);
+        return month - 1;
     }
 
     function _normalizeMultiplier(address asset, uint256 multiplier) internal view returns (uint256) {

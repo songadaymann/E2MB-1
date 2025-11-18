@@ -2,8 +2,8 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
@@ -18,6 +18,7 @@ import "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
 
 // Countdown renderer (external contract)
 import "../render/IRenderTypes.sol";
+import "../render/pre/IPreRevealRegistry.sol";
 
 interface ICountdownRenderer {
     function render(RenderTypes.RenderCtx memory ctx) external view returns (string memory);
@@ -29,10 +30,9 @@ interface ICountdownHtmlRenderer {
 
 /**
  * @title EveryTwoMillionBlocks
- * @dev ERC-721 NFT with external rendering contracts for modularity and size optimization
- *      Uses orchestrator pattern to stay under 24KB contract size limit
+ * @dev ERC-721 orchestrator that wires external renderers/points modules to stay under the size cap.
  */
-contract EveryTwoMillionBlocks is ERC721, Ownable {
+contract EveryTwoMillionBlocks is ERC721, Ownable, ReentrancyGuard {
     using Strings for uint256;
     
     uint256 public constant START_YEAR = 2026;
@@ -49,23 +49,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
     IAudioRenderer public audioRenderer;
     IPointsManager public pointsManager;
     IPointsAggregator public pointsAggregator;
-    ICountdownRenderer public countdownRenderer;
-    ICountdownHtmlRenderer public countdownHtmlRenderer;
-    address public permutationScript;
-
-    struct PreRevealRenderer {
-        ICountdownRenderer svgRenderer;
-        ICountdownHtmlRenderer htmlRenderer;
-        bool active;
-    }
-
-    mapping(uint256 => PreRevealRenderer) private preRevealRenderers;
-    uint256 public preRevealRendererCount = 1; // slot 0 reserved for countdown
-    uint256 public defaultPreRevealRendererId;
-    bool public preRevealRegistryFrozen;
-
-    mapping(uint256 => uint256) public tokenPreRevealChoice;
-    mapping(uint256 => bool) public tokenPreRevealChoiceSet;
+    IPreRevealRegistry public preRevealRegistry;
 
     IVRFCoordinatorV2_5 public vrfCoordinator;
     bytes32 public vrfKeyHash;
@@ -91,6 +75,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
     mapping(uint256 => ISongAlgorithm.Event) public revealedLeadNote;
     mapping(uint256 => ISongAlgorithm.Event) public revealedBassNote;
     mapping(uint256 => uint256) public revealBlockTimestamp;
+    mapping(uint256 => uint256) public finalRank;
     
     // --- SEED COMPONENTS ---
     mapping(uint256 => bytes32) public sevenWords;
@@ -102,6 +87,15 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
     mapping(uint256 => bool) public revealPending;
     mapping(uint256 => uint32) public pendingBeat;
     mapping(uint256 => bytes32) public pendingWords;
+
+    struct PreRevealSelection {
+        uint256 rendererId;
+        uint256 defaultRendererId;
+        address svgRenderer;
+        address htmlRenderer;
+        address defaultSvgRenderer;
+        address defaultHtmlRenderer;
+    }
     
     event NoteRevealed(
         uint256 indexed tokenId, 
@@ -130,17 +124,11 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
     event PermutationSeedRequested(uint256 indexed requestId);
     event PermutationSeedFulfilled(uint256 indexed requestId, bytes32 seed);
     event PermutationSeedManuallySet(bytes32 seed);
-    event PreRevealRendererRegistered(uint256 indexed rendererId, address svgRenderer, address htmlRenderer, bool active);
-    event PreRevealRendererUpdated(uint256 indexed rendererId, address svgRenderer, address htmlRenderer, bool active);
-    event DefaultPreRevealRendererSet(uint256 indexed rendererId);
-    event PreRevealRegistryFrozen();
     event TokenPreRevealRendererSelected(uint256 indexed tokenId, uint256 indexed rendererId, address indexed caller);
     event TokenPreRevealRendererCleared(uint256 indexed tokenId, address indexed caller);
+    event PreRevealRegistryUpdated(address indexed registry);
 
-    constructor() ERC721("Every Two Million Blocks", "E2MB") Ownable(msg.sender) {
-        preRevealRenderers[0].active = true;
-        defaultPreRevealRendererId = 0;
-    }
+    constructor() ERC721("Every Two Million Blocks", "E2MB") Ownable(msg.sender) {}
     
     // --- RENDERER MANAGEMENT ---
     modifier renderersNotFinalized() {
@@ -148,11 +136,6 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         _;
     }
 
-    modifier preRevealRegistryNotFrozen() {
-        require(!preRevealRegistryFrozen, "Pre-reveal registry frozen");
-        _;
-    }
-    
     /// @notice Set external contract addresses (only before finalization)
     function setRenderers(
         address _songAlgorithm,
@@ -177,9 +160,12 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         emit PointsAggregatorUpdated(_pointsAggregator);
     }
 
-    /// @notice Set permutation script storage address (SSTORE2 blob) before finalization
-    function setPermutationScript(address _script) external onlyOwner renderersNotFinalized {
-        permutationScript = _script;
+    /// @notice Configure the external pre-reveal registry contract
+    function setPreRevealRegistry(address registry) external onlyOwner renderersNotFinalized {
+        require(registry != address(0), "Invalid registry");
+        preRevealRegistry = IPreRevealRegistry(registry);
+        require(preRevealRegistry.controller() == address(this), "Registry controller mismatch");
+        emit PreRevealRegistryUpdated(registry);
     }
 
     /// @notice Configure Chainlink VRF settings (only before finalization)
@@ -242,95 +228,21 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         emit PermutationSeedRequested(requestId);
     }
     
-    /// @notice Set countdown renderer addresses (slot 0 in the registry)
-    function setCountdownRenderer(address _countdownRenderer) external onlyOwner preRevealRegistryNotFrozen {
-        require(_countdownRenderer != address(0), "Invalid countdown renderer");
-        PreRevealRenderer storage slotZero = preRevealRenderers[0];
-        slotZero.svgRenderer = ICountdownRenderer(_countdownRenderer);
-        slotZero.active = true;
-        countdownRenderer = ICountdownRenderer(_countdownRenderer);
-        emit PreRevealRendererUpdated(0, _countdownRenderer, address(slotZero.htmlRenderer), true);
-    }
-    
-    /// @notice Set countdown HTML renderer address (slot 0 in the registry)
-    function setCountdownHtmlRenderer(address _countdownHtmlRenderer) external onlyOwner preRevealRegistryNotFrozen {
-        PreRevealRenderer storage slotZero = preRevealRenderers[0];
-        slotZero.htmlRenderer = ICountdownHtmlRenderer(_countdownHtmlRenderer);
-        countdownHtmlRenderer = ICountdownHtmlRenderer(_countdownHtmlRenderer);
-        emit PreRevealRendererUpdated(0, address(slotZero.svgRenderer), _countdownHtmlRenderer, slotZero.active);
-    }
-
-    /// @notice Register a new pre-reveal renderer slot (returns the slot id)
-    function addPreRevealRenderer(
-        address svgRenderer,
-        address htmlRenderer,
-        bool active
-    ) external onlyOwner preRevealRegistryNotFrozen returns (uint256 rendererId) {
-        require(svgRenderer != address(0), "SVG renderer required");
-
-        rendererId = preRevealRendererCount;
-        preRevealRendererCount += 1;
-
-        preRevealRenderers[rendererId] = PreRevealRenderer({
-            svgRenderer: ICountdownRenderer(svgRenderer),
-            htmlRenderer: ICountdownHtmlRenderer(htmlRenderer),
-            active: active
-        });
-
-        emit PreRevealRendererRegistered(rendererId, svgRenderer, htmlRenderer, active);
-    }
-
-    /// @notice Update renderer addresses and status for an existing slot
-    function updatePreRevealRenderer(
-        uint256 rendererId,
-        address svgRenderer,
-        address htmlRenderer,
-        bool active
-    ) public onlyOwner preRevealRegistryNotFrozen {
-        require(rendererId < preRevealRendererCount, "Renderer does not exist");
-        require(svgRenderer != address(0), "SVG renderer required");
-
-        preRevealRenderers[rendererId] = PreRevealRenderer({
-            svgRenderer: ICountdownRenderer(svgRenderer),
-            htmlRenderer: ICountdownHtmlRenderer(htmlRenderer),
-            active: active
-        });
-
-        emit PreRevealRendererUpdated(rendererId, svgRenderer, htmlRenderer, active);
-    }
-
-    /// @notice Set an existing slot as the default renderer for tokens without a manual choice
-    function setDefaultPreRevealRenderer(uint256 rendererId) external onlyOwner preRevealRegistryNotFrozen {
-        require(rendererId < preRevealRendererCount, "Renderer does not exist");
-        PreRevealRenderer storage renderer = preRevealRenderers[rendererId];
-        require(renderer.active, "Renderer inactive");
-        require(address(renderer.svgRenderer) != address(0), "Renderer missing SVG");
-
-        defaultPreRevealRendererId = rendererId;
-        emit DefaultPreRevealRendererSet(rendererId);
-    }
-
-    /// @notice Irreversibly freeze the registry so no new slots or updates can occur
-    function freezePreRevealRegistry() external onlyOwner preRevealRegistryNotFrozen {
-        preRevealRegistryFrozen = true;
-        emit PreRevealRegistryFrozen();
-    }
-
     /// @notice Assign a renderer slot to a token (token owner or approved)
     function setTokenPreRevealRenderer(uint256 tokenId, uint256 rendererId) external {
         address tokenOwner = _ownerOf(tokenId);
         require(tokenOwner != address(0), "Token does not exist");
         require(_isAuthorized(tokenOwner, msg.sender, tokenId), "Not authorized");
         require(!revealed[tokenId], "Token already revealed");
-        require(rendererId < preRevealRendererCount, "Renderer does not exist");
-
-        PreRevealRenderer storage renderer = preRevealRenderers[rendererId];
-        require(renderer.active, "Renderer inactive");
-        require(address(renderer.svgRenderer) != address(0), "Renderer missing SVG");
-
-        tokenPreRevealChoice[tokenId] = rendererId;
-        tokenPreRevealChoiceSet[tokenId] = true;
-
+        require(address(preRevealRegistry) != address(0), "Registry not set");
+        bool hasWords = bytes(sevenWordsText[tokenId]).length > 0;
+        if (!hasWords) {
+            IPreRevealRegistry.Renderer memory rendererInfo = preRevealRegistry.getRenderer(rendererId);
+            if (rendererInfo.requiresSevenWords) {
+                revert("Seven words not set");
+            }
+        }
+        preRevealRegistry.setTokenRenderer(tokenId, rendererId, hasWords);
         emit TokenPreRevealRendererSelected(tokenId, rendererId, msg.sender);
     }
 
@@ -339,36 +251,11 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         address tokenOwner = _ownerOf(tokenId);
         require(tokenOwner != address(0), "Token does not exist");
         require(_isAuthorized(tokenOwner, msg.sender, tokenId), "Not authorized");
-        if (!tokenPreRevealChoiceSet[tokenId]) {
-            return;
-        }
-
-        delete tokenPreRevealChoice[tokenId];
-        tokenPreRevealChoiceSet[tokenId] = false;
-
+        require(address(preRevealRegistry) != address(0), "Registry not set");
+        preRevealRegistry.clearTokenRenderer(tokenId);
         emit TokenPreRevealRendererCleared(tokenId, msg.sender);
     }
 
-    /// @notice View helper to inspect a renderer slot
-    function getPreRevealRenderer(uint256 rendererId)
-        external
-        view
-        returns (address svgRenderer, address htmlRenderer, bool active)
-    {
-        require(rendererId < preRevealRendererCount, "Renderer does not exist");
-        PreRevealRenderer storage renderer = preRevealRenderers[rendererId];
-        return (address(renderer.svgRenderer), address(renderer.htmlRenderer), renderer.active);
-    }
-
-    /// @notice View helper that returns the effective renderer for a token
-    function getTokenPreRevealRenderer(uint256 tokenId) external view returns (uint256 rendererId, bool isCustom) {
-        require(_ownerOf(tokenId) != address(0), "Token does not exist");
-        if (tokenPreRevealChoiceSet[tokenId]) {
-            return (tokenPreRevealChoice[tokenId], true);
-        }
-        return (defaultPreRevealRendererId, false);
-    }
-    
     /// @notice Finalize renderer addresses (one-way, cannot be changed after)
     function finalizeRenderers() external onlyOwner {
         renderersFinalized = true;
@@ -400,14 +287,14 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         tokenId = _mintToken(to, seed);
     }
 
-    function mintOpenEdition(uint32 seed) external payable returns (uint256 tokenId) {
+    function mintOpenEdition(uint32 seed) external payable nonReentrant returns (uint256 tokenId) {
         require(mintEnabled, "Mint disabled");
         require(msg.value >= mintPrice, "Insufficient payment");
         tokenId = _mintToken(msg.sender, seed);
         if (msg.value > mintPrice) {
-            unchecked {
-                payable(msg.sender).transfer(msg.value - mintPrice);
-            }
+            uint256 refund = msg.value - mintPrice;
+            (bool success, ) = payable(msg.sender).call{value: refund}("");
+            require(success, "Refund failed");
         }
     }
 
@@ -421,10 +308,13 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         basePermutation[tokenId] = tokenId - 1;
     }
 
-    function withdraw() external onlyOwner {
+    function withdraw() external onlyOwner nonReentrant {
         address payable recipient = payoutAddress;
         require(recipient != address(0), "Payout not set");
-        recipient.transfer(address(this).balance);
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No balance");
+        (bool success, ) = recipient.call{value: balance}("");
+        require(success, "Withdraw failed");
     }
     /// @notice Ingest a batch of permutation entries before finalization
     function ingestPermutationChunk(
@@ -461,6 +351,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         require(_ownerOf(tokenId) == msg.sender, "Not token owner");
         require(!revealed[tokenId], "Already revealed");
         require(bytes(wordsText).length > 0, "Words required");
+        require(bytes(sevenWordsText[tokenId]).length == 0, "Seven words locked");
         sevenWords[tokenId] = keccak256(bytes(wordsText));
         sevenWordsText[tokenId] = wordsText;
     }
@@ -489,7 +380,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         _performReveal(tokenId, rank);
     }
     
-    /// @notice TEST ONLY: Force reveal a token (bypasses time check)
+    /// @notice Test helper that bypasses the time gate
     function forceReveal(uint256 tokenId) external onlyOwner {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
         require(!revealed[tokenId], "Already revealed");
@@ -507,10 +398,10 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         require(!revealed[tokenId], "Already revealed");
         require(!revealPending[tokenId], "Reveal already pending");
         
-        // Compute rank (expensive O(n) operation)
+        // Snapshot current rank (PointsManager handles ordering)
         uint256 rank = getCurrentRank(tokenId);
         
-        // Snapshot state to prevent manipulation
+        // Cache data so finalizeReveal cannot be manipulated mid-flow
         pendingBeat[tokenId] = uint32(rank);
         pendingWords[tokenId] = sevenWords[tokenId];
         revealPending[tokenId] = true;
@@ -525,27 +416,28 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         require(revealPending[tokenId], "No pending reveal");
         require(!revealed[tokenId], "Already revealed");
         
-        // Validate seven words haven't changed (anti-manipulation)
+        // Ensure prompt hash matches the cached value
         require(sevenWords[tokenId] == pendingWords[tokenId], "Seven words changed");
         
         uint32 beat = pendingBeat[tokenId];
+        finalRank[tokenId] = beat;
 
-        // Mark as revealed
+        // Flip storage flags
         revealed[tokenId] = true;
         revealBlockTimestamp[tokenId] = block.timestamp;
         
-        // Compute seed using snapshotted words and current previousNotesHash
+        // Seed rests on cached words and rolling hash
         uint32 seed = _computeRevealSeed(tokenId);
         
-        // Generate music (external contract call)
+        // Produce deterministic events
         (ISongAlgorithm.Event memory lead, ISongAlgorithm.Event memory bass) = 
             songAlgorithm.generateBeat(beat, seed);
         
-        // Store revealed notes
+        // Persist generated events
         revealedLeadNote[tokenId] = lead;
         revealedBassNote[tokenId] = bass;
         
-        // Update cumulative hash
+        // Extend rolling hash
         previousNotesHash = keccak256(abi.encodePacked(
             previousNotesHash,
             lead.pitch,
@@ -554,7 +446,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
             bass.duration
         ));
         
-        // Clear pending state
+        // Clear staging slots
         revealPending[tokenId] = false;
         delete pendingBeat[tokenId];
         delete pendingWords[tokenId];
@@ -582,6 +474,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         revealBlockTimestamp[tokenId] = block.timestamp;
         
         uint32 beat = uint32(rank);
+        finalRank[tokenId] = rank;
         uint32 seed = _computeRevealSeed(tokenId);
         
         (ISongAlgorithm.Event memory lead, ISongAlgorithm.Event memory bass) = 
@@ -617,7 +510,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
             try pointsAggregator.onTokenRevealed(tokenId) {
                 // no-op
             } catch {
-                // swallow errors to avoid blocking reveal
+                // Ignore failures so reveals cannot be blocked
             }
         }
     }
@@ -695,18 +588,22 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
         
-        uint256 rank = getCurrentRank(tokenId);
-        uint256 revealYear = START_YEAR + rank;
         bool isRevealed = revealed[tokenId];
+        uint256 rank = isRevealed ? finalRank[tokenId] : getCurrentRank(tokenId);
+        uint256 revealYear = START_YEAR + rank;
         
         string memory image;
         string memory animationUrl = "";
         string memory description;
         string memory wordsText = sevenWordsText[tokenId];
         bool hasWords = bytes(wordsText).length > 0;
+        string memory escapedWords = "";
+        if (hasWords) {
+            escapedWords = _escapeJsonString(wordsText);
+        }
         
         if (!isRevealed) {
-            // Pre-reveal: Use countdown renderer (library)
+            // Pre-reveal path delegates to the registry
             uint256 revealTime = _jan1Timestamp(revealYear);
             uint256 blocksRemaining = (revealTime > block.timestamp) 
                 ? (revealTime - block.timestamp) / 12
@@ -721,7 +618,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
                     closenessBps = (elapsed * 10000) / totalTime;
                 }
             } else if (block.timestamp < startTime) {
-                // Before START_YEAR, closeness is 0
+                // Clamp to zero before the program begins
                 closenessBps = 0;
             }
             
@@ -735,35 +632,28 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
                 nowTs: block.timestamp
             });
 
-            uint256 preferredRendererId = tokenPreRevealChoiceSet[tokenId]
-                ? tokenPreRevealChoice[tokenId]
-                : defaultPreRevealRendererId;
-
-            if (preferredRendererId >= preRevealRendererCount) {
-                preferredRendererId = defaultPreRevealRendererId;
-            }
-
-            string memory svgContent = _renderPreRevealSVG(preferredRendererId, ctx);
-            // Convert to data URI
+            PreRevealSelection memory selection = _resolvePreRevealSelection(tokenId, hasWords);
+            string memory svgContent = _renderPreRevealSVG(selection, ctx);
+            // Encode as data URI
             image = string(abi.encodePacked(
                 "data:image/svg+xml;base64,",
                 Base64.encode(bytes(svgContent))
             ));
             
-            // Generate HTML countdown for animation_url
-            string memory html = _renderPreRevealHtml(preferredRendererId, ctx);
+            // Attach HTML renderer output if available
+            string memory html = _renderPreRevealHtml(selection, ctx);
             if (bytes(html).length > 0) {
                 animationUrl = html;
             }
             
             description = hasWords
-                ? wordsText 
+                ? escapedWords 
                 : string(abi.encodePacked(
                     "Every Two Million Blocks token #", tokenId.toString(),
                     " will reveal on Jan 1, ", revealYear.toString(), " UTC"
                   ));
         } else {
-            // Post-reveal: Use music renderer + audio renderer
+            // Post-reveal path uses the final renderer stack
             ISongAlgorithm.Event memory lead = revealedLeadNote[tokenId];
             ISongAlgorithm.Event memory bass = revealedBassNote[tokenId];
             
@@ -779,18 +669,18 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
                     bassDuration: bass.duration
                 })) returns (string memory svg) {
                     svgContent = svg;
-                    // Convert raw SVG to data URI
+                    // Encode renderer output as a data URI
                     image = string(abi.encodePacked(
                         "data:image/svg+xml;base64,",
                         Base64.encode(bytes(svg))
                     ));
                 } catch {
                     svgContent = _buildFallbackSVG(tokenId, "Music renderer error");
-                    image = svgContent; // Already a data URI
+                    image = svgContent;
                 }
             } else {
                 svgContent = _buildFallbackSVG(tokenId, "Music renderer not set");
-                image = svgContent; // Already a data URI
+                image = svgContent;
             }
             
             if (address(audioRenderer) != address(0)) {
@@ -802,12 +692,12 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
                 ) returns (string memory html) {
                     animationUrl = html;
                 } catch {
-                    // Audio is optional, don't fail if it doesn't work
+                    // Audio is best-effort
                 }
             }
             
             description = hasWords
-                ? wordsText 
+                ? escapedWords 
                 : string(abi.encodePacked(
                     "Every Two Million Blocks token #", tokenId.toString(),
                     " - Year ", revealYear.toString(),
@@ -815,17 +705,25 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
                   ));
         }
         
-        // Build metadata JSON with note-based name for revealed tokens
+        // Build metadata JSON (revealed tokens expose their notes)
         string memory name;
         if (isRevealed) {
-            // Format: "G4+Eb2 [67+39]" (note names + MIDI)
+            // Example format: "G4 (G4) + Eb2 (Eb2) [67+39]"
             ISongAlgorithm.Event memory lead = revealedLeadNote[tokenId];
             ISongAlgorithm.Event memory bass = revealedBassNote[tokenId];
+            string memory leadUnicodeName = _midiToUnicodeNoteName(lead.pitch);
+            string memory bassUnicodeName = _midiToUnicodeNoteName(bass.pitch);
+            string memory leadAsciiName = _midiToAsciiNoteName(lead.pitch);
+            string memory bassAsciiName = _midiToAsciiNoteName(bass.pitch);
             name = string(abi.encodePacked(
-                _midiToNoteName(lead.pitch),
-                "+",
-                _midiToNoteName(bass.pitch),
-                " [",
+                leadUnicodeName,
+                " (",
+                leadAsciiName,
+                ") + ",
+                bassUnicodeName,
+                " (",
+                bassAsciiName,
+                ") [",
                 _int16ToString(lead.pitch),
                 "+",
                 _int16ToString(bass.pitch),
@@ -833,7 +731,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
             ));
         } else {
             name = hasWords
-                ? wordsText
+                ? escapedWords
                 : string(abi.encodePacked(
                     "Every Two Million Blocks #", tokenId.toString(),
                     " - Year ", revealYear.toString()
@@ -850,7 +748,7 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
             json = string(abi.encodePacked(json, ',"animation_url":"', animationUrl, '"'));
         }
         
-        // Add attributes
+        // Attach attributes
         uint256 tokenPoints = getPoints(tokenId);
         json = string(abi.encodePacked(
             json,
@@ -861,12 +759,20 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         ));
         
         if (isRevealed) {
+            string memory leadUnicodeNameAttr = _midiToUnicodeNoteName(revealedLeadNote[tokenId].pitch);
+            string memory bassUnicodeNameAttr = _midiToUnicodeNoteName(revealedBassNote[tokenId].pitch);
+            string memory leadAsciiNameAttr = _midiToAsciiNoteName(revealedLeadNote[tokenId].pitch);
+            string memory bassAsciiNameAttr = _midiToAsciiNoteName(revealedBassNote[tokenId].pitch);
             json = string(abi.encodePacked(
                 json,
                 ',{"trait_type":"Lead Pitch (MIDI)","value":', _int16ToString(revealedLeadNote[tokenId].pitch), '}',
                 ',{"trait_type":"Lead Duration","value":', uint256(revealedLeadNote[tokenId].duration).toString(), '}',
                 ',{"trait_type":"Bass Pitch (MIDI)","value":', _int16ToString(revealedBassNote[tokenId].pitch), '}',
-                ',{"trait_type":"Bass Duration","value":', uint256(revealedBassNote[tokenId].duration).toString(), '}'
+                ',{"trait_type":"Bass Duration","value":', uint256(revealedBassNote[tokenId].duration).toString(), '}',
+                ',{"trait_type":"Lead Note (Unicode)","value":"', leadUnicodeNameAttr, '"}',
+                ',{"trait_type":"Lead Note (ASCII)","value":"', leadAsciiNameAttr, '"}',
+                ',{"trait_type":"Bass Note (Unicode)","value":"', bassUnicodeNameAttr, '"}',
+                ',{"trait_type":"Bass Note (ASCII)","value":"', bassAsciiNameAttr, '"}'
             ));
         }
         
@@ -878,44 +784,58 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         ));
     }
     
-    function _renderPreRevealSVG(uint256 preferredRendererId, RenderTypes.RenderCtx memory ctx)
-        internal
+    function _resolvePreRevealSelection(uint256 tokenId, bool wordsSet)
+        private
+        view
+        returns (PreRevealSelection memory selection)
+    {
+        require(address(preRevealRegistry) != address(0), "Registry not set");
+        (uint256 rendererId, address svgRendererAddr, address htmlRendererAddr,) =
+            preRevealRegistry.resolveRenderer(tokenId, wordsSet);
+        selection.rendererId = rendererId;
+        selection.svgRenderer = svgRendererAddr;
+        selection.htmlRenderer = htmlRendererAddr;
+
+        uint256 defaultRendererId = preRevealRegistry.defaultRendererId();
+        selection.defaultRendererId = defaultRendererId;
+        IPreRevealRegistry.Renderer memory defaultRenderer = preRevealRegistry.getRenderer(defaultRendererId);
+        selection.defaultSvgRenderer = defaultRenderer.svgRenderer;
+        selection.defaultHtmlRenderer = defaultRenderer.htmlRenderer;
+
+        return selection;
+    }
+
+    function _renderPreRevealSVG(PreRevealSelection memory selection, RenderTypes.RenderCtx memory ctx)
+        private
         view
         returns (string memory)
     {
-        if (_rendererUsable(preferredRendererId)) {
-            PreRevealRenderer storage renderer = preRevealRenderers[preferredRendererId];
-            try renderer.svgRenderer.render(ctx) returns (string memory svg) {
-                return svg;
-            } catch {
-                // continue to fallback
-            }
+        (bool success, string memory svg) = _tryRenderSvg(selection.svgRenderer, ctx);
+        if (success) {
+            return svg;
         }
-
-        if (preferredRendererId != defaultPreRevealRendererId) {
-            require(_rendererUsable(defaultPreRevealRendererId), "Default pre-reveal renderer unavailable");
-            PreRevealRenderer storage fallbackRenderer = preRevealRenderers[defaultPreRevealRendererId];
-            try fallbackRenderer.svgRenderer.render(ctx) returns (string memory fallbackSvg) {
+        if (selection.rendererId != selection.defaultRendererId) {
+            (bool fallbackSuccess, string memory fallbackSvg) = _tryRenderSvg(selection.defaultSvgRenderer, ctx);
+            if (fallbackSuccess) {
                 return fallbackSvg;
-            } catch {
-                revert("Default pre-reveal renderer error");
             }
+            revert("Default pre-reveal renderer error");
         }
-
         revert("Pre-reveal renderer error");
     }
 
-    function _renderPreRevealHtml(uint256 preferredRendererId, RenderTypes.RenderCtx memory ctx)
-        internal
+    function _renderPreRevealHtml(PreRevealSelection memory selection, RenderTypes.RenderCtx memory ctx)
+        private
         view
         returns (string memory)
     {
-        (bool success, string memory html) = _tryRenderPreRevealHtml(preferredRendererId, ctx);
+        (bool success, string memory html) = _tryRenderPreRevealHtml(selection.htmlRenderer, ctx);
         if (success) {
             return html;
         }
-        if (preferredRendererId != defaultPreRevealRendererId) {
-            (bool fallbackSuccess, string memory fallbackHtml) = _tryRenderPreRevealHtml(defaultPreRevealRendererId, ctx);
+        if (selection.rendererId != selection.defaultRendererId) {
+            (bool fallbackSuccess, string memory fallbackHtml) =
+                _tryRenderPreRevealHtml(selection.defaultHtmlRenderer, ctx);
             if (fallbackSuccess) {
                 return fallbackHtml;
             }
@@ -923,35 +843,34 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
         return "";
     }
 
-    function _tryRenderPreRevealHtml(uint256 rendererId, RenderTypes.RenderCtx memory ctx)
-        internal
+    function _tryRenderSvg(address rendererAddr, RenderTypes.RenderCtx memory ctx)
+        private
         view
         returns (bool, string memory)
     {
-        if (rendererId >= preRevealRendererCount) {
+        if (rendererAddr == address(0)) {
             return (false, "");
         }
-        PreRevealRenderer storage renderer = preRevealRenderers[rendererId];
-        if (!renderer.active) {
-            return (false, "");
-        }
-        ICountdownHtmlRenderer htmlRenderer = renderer.htmlRenderer;
-        if (address(htmlRenderer) == address(0)) {
-            return (false, "");
-        }
-        try htmlRenderer.render(ctx) returns (string memory html) {
-            return (true, html);
+        try ICountdownRenderer(rendererAddr).render(ctx) returns (string memory svg) {
+            return (true, svg);
         } catch {
             return (false, "");
         }
     }
 
-    function _rendererUsable(uint256 rendererId) private view returns (bool) {
-        if (rendererId >= preRevealRendererCount) {
-            return false;
+    function _tryRenderPreRevealHtml(address rendererAddr, RenderTypes.RenderCtx memory ctx)
+        private
+        view
+        returns (bool, string memory)
+    {
+        if (rendererAddr == address(0)) {
+            return (false, "");
         }
-        PreRevealRenderer storage renderer = preRevealRenderers[rendererId];
-        return renderer.active && address(renderer.svgRenderer) != address(0);
+        try ICountdownHtmlRenderer(rendererAddr).render(ctx) returns (string memory html) {
+            return (true, html);
+        } catch {
+            return (false, "");
+        }
     }
 
     function _buildFallbackSVG(uint256 tokenId, string memory message) private pure returns (string memory) {
@@ -972,6 +891,60 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
             Base64.encode(bytes(svg))
         ));
     }
+
+    function _escapeJsonString(string memory value) internal pure returns (string memory) {
+        bytes memory data = bytes(value);
+        uint256 len = data.length;
+        if (len == 0) {
+            return "";
+        }
+
+        bytes memory buffer = new bytes(len * 6);
+        uint256 pos = 0;
+
+        for (uint256 i = 0; i < len; i++) {
+            bytes1 char = data[i];
+            if (char == 0x22 || char == 0x5c) {
+                buffer[pos++] = 0x5c;
+                buffer[pos++] = char;
+            } else if (char == 0x08) {
+                buffer[pos++] = 0x5c;
+                buffer[pos++] = 0x62;
+            } else if (char == 0x0c) {
+                buffer[pos++] = 0x5c;
+                buffer[pos++] = 0x66;
+            } else if (char == 0x0a) {
+                buffer[pos++] = 0x5c;
+                buffer[pos++] = 0x6e;
+            } else if (char == 0x0d) {
+                buffer[pos++] = 0x5c;
+                buffer[pos++] = 0x72;
+            } else if (char == 0x09) {
+                buffer[pos++] = 0x5c;
+                buffer[pos++] = 0x74;
+            } else if (uint8(char) < 0x20) {
+                buffer[pos++] = 0x5c;
+                buffer[pos++] = 0x75;
+                buffer[pos++] = 0x30;
+                buffer[pos++] = 0x30;
+                buffer[pos++] = _hexChar(uint8(char) >> 4);
+                buffer[pos++] = _hexChar(uint8(char) & 0x0f);
+            } else {
+                buffer[pos++] = char;
+            }
+        }
+
+        bytes memory escaped = new bytes(pos);
+        for (uint256 j = 0; j < pos; j++) {
+            escaped[j] = buffer[j];
+        }
+        return string(escaped);
+    }
+
+    function _hexChar(uint8 nibble) private pure returns (bytes1) {
+        uint8 charCode = nibble < 10 ? nibble + uint8(bytes1("0")) : nibble - 10 + uint8(bytes1("a"));
+        return bytes1(charCode);
+    }
     
     function _int16ToString(int16 value) private pure returns (string memory) {
         if (value >= 0) {
@@ -982,18 +955,40 @@ contract EveryTwoMillionBlocks is ERC721, Ownable {
     }
     
     /// @notice Convert MIDI pitch to note name (e.g., 60 -> "C4", 67 -> "G4")
-    function _midiToNoteName(int16 midi) private pure returns (string memory) {
-        if (midi == -1) return "REST";
-        
-        string[12] memory notes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+    function _midiToUnicodeNoteName(int16 midi) private pure returns (string memory) {
+        if (midi == -1) return unicode"𝄽"; // Unicode quarter rest
+
+        string[12] memory unicodeNotes = [
+            unicode"C",
+            unicode"D♭",
+            unicode"D",
+            unicode"E♭",
+            unicode"E",
+            unicode"F",
+            unicode"G♭",
+            unicode"G",
+            unicode"A♭",
+            unicode"A",
+            unicode"B♭",
+            unicode"B"
+        ];
+
         uint256 midiUint = uint256(int256(midi));
         uint256 pitchClass = midiUint % 12;
         int16 octave = int16(int256(midiUint / 12) - 1);
-        
-        return string(abi.encodePacked(
-            notes[pitchClass],
-            _int16ToString(octave)
-        ));
+
+        return string(abi.encodePacked(unicodeNotes[pitchClass], _int16ToString(octave)));
+    }
+
+    function _midiToAsciiNoteName(int16 midi) private pure returns (string memory) {
+        if (midi == -1) return "REST";
+
+        string[12] memory asciiNotes = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+        uint256 midiUint = uint256(int256(midi));
+        uint256 pitchClass = midiUint % 12;
+        int16 octave = int16(int256(midiUint / 12) - 1);
+
+        return string(abi.encodePacked(asciiNotes[pitchClass], _int16ToString(octave)));
     }
     
     // --- UTC DATE CALCULATION ---

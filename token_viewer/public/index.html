@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sepolia Token Viewer</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 40px auto;
+        max-width: 720px;
+        padding: 0 16px;
+        color: #111;
+        background: #fafafa;
+      }
+      form {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        font-weight: 600;
+        gap: 4px;
+      }
+      input {
+        padding: 10px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-family: inherit;
+      }
+      button {
+        padding: 12px 16px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background: #111;
+        color: #fff;
+      }
+      #result pre {
+        background: #1d1d1d;
+        color: #e8e8e8;
+        padding: 12px;
+        border-radius: 8px;
+        overflow-x: auto;
+        max-height: 360px;
+      }
+      iframe,
+      img {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        min-height: 360px;
+        background: #fff;
+      }
+      .render-preview {
+        display: grid;
+        gap: 12px;
+      }
+      .error {
+        color: #c00;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sepolia Token Viewer</h1>
+    <p>Enter a contract + token ID to inspect the tokenURI and metadata (RPC locked to Sepolia).</p>
+
+    <div id="error" class="error"></div>
+    <form id="lookup-form">
+      <label>
+        Contract Address
+        <input type="text" id="contractAddress" placeholder="0x…" required />
+      </label>
+      <label>
+        Token ID
+        <input type="number" id="tokenId" min="1" required />
+      </label>
+      <button type="submit">Fetch Metadata</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      const form = document.getElementById("lookup-form");
+      const result = document.getElementById("result");
+      const errorBox = document.getElementById("error");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        errorBox.textContent = "";
+        result.innerHTML = "Loading…";
+
+        const contractAddress = document.getElementById("contractAddress").value.trim();
+        const tokenId = document.getElementById("tokenId").value.trim();
+
+        try {
+          const response = await fetch("/api/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contractAddress, tokenId })
+          });
+
+          if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || "Failed to fetch token");
+          }
+
+          const payload = await response.json();
+          renderResult(payload);
+        } catch (err) {
+          errorBox.textContent = err.message;
+          result.innerHTML = "";
+        }
+      });
+
+      function renderResult(payload) {
+        const { tokenUri, resolvedMetadata, rawData, imageUrl, animationUrl } = payload;
+
+        const metadataBlock = resolvedMetadata
+          ? `<pre>${JSON.stringify(resolvedMetadata, null, 2)}</pre>`
+          : "<p>Unable to parse JSON metadata.</p>";
+
+        const image = imageUrl
+          ? `<div><strong>Image</strong><img src="${imageUrl}" alt="Token image" /></div>`
+          : "";
+
+        const animation = animationUrl
+          ? `<div><strong>animation_url</strong><iframe src="${animationUrl}"></iframe></div>`
+          : "";
+
+        const renderPreview = image || animation
+          ? `<div class="render-preview">${image}${animation}</div>`
+          : "";
+
+        result.innerHTML = `
+          <p><strong>tokenURI:</strong> ${tokenUri}</p>
+          ${renderPreview}
+          <details open>
+            <summary>Raw Metadata</summary>
+            ${metadataBlock}
+          </details>
+          <details>
+            <summary>Raw Response (string)</summary>
+            <pre>${rawData}</pre>
+          </details>
+        `;
+      }
+    </script>
+  </body>
+</html>

@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 interface ILifeSeedSource {
     function tokenSeed(uint256 tokenId) external view returns (uint32);
     function sevenWords(uint256 tokenId) external view returns (bytes32);
+    function sevenWordsText(uint256 tokenId) external view returns (string memory);
     function previousNotesHash() external view returns (bytes32);
     function globalState() external view returns (bytes32);
     function getCurrentRank(uint256 tokenId) external view returns (uint256);
@@ -55,8 +56,10 @@ contract LifeLensInit is ILifeLens {
     }
 
     function board(uint256 tokenId) external view override returns (LifeBoard memory) {
+        bytes32 wordsHash = seedSource.sevenWords(tokenId);
+        string memory wordsText = seedSource.sevenWordsText(tokenId);
         bytes memory initialCells = new bytes(BOARD_SIZE * BOARD_SIZE);
-        uint32 seed = _computeSeed(tokenId);
+        uint32 seed = _computeSeed(tokenId, wordsHash);
         uint32 rng = seed == 0 ? 1 : seed;
         uint256 aliveCount;
 
@@ -83,24 +86,26 @@ contract LifeLensInit is ILifeLens {
         int16[] memory bassPitches = new int16[](MARKOV_STEPS);
         uint16[] memory bassDurations = new uint16[](MARKOV_STEPS);
 
+        uint32[] memory wordSeeds = new uint32[](MARKOV_STEPS);
         for (uint16 i = 0; i < MARKOV_STEPS; i++) {
             (ISongAlgorithm.Event memory lead, ISongAlgorithm.Event memory bass) = songAlgorithm.generateBeat(i, seed);
             leadPitches[i] = lead.pitch;
             leadDurations[i] = lead.duration;
             bassPitches[i] = bass.pitch;
             bassDurations[i] = bass.duration;
+            wordSeeds[i] = _deriveWordSeed(wordsHash, tokenId, i);
         }
 
         uint256 currentRank = seedSource.getCurrentRank(tokenId);
         uint256 totalTokens = seedSource.totalMinted();
         bool revealedState = seedSource.revealed(tokenId);
+        uint256 startYear = seedSource.START_YEAR();
+        uint256 revealYearValue = startYear + currentRank;
         uint256 revealTs = 0;
         if (revealedState) {
             revealTs = seedSource.revealBlockTimestamp(tokenId);
         } else {
-            uint256 startYear = seedSource.START_YEAR();
-            uint256 revealYear = startYear + currentRank;
-            revealTs = _jan1Timestamp(revealYear);
+            revealTs = _jan1Timestamp(revealYearValue);
         }
 
         return LifeBoard({
@@ -113,10 +118,13 @@ contract LifeLensInit is ILifeLens {
             leadDurations: leadDurations,
             bassPitches: bassPitches,
             bassDurations: bassDurations,
+            wordSeeds: wordSeeds,
             currentRank: currentRank,
             totalTokens: totalTokens,
             revealTimestamp: revealTs,
-            isRevealed: revealedState
+            isRevealed: revealedState,
+            wordsText: wordsText,
+            revealYear: revealYearValue
         });
     }
 
@@ -124,9 +132,8 @@ contract LifeLensInit is ILifeLens {
         return Strings.toHexString(uint256(uint160(account)), 20);
     }
 
-    function _computeSeed(uint256 tokenId) private view returns (uint32) {
+    function _computeSeed(uint256 tokenId, bytes32 words) private view returns (uint32) {
         uint32 baseSeed = seedSource.tokenSeed(tokenId);
-        bytes32 words = seedSource.sevenWords(tokenId);
         bytes32 previous = seedSource.previousNotesHash();
         bytes32 global = seedSource.globalState();
         if (baseSeed == 0 && words == bytes32(0) && previous == bytes32(0) && global == bytes32(0)) {
@@ -134,6 +141,10 @@ contract LifeLensInit is ILifeLens {
             return uint32(uint256(keccak256(abi.encodePacked(tokenId, address(tokenContract)))));
         }
         return uint32(uint256(keccak256(abi.encodePacked(baseSeed, words, previous, global, tokenId))));
+    }
+
+    function _deriveWordSeed(bytes32 words, uint256 tokenId, uint16 step) private pure returns (uint32) {
+        return uint32(uint256(keccak256(abi.encodePacked(words, tokenId, step))));
     }
 
     function _lcg(uint32 state) private pure returns (uint32) {

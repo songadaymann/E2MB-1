@@ -67,63 +67,70 @@ forge script script/tools/MintBatch50.s.sol \
   --private-key $PRIVATE_KEY
 ```
 
+MINT A SINGLE:
+cast send $MSONG_ADDRESS 'mint(address,uint32)' 0xAd9fDaD276AB1A430fD03177A07350CD7C61E897 0 --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+
 ### 1.5 Pre-reveal renderer registry (slot management + holder UX)
 
-> **Quick mental model**: slot `0` == legacy countdown. Additional slots hold (SVG, HTML, active) pairs. Tokens default to `defaultPreRevealRendererId` unless the holder picks a slot via `setTokenPreRevealRenderer`.
+The pre-reveal menu now lives in a dedicated `PreRevealRegistry` contract. Only that registry stores slot data; `EveryTwoMillionBlocks` simply records the token→slot choice and enforces holder permissions.
 
-- **Set slot 0 (countdown) during wiring**
-  ```sh
-  cast send $MSONG_ADDRESS 'setCountdownRenderer(address)' $COUNTDOWN_SVG_ADDRESS \
-    --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+Workflow:
 
-  cast send $MSONG_ADDRESS 'setCountdownHtmlRenderer(address)' $COUNTDOWN_HTML_ADDRESS \
-    --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+1. **Deploy the registry** (owner = your deployer wallet), then authorize `EveryTwoMillionBlocks` as the controller:
+```sh
+PRE_REVEAL_REGISTRY_ADDRESS=$(forge create src/render/pre/PreRevealRegistry.sol:PreRevealRegistry \
+  --constructor-args $OWNER_ADDRESS \
+  --rpc-url $SEPOLIA_RPC_URL \
+  --private-key $PRIVATE_KEY | jq -r '.deployedTo')
 
-  cast send $MSONG_ADDRESS 'setDefaultPreRevealRenderer(uint256)' 0 \
-    --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+   cast send $PRE_REVEAL_REGISTRY_ADDRESS 'setController(address)' $MSONG_ADDRESS \
+     --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+
+   cast send $MSONG_ADDRESS 'setPreRevealRegistry(address)' $PRE_REVEAL_REGISTRY_ADDRESS \
+     --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+   ```
+
+2. **Seed slot `0` with the countdown renderer pair** (owner-only calls go straight to the registry):
+   ```sh
+   cast send $PRE_REVEAL_REGISTRY_ADDRESS 'addRenderer(address,address,bool)' \
+     $COUNTDOWN_SVG_ADDRESS $COUNTDOWN_HTML_ADDRESS true \
+     --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+
+   cast send $PRE_REVEAL_REGISTRY_ADDRESS 'setDefaultRenderer(uint256)' 0 \
+     --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+   ```
+
+3. **Register additional slots (Life lens, etc.)**
+   ```sh
+   cast send $PRE_REVEAL_REGISTRY_ADDRESS 'addRenderer(address,address,bool)' \
+     $LIFE_LENS_SVG_ADDRESS $LIFE_LENS_HTML_ADDRESS true \
+     --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+
+   cast send $PRE_REVEAL_REGISTRY_ADDRESS 'setRendererRequiresSevenWords(uint256,bool)' $RENDERER_ID true \
+     --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
+   ```
+
+4. **Update / deactivate slots**  
+   `cast send $PRE_REVEAL_REGISTRY_ADDRESS 'updateRenderer(uint256,address,address,bool)' ...`
+
+5. **Freeze the registry once the menu is final**  
+   `cast send $PRE_REVEAL_REGISTRY_ADDRESS 'freeze()' --rpc-url ...`
+
+6. **Holder actions (still routed through the NFT contract)**  
+   - Select slot `N`:  
+     `cast send $MSONG_ADDRESS 'setTokenPreRevealRenderer(uint256,uint256)' $TOKEN_ID $RENDERER_ID --rpc-url ... --private-key <token-owner>`
+   - Clear custom choice:  
+     `cast send $MSONG_ADDRESS 'clearTokenPreRevealRenderer(uint256)' $TOKEN_ID --rpc-url ... --private-key <token-owner>`
+
+7. **Introspection**
+   ```sh
+   PRE_REVEAL_REGISTRY_ADDRESS=$(cast call $MSONG_ADDRESS 'preRevealRegistry()(address)' --rpc-url $SEPOLIA_RPC_URL)
+   cast call $PRE_REVEAL_REGISTRY_ADDRESS 'getRenderer(uint256)(address,address,bool,bool)' 0 --rpc-url $SEPOLIA_RPC_URL
+  cast call $PRE_REVEAL_REGISTRY_ADDRESS 'getTokenRenderer(uint256)(uint256,bool)' $TOKEN_ID --rpc-url $SEPOLIA_RPC_URL
+  cast call $PRE_REVEAL_REGISTRY_ADDRESS 'defaultRendererId()(uint256)' --rpc-url $SEPOLIA_RPC_URL
   ```
 
-- **Register a new renderer pair (e.g., Life lens adapters)**
-  ```sh
-  cast send $MSONG_ADDRESS 'addPreRevealRenderer(address,address,bool)' \
-    $LIFE_LENS_SVG_ADDRESS $LIFE_LENS_HTML_ADDRESS true \
-    --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
-  ```
-  *Read the emitted `PreRevealRendererRegistered` event (or `cast call getPreRevealRenderer(id)`) to learn the slot ID. Leave slot `0` untouched so countdown remains the default until we intentionally flip it.*
-
-- **Update or deactivate an existing slot**
-  ```sh
-  cast send $MSONG_ADDRESS 'updatePreRevealRenderer(uint256,address,address,bool)' \
-    $RENDERER_ID $NEW_SVG $NEW_HTML $IS_ACTIVE \
-    --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
-  ```
-
-- **Freeze further mutations once we're confident in the menu**
-  ```sh
-  cast send $MSONG_ADDRESS 'freezePreRevealRegistry()' \
-    --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
-  ```
-  *After freezing, slot edits (including `setCountdownRenderer`) are permanently disabled, but holders can still switch between the already-registered slots.*
-
-- **Holder instructions (Etherscan write tab or `cast`)**
-  - Switch to slot `N`:  
-    `cast send $MSONG_ADDRESS 'setTokenPreRevealRenderer(uint256,uint256)' $TOKEN_ID $RENDERER_ID --rpc-url ... --private-key <token-owner>`
-  - Reset to default countdown:  
-    `cast send $MSONG_ADDRESS 'clearTokenPreRevealRenderer(uint256)' $TOKEN_ID --rpc-url ... --private-key <token-owner>`
-  - Read active slot for a token:  
-    `cast call $MSONG_ADDRESS 'getTokenPreRevealRenderer(uint256)(uint256,bool)' $TOKEN_ID --rpc-url ...`
-
-- **Safety checks**
-  ```sh
-  cast call $MSONG_ADDRESS 'getPreRevealRenderer(uint256)(address,address,bool)' 0 \
-    --rpc-url $SEPOLIA_RPC_URL                     # slot 0 still countdown?
-  cast call $MSONG_ADDRESS 'defaultPreRevealRendererId()(uint256)' \
-    --rpc-url $SEPOLIA_RPC_URL
-  cast call $MSONG_ADDRESS 'tokenPreRevealChoice(uint256)(uint256)' $TOKEN_ID \
-    --rpc-url $SEPOLIA_RPC_URL                     # = rendererId if custom
-  cast call $MSONG_ADDRESS 'tokenPreRevealChoiceSet(uint256)(bool)' $TOKEN_ID \
-    --rpc-url $SEPOLIA_RPC_URL
-  ```
+**Tone.js source**: `LifeToneHtmlRenderer` no longer pulls Tone.js from a CDN. Set `BEGINNING_JS_ADDRESS` to Dav's deployed `beginningJS` contract (0x289b5441af7510F7fDc8e08c092359175726B839 on Sepolia/Mainnet) before running `script/dev/DeployLifeLensAdapters.s.sol` so the adapters can reference the EthFS-backed script.
 
 ---
 
@@ -135,6 +142,16 @@ forge script script/deploy/10_FreshPointsStack.s.sol \
   --rpc-url $SEPOLIA_RPC_URL \
   --broadcast --legacy \
   --private-key $PRIVATE_KEY
+```
+
+Deploy and seed the Life glyph font (SSTORE2 mirror of the Bravura subset), then export its address for later scripts:
+```sh
+forge script script/dev/DeployInlineGlyphFontSource.s.sol \
+  --rpc-url $SEPOLIA_RPC_URL \
+  --broadcast --legacy \
+  --private-key $PRIVATE_KEY
+
+# After the run, set LIFE_GLYPH_FONT_ADDRESS=<output address> in deployed.env
 ```
 *Outputs new `PointsAggregator` + `L1BurnCollector` addresses, registers dummy assets, refreshes approvals, authorizes receivers, and sets E2MB pointers. Update `POINTS_AGGREGATOR_ADDRESS` / `L1_BURN_COLLECTOR_ADDRESS` in `deployed.env` afterwards.*
 
@@ -409,12 +426,6 @@ cast call $POINTS_MANAGER_ADDRESS 'pointsOf(uint256)(uint256)' 1 --rpc-url $SEPO
    ```sh
    cast send $MSONG_ADDRESS 'finalizePermutation()' --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
    cast send $MSONG_ADDRESS 'finalizeRenderers()'   --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
-   ```
-
-7. *(Optional)* Store permutation script pointer when ready:
-   ```sh
-   cast send $MSONG_ADDRESS 'setPermutationScript(address)' <SSTORE2_pointer> \
-     --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY
    ```
 
 ---

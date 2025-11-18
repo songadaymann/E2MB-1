@@ -10,6 +10,7 @@ library LifeScript {
         string memory bassSeq = _eventsToJS(board.bassPitches, board.bassDurations);
         string memory markovCount = _toString(board.markovSteps);
         string memory baseSeed = _toString(board.baseSeed);
+        string memory wordSeeds = _uintArrayToJS(board.wordSeeds);
 
         return string(
             abi.encodePacked(
@@ -35,7 +36,25 @@ library LifeScript {
                 leadSeq,
                 ";const baseBassSeq=",
                 bassSeq,
-                ";let currentSeed=baseSeed;",
+                ";const unicodeNotes=[\"C\",\"D\\\\u266D\",\"D\",\"E\\\\u266D\",\"E\",\"F\",\"G\\\\u266D\",\"G\",\"A\\\\u266D\",\"A\",\"B\\\\u266D\",\"B\"];",
+                "const asciiNotes=[\"C\",\"Db\",\"D\",\"Eb\",\"E\",\"F\",\"Gb\",\"G\",\"Ab\",\"A\",\"Bb\",\"B\"];",
+                "const restUnicode=\"\\\\U0001D13D\";const restAscii=\"REST\";",
+                "function formatNote(pitch){if(pitch<0)return{u:restUnicode,a:restAscii};const cls=((pitch%12)+12)%12;const octave=Math.floor(pitch/12)-1;return{u:unicodeNotes[cls]+octave,a:asciiNotes[cls]+octave};}",
+                "const leadLabel=formatNote(baseLeadSeq.length?baseLeadSeq[0].p:-1);",
+                "const bassLabel=formatNote(baseBassSeq.length?baseBassSeq[0].p:-1);",
+                "const titleEl=document.getElementById('life-title');if(titleEl){titleEl.textContent=leadLabel.u+\" (\"+leadLabel.a+\") + \"+bassLabel.u+\" (\"+bassLabel.a+\")\";}",
+                "const wordSeeds=",
+                wordSeeds,
+                ";const wordSeedCount=Math.max(1,wordSeeds.length);",
+                "let wordCycle=0;",
+                "const wordSalt=step=>wordSeeds[(wordCycle+step)%wordSeedCount]>>>0;",
+                "const baseWordSalt=wordSalt(0);",
+                "let currentSeed=(baseSeed^baseWordSalt)>>>0;",
+                "const glyphNodes=Array.from(document.querySelectorAll('.glyph'));",
+                "const glyphPool=[\"\\u2669\",\"\\u266A\",\"\\u266B\",\"\\u266C\",\"\\u266D\",\"\\u266E\",\"\\u266F\",\"\\u{1D10C}\",\"\\u{1D10D}\",\"\\u{1D10E}\",\"\\u{1D10F}\",\"\\u{1D110}\",\"\\u{1D111}\",\"\\u{1D112}\",\"\\u{1D113}\",\"\\u{1D114}\",\"\\u{1D115}\",\"\\u{1D116}\",\"\\u{1D117}\",\"\\u{1D118}\",\"\\u{1D119}\",\"\\u{1D11A}\",\"\\u{1D11B}\",\"\\u{1D11C}\",\"\\u{1D11D}\",\"\\u{1D11E}\",\"\\u{1D11F}\",\"\\u{1D120}\",\"\\u{1D121}\",\"\\u{1D122}\",\"\\u{1D123}\",\"\\u{1D124}\",\"f\",\"\\u{1D18C}\",\"\\u{1D18D}\",\"\\u{1D18E}\",\"\\u{1D18F}\"];",
+                "const glyphAssignments=new Array(initialCells.length);",
+                "let glyphSeed=currentSeed||1;",
+                "for(let i=0;i<initialCells.length;i++){glyphSeed=lcg(glyphSeed);glyphAssignments[i]=glyphPool[glyphSeed%glyphPool.length];if(glyphNodes[i]){glyphNodes[i].textContent=glyphAssignments[i];}}",
                 ";const cellCount=initialCells.length;",
                 ";const totalTokens=Math.max(totalTokensRaw,1);",
                 "const currentRank=Math.min(currentRankRaw,totalTokens>0?totalTokens-1:currentRankRaw);",
@@ -60,15 +79,15 @@ library LifeScript {
                 "function ensureAudio(){if(audioCtx)return;const Ctor=window.AudioContext||window.webkitAudioContext;if(!Ctor)return;audioCtx=new Ctor();masterGain=audioCtx.createGain();masterGain.gain.value=0.18;masterGain.connect(audioCtx.destination);}",
                 "function playEvent(ev,type,amp){if(!audioCtx||ev.p<-32760)return;if(ev.p<0)return;const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();osc.type=type;osc.frequency.value=midiToFreq(ev.p);osc.connect(gain);gain.connect(masterGain);const now=audioCtx.currentTime;if(audioCtx.state==='suspended'){audioCtx.resume();}const duration=Math.max(0.12,(ev.d/480)*0.45);gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(amp,now+0.02);gain.gain.linearRampToValueAtTime(0,now+duration);osc.start(now);osc.stop(now+duration+0.05);}",
                 "function playEvents(events){if(!audioCtx)return;if(events.lead)playEvent(events.lead,'sine',0.18);if(events.bass)playEvent(events.bass,'triangle',0.12);}",
-                "function render(){for(let i=0;i<grid.length;i++){const cell=cells[i];if(!cell)continue;cell.style.opacity=grid[i]?'1':'0.08';cell.style.transform=grid[i]?'scale(1)':'scale(0.9)';}}",
+                "function render(){for(let i=0;i<grid.length;i++){const alive=grid[i];const cell=cells[i];if(cell){cell.style.opacity=alive?'0.08':'0';}const glyph=glyphNodes[i];if(glyph){glyph.style.opacity=alive?'1':'0';}}}",
                 "function evolve(){for(let y=0;y<height;y++){for(let x=0;x<width;x++){let live=0;for(let dy=-1;dy<=1;dy++){for(let dx=-1;dx<=1;dx++){if(dx===0&&dy===0)continue;const nx=x+dx;const ny=y+dy;if(nx<0||ny<0||nx>=width||ny>=height)continue;const nIdx=ny*width+nx;live+=grid[nIdx];}}const index=y*width+x;const current=grid[index];nextGrid[index]=current?((live===2||live===3)?1:0):(live===3?1:0);}}const swap=grid;grid=nextGrid;nextGrid=swap;}",
                 "function lcg(state){state=(Math.imul(state>>>0,1664525)+1013904223)>>>0;return state;}",
                 "function seedGrid(seed){let state=(seed>>>0)||1;const out=new Array(cellCount);let alive=0;for(let i=0;i<out.length;i++){state=lcg(state);const aliveCell=((state&0xffff)/65535)<aliveProbability;out[i]=aliveCell?1:0;if(aliveCell)alive++;}if(alive<minAlive){for(let i=0;i<out.length&&alive<minAlive;i++){if(out[i]===0){out[i]=1;alive++;}}}return out;}",
                 "function mutateSequence(base,seed,salt){let state=(seed^salt)>>>0;return base.map(ev=>{let pitch=ev.p;if(pitch>=0&&pitchShiftRange>0){state=lcg(state);const span=pitchShiftRange;const offset=((state>>>26)%(span*2+1))-span;pitch+=offset;}else{state=lcg(state);}state=lcg(state);let dur=ev.d;if(durationVariance>0){const tweak=(state>>>28)&3;if(tweak===1){dur=Math.max(60,Math.round(dur*(1-0.25*durationVariance)));}else if(tweak===2){dur=Math.min(960,Math.round(dur*(1+0.3*durationVariance)));}}return {p:pitch,d:dur};});}",
                 "function updateSequences(){currentLeadSeq=mutateSequence(baseLeadSeq,currentSeed,101);currentBassSeq=mutateSequence(baseBassSeq,currentSeed,202);}",
                 "function getEvents(step){return {lead:currentLeadSeq[step%currentLeadSeq.length],bass:currentBassSeq[step%currentBassSeq.length]};}",
-                "function mixSeed(seed,gridArr,events,step){let state=(seed^0x9e3779b9)>>>0;for(let i=0;i<gridArr.length;i++){state=lcg(state ^ gridArr[i]);}state=lcg(state ^ ((events.lead.p&0xffff)>>>0));state=lcg(state ^ ((events.lead.d&0xffff)>>>0));state=lcg(state ^ ((events.bass.p&0xffff)>>>0));state=lcg(state ^ ((events.bass.d&0xffff)>>>0));state=lcg(state ^ (step>>>0));if(state===0)state=1;return state>>>0;}",
-                "function resetLife(){const events=getEvents(idx);currentSeed=mixSeed(currentSeed,grid,events,idx);grid=seedGrid(currentSeed);nextGrid=new Array(cellCount).fill(0);seenStates.clear();updateSequences();idx=0;}",
+                "function mixSeed(seed,gridArr,events,step){let state=(seed^0x9e3779b9^wordSalt(step))>>>0;for(let i=0;i<gridArr.length;i++){state=lcg(state ^ gridArr[i]);}state=lcg(state ^ ((events.lead.p&0xffff)>>>0));state=lcg(state ^ ((events.lead.d&0xffff)>>>0));state=lcg(state ^ ((events.bass.p&0xffff)>>>0));state=lcg(state ^ ((events.bass.d&0xffff)>>>0));state=lcg(state ^ (step>>>0));if(state===0)state=1;return state>>>0;}",
+                "function resetLife(){wordCycle=(wordCycle+1)%wordSeedCount;const events=getEvents(idx);currentSeed=mixSeed(currentSeed,grid,events,idx);grid=seedGrid(currentSeed);nextGrid=new Array(cellCount).fill(0);seenStates.clear();updateSequences();idx=0;}",
                 "function tick(){const key=grid.join(\"\");if(key===zeroState||seenStates.has(key)){resetLife();const events=getEvents(idx);render();playEvents(events);evolve();idx=(idx+1)%(",
                 markovCount,
                 ");return;}seenStates.add(key);const events=getEvents(idx);render();playEvents(events);evolve();idx=(idx+1)%(",
@@ -136,6 +155,18 @@ library LifeScript {
                 "}"
             );
             if (i + 1 < pitches.length) {
+                out = abi.encodePacked(out, ",");
+            }
+        }
+        out = abi.encodePacked(out, "]");
+        return string(out);
+    }
+
+    function _uintArrayToJS(uint32[] memory values) private pure returns (string memory) {
+        bytes memory out = "[";
+        for (uint256 i = 0; i < values.length; i++) {
+            out = abi.encodePacked(out, _toString(values[i]));
+            if (i + 1 < values.length) {
                 out = abi.encodePacked(out, ",");
             }
         }

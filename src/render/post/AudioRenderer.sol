@@ -5,24 +5,9 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "../../interfaces/IAudioRenderer.sol";
 
-/**
- * @title AudioRenderer
- * @notice Generates minimal HTML with embedded SVG and click-to-play audio
- * @dev Creates an HTML data URI with WebAudio organ synthesis
- *      Click anywhere to toggle audio on/off
- * @dev Converted from library to contract - now deployable separately
- */
 contract AudioRenderer is IAudioRenderer {
     using Strings for uint256;
     
-    /**
-     * @notice Generate HTML with embedded SVG and audio as data URI
-     * @param leadPitch MIDI note for lead (-1 for rest/silence)
-     * @param bassPitch MIDI note for bass (never -1, bass has no rests)
-     * @param revealTimestamp Unix timestamp when this token revealed (unused but kept for interface)
-     * @param svgContent Raw SVG markup to embed (not data URI)
-     * @return HTML data URI for animation_url
-     */
     function generateAudioHTML(
         int16 leadPitch,
         int16 bassPitch, 
@@ -45,10 +30,6 @@ contract AudioRenderer is IAudioRenderer {
         ));
     }
     
-    /**
-     * @dev Generate minimal WebAudio JavaScript with organ-style synthesis
-     *      Click anywhere to toggle audio on/off
-     */
     function _generateScript(
         int16 leadPitch,
         int16 bassPitch
@@ -98,9 +79,6 @@ contract AudioRenderer is IAudioRenderer {
         ));
     }
     
-    /**
-     * @dev Convert int16 to string (handles negative numbers)
-     */
     function _int16ToString(int16 value) private pure returns (string memory) {
         if (value >= 0) {
             return Strings.toString(uint256(int256(value)));

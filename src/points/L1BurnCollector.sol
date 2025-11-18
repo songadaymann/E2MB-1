@@ -8,7 +8,9 @@ import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./PointsAggregator.sol";
+import { BokkyPooBahsDateTimeLibrary as DateTime } from "../../lib/bokkypon/BokkyPooBahsDateTimeLibrary.sol";
 
 interface IBurnableERC721 {
     function burn(uint256 tokenId) external;
@@ -23,6 +25,7 @@ interface IBurnableERC20 {
 }
 
 contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
+    using SafeERC20 for IERC20;
     PointsAggregator public aggregator;
     mapping(address => uint256) public eligibleAssets; // baseValue per asset
     address[] private eligibleAssetList;
@@ -30,9 +33,12 @@ contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
     mapping(address => uint8) public assetDecimals; // 0 for NFTs, >0 for ERC20 normalization
     address public songADayCollection;
     uint256[12] public monthWeights = [100, 95, 92, 88, 85, 82, 78, 75, 72, 68, 65, 60];
+    uint256 public songADayLockPeriod = 7 days;
+    mapping(address => uint256) public songADayEligibleAfter;
 
     event BurnRecorded(address indexed burner, address asset, uint256 tokenIdOrAmount, uint256 pointsEarned, uint256 month, string source);
     event SongADayCollectionUpdated(address indexed newCollection);
+    event SongADayLockPeriodUpdated(uint256 newPeriod);
 
     constructor(address _aggregator, address _songADayCollection) Ownable(msg.sender) {
         aggregator = PointsAggregator(_aggregator);
@@ -67,6 +73,16 @@ contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
         emit SongADayCollectionUpdated(newCollection);
     }
 
+    function setSongADayLockPeriod(uint256 newPeriod) external onlyOwner {
+        songADayLockPeriod = newPeriod;
+        emit SongADayLockPeriodUpdated(newPeriod);
+    }
+
+    function registerSongADayHold() external {
+        _ensureSongADayTracking(msg.sender);
+        require(songADayEligibleAfter[msg.sender] != 0, "No Song-A-Day balance");
+    }
+
     function getEligibleAssets() external view returns (address[] memory assets, uint256[] memory baseValues) {
         assets = new address[](eligibleAssetList.length);
         baseValues = new uint256[](eligibleAssetList.length);
@@ -92,8 +108,8 @@ contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
     }
 
     function getMonth() internal view returns (uint256) {
-        // Month 0-11 from timestamp (Jan=0)
-        return (block.timestamp / 2629743) % 12; // approx 30.44 days
+        (, uint256 month, ) = DateTime.timestampToDate(block.timestamp);
+        return month - 1;
     }
 
     function _normalizeMultiplier(address asset, uint256 multiplier) internal view returns (uint256) {
@@ -119,10 +135,12 @@ contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
         if (collection == address(0) || collection.code.length == 0) {
             return 10000;
         }
-        uint256 balance;
-        try IERC721(collection).balanceOf(burner) returns (uint256 bal) {
-            balance = bal;
-        } catch {
+        uint256 balance = _songADayBalance(burner);
+        if (balance == 0) {
+            return 10000;
+        }
+        uint256 eligibleTime = songADayEligibleAfter[burner];
+        if (eligibleTime == 0 || block.timestamp < eligibleTime) {
             return 10000;
         }
         if (balance >= 100) return 40000;
@@ -132,10 +150,40 @@ contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
         return 10000;
     }
 
+    function _songADayBalance(address account) internal view returns (uint256 balance) {
+        address collection = songADayCollection;
+        if (collection == address(0) || collection.code.length == 0) {
+            return 0;
+        }
+        try IERC721(collection).balanceOf(account) returns (uint256 bal) {
+            return bal;
+        } catch {
+            return 0;
+        }
+    }
+
+    function _ensureSongADayTracking(address burner) internal {
+        address collection = songADayCollection;
+        if (collection == address(0) || collection.code.length == 0) {
+            return;
+        }
+        uint256 balance = _songADayBalance(burner);
+        if (balance == 0) {
+            if (songADayEligibleAfter[burner] != 0) {
+                songADayEligibleAfter[burner] = 0;
+            }
+            return;
+        }
+        if (songADayEligibleAfter[burner] == 0) {
+            songADayEligibleAfter[burner] = block.timestamp + songADayLockPeriod;
+        }
+    }
+
     // ERC721 burn
     function onERC721Received(address, address from, uint256 tokenId, bytes calldata data) external override returns (bytes4) {
         require(eligibleAssets[msg.sender] > 0, "Asset not eligible");
         uint256 msongTokenId = abi.decode(data, (uint256));
+        _ensureSongADayTracking(from);
         uint256 points = calculatePoints(eligibleAssets[msg.sender], 1, from);
         // Try to burn the NFT; if not possible, hold in contract
         try IBurnableERC721(msg.sender).burn(tokenId) {} catch {
@@ -162,6 +210,7 @@ contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
     function onERC1155Received(address, address from, uint256 id, uint256 amount, bytes calldata data) external override returns (bytes4) {
         require(eligibleAssets[msg.sender] > 0, "Asset not eligible");
         uint256 msongTokenId = abi.decode(data, (uint256));
+        _ensureSongADayTracking(from);
         uint256 points = calculatePoints(eligibleAssets[msg.sender], amount, from);
         // Try to burn; if not possible, hold
         try IBurnableERC1155(msg.sender).burnSelf(id, amount) {} catch {
@@ -183,7 +232,8 @@ contract L1BurnCollector is Ownable, ERC165, IERC721Receiver, IERC1155Receiver {
     // ERC20 burn
     function burnERC20(address asset, uint256 amount, uint256 msongTokenId) external {
     require(eligibleAssets[asset] > 0, "Asset not eligible");
-    IERC20(asset).transferFrom(msg.sender, address(this), amount);
+    IERC20(asset).safeTransferFrom(msg.sender, address(this), amount);
+    _ensureSongADayTracking(msg.sender);
     uint256 normalizedAmount = _normalizeMultiplier(asset, amount);
     uint256 points = calculatePoints(eligibleAssets[asset], normalizedAmount, msg.sender);
         // Try to burn; if not possible, hold

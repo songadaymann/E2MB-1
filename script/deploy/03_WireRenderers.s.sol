@@ -51,15 +51,9 @@ contract WireRenderers is Script {
             audioRendererAddress
         );
         
-        msong.setCountdownRenderer(countdownSvgAddress);
-        msong.setCountdownHtmlRenderer(countdownHtmlAddress);
-        
         console.log("\n=== WIRING COMPLETE ===");
         console.log("Renderers connected successfully!");
-        console.log("\nYou can now:");
-        console.log("1. Mint tokens: forge script script/test/MintAndReveal.s.sol");
-        console.log("2. Force reveal: cast send $MSONG_ADDRESS 'forceReveal(uint256)' 1");
-        console.log("3. View metadata: cast call $MSONG_ADDRESS 'tokenURI(uint256)' 1");
+        console.log("\nNext step: configure the pre-reveal registry directly.");
         
         vm.stopBroadcast();
     }

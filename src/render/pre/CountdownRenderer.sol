@@ -4,25 +4,17 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "../IRenderTypes.sol";
 
-/**
- * @title CountdownRenderer v0.3
- * @notice Simple discrete-flip countdown with 12-second progress bar
- * @dev All digits flip instantly, progress bar shows time until next block
- */
 library CountdownRenderer {
     using Strings for uint256;
     using RenderTypes for RenderTypes.RenderCtx;
 
     function render(RenderTypes.RenderCtx memory ctx) internal pure returns (string memory) {
-        // Opacity ramp: 0.15 + 0.85 * closeness
         uint256 closenessCapped = ctx.closenessBps > 10000 ? 10000 : ctx.closenessBps;
         string memory opacity = _bpsToDec4(uint16(1500 + (uint256(8500) * closenessCapped) / 10000));
         
-        // Background brightness
         uint256 bgBrightness = closenessCapped >= 10000 ? 0 : (10000 - closenessCapped);
         string memory bg = _grayCss(uint16(bgBrightness));
         
-        // Digit color
         string memory digitCol = (ctx.closenessBps >= 5000) ? "rgb(255,255,255)" : "rgb(0,0,0)";
 
         string memory head = string(abi.encodePacked(
@@ -31,14 +23,12 @@ library CountdownRenderer {
             '<rect width="100%" height="100%" fill="', bg, '"/>'
         ));
 
-        // Display block count (counting DOWN)
         string memory rows = string(abi.encodePacked(
             _digitRow(80, ctx.blocksDisplay, digitCol, opacity, ctx.nowTs, 100000000000, 10000000000, 1000000000, 100000000),
             _digitRow(140, ctx.blocksDisplay, digitCol, opacity, ctx.nowTs, 10000000, 1000000, 100000, 10000),
             _digitRow(200, ctx.blocksDisplay, digitCol, opacity, ctx.nowTs, 1000, 100, 10, 1)
         ));
         
-        // Progress bar (fills over 12 seconds)
         string memory progressBar = _progressBar(digitCol, ctx.nowTs);
         
         string memory yr = _year(ctx.revealYear, digitCol);
@@ -54,7 +44,6 @@ library CountdownRenderer {
         uint256 nowTs,
         uint256 d3, uint256 d2, uint256 d1, uint256 d0
     ) private pure returns (string memory) {
-        // Calculate current blocks (counting DOWN)
         uint256 blocksElapsed = nowTs / 12;
         uint256 currentBlocks = displayNumber > blocksElapsed ? displayNumber - blocksElapsed : 0;
         
@@ -74,11 +63,9 @@ library CountdownRenderer {
     }
 
     function _progressBar(string memory color, uint256 nowTs) private pure returns (string memory) {
-        // Progress within current 12-second block
         uint256 secondsIntoBlock = nowTs % 12;
         uint256 progressWidth = (secondsIntoBlock * 260) / 12; // 0-260px over 12 seconds
         
-        // Calculate time remaining in this block for animation sync
         uint256 timeRemaining = 12 - secondsIntoBlock;
         
         return string(abi.encodePacked(

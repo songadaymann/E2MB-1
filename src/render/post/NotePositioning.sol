@@ -3,41 +3,22 @@ pragma solidity ^0.8.20;
 
 import "../../interfaces/INotePositioning.sol";
 
-/// @title NotePositioning
-/// @notice Library for positioning musical notes, rests, and dots on SVG staff
-/// @dev Contains all calibrated positioning formulas from testing
-/// @dev Converted from library to contract - now deployable separately
 contract NotePositioning is INotePositioning {
     
-    /// @notice Standard note size used in calculations
     uint256 private constant NOTE_SIZE = 60;
     
-    /// @notice Note display height scale factor (2.5x)
     uint256 private constant NOTE_SCALE = 2500;
     
-    // PositionResult struct is defined in INotePositioning interface
-    
-    /// @notice Head center coordinates for each note type (viewBox coords * 100 for precision)
     struct HeadCenter {
-        uint256 x;  // X coordinate * 100
-        uint256 y;  // Y coordinate * 100
+        uint256 x;
+        uint256 y;
     }
     
-    /// @notice ViewBox dimensions for each symbol (dimensions * 100 for precision)  
     struct ViewBoxDims {
-        uint256 width;   // Width * 100
-        uint256 height;  // Height * 100
+        uint256 width;
+        uint256 height;
     }
     
-    // ============================================================================
-    // NOTE POSITIONING
-    // ============================================================================
-    
-    /// @notice Calculate positioning for up-stemmed notes
-    /// @param noteX Target X coordinate for note head center
-    /// @param noteY Target Y coordinate for note head center  
-    /// @param noteType Note type identifier ("quarter-up", "half-up", etc.)
-    /// @return Positioning data (offsetX, offsetY, width, height)
     function getUpNotePosition(
         uint256 noteX,
         uint256 noteY,
@@ -66,11 +47,6 @@ contract NotePositioning is INotePositioning {
         });
     }
     
-    /// @notice Calculate positioning for down-stemmed notes
-    /// @param noteX Target X coordinate for note head center
-    /// @param noteY Target Y coordinate for note head center
-    /// @param noteType Note type identifier ("quarter-down", "half-down", etc.)
-    /// @return Positioning data (offsetX, offsetY, width, height)
     function getDownNotePosition(
         uint256 noteX,
         uint256 noteY,
@@ -99,10 +75,6 @@ contract NotePositioning is INotePositioning {
         });
     }
     
-    /// @notice Calculate positioning for whole notes (no stem)
-    /// @param noteX Target X coordinate for note head center
-    /// @param noteY Target Y coordinate for note head center
-    /// @return Positioning data (offsetX, offsetY, width, height)
     function getWholeNotePosition(
         uint256 noteX,
         uint256 noteY
@@ -132,15 +104,6 @@ contract NotePositioning is INotePositioning {
         });
     }
     
-    // ============================================================================
-    // REST POSITIONING
-    // ============================================================================
-    
-    /// @notice Calculate positioning for rests (center-based positioning)
-    /// @param restX Target X coordinate for rest center
-    /// @param restY Target Y coordinate for rest center
-    /// @param restType Rest type identifier ("rest-quarter", "rest-eighth", "rest-half")
-    /// @return Positioning data (offsetX, offsetY, width, height)
     function getRestPosition(
         uint256 restX,
         uint256 restY,
@@ -166,15 +129,6 @@ contract NotePositioning is INotePositioning {
         });
     }
     
-    // ============================================================================
-    // DOT POSITIONING
-    // ============================================================================
-    
-    /// @notice Calculate positioning for dots (follows musical notation rules)
-    /// @param noteX Note head center X coordinate
-    /// @param noteY Note head center Y coordinate  
-    /// @param onLine True if note is on a staff line, false if in space
-    /// @return Positioning data (offsetX, offsetY, width, height)
     function getDotPosition(
         uint256 noteX,
         uint256 noteY,

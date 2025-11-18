@@ -54,7 +54,7 @@ contract LifeLensRenderer is Ownable {
                 palette[0],
                 ";display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;font-family:monospace;color:",
                 palette[1],
-                ";}#life-container{text-align:center;}#life-title{margin-top:16px;letter-spacing:2px;font-size:12px;text-transform:uppercase;}</style></head><body><div id='life-container'>",
+                ";}#life-container{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;gap:18px;text-align:center;}#life-title{letter-spacing:1px;font-size:12px;text-transform:uppercase;opacity:0.8;}</style></head><body><div id='life-container'>",
                 svg,
                 "<div id='life-title'></div></div><script>",
                 script,

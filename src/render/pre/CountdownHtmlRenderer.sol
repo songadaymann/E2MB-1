@@ -3,18 +3,8 @@ pragma solidity ^0.8.20;
 
 import "../IRenderTypes.sol";
 
-/**
- * @title CountdownHtmlRenderer
- * @notice Generates HTML with JavaScript for accurate real-time countdown
- * @dev Returns data URI for animation_url field
- */
 contract CountdownHtmlRenderer {
     
-    /**
-     * @notice Render the countdown HTML
-     * @param ctx Render context with blocksDisplay and nowTs
-     * @return HTML data URI
-     */
     function render(RenderTypes.RenderCtx memory ctx) external pure returns (string memory) {
         return _generateHtml(ctx.blocksDisplay, ctx.nowTs);
     }

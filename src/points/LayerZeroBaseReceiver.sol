@@ -75,7 +75,12 @@ contract LayerZeroBaseReceiver is Ownable, ILayerZeroReceiver {
     /// @notice Allows the owner to sweep any stranded ETH.
     function sweep(address payable to) external onlyOwner {
         require(to != address(0), "Invalid recipient");
-        to.transfer(address(this).balance);
+        uint256 balance = address(this).balance;
+        if (balance == 0) {
+            return;
+        }
+        (bool success, ) = to.call{value: balance}("");
+        require(success, "Sweep failed");
     }
 
     receive() external payable {}

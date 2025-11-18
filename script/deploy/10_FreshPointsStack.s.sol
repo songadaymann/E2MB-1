@@ -43,6 +43,8 @@ contract FreshPointsStack is Script {
         L1BurnCollector collector = new L1BurnCollector(address(aggregator), songADayCollection);
         aggregator.setL1BurnCollector(address(collector));
         console.log("L1BurnCollector deployed:", address(collector));
+        aggregator.setNftContract(nftAddress);
+        console.log("Aggregator NFT contract set:", nftAddress);
 
         address baseReceiver = vm.envOr("BASE_L1_LAYERZERO_RECEIVER_ADDRESS", address(0));
         if (baseReceiver == address(0)) {
@@ -87,6 +89,10 @@ contract FreshPointsStack is Script {
         EveryTwoMillionBlocks msong = EveryTwoMillionBlocks(nftAddress);
         msong.setPointsManager(address(pointsManager));
         console.log("EveryTwoMillionBlocks now uses new PointsManager.");
+
+        pointsManager.setRevealQueue(nftAddress);
+        pointsManager.setPermutationZeroIndexed(true);
+        console.log("PointsManager reveal queue + zero-index setting applied.");
 
         vm.stopBroadcast();
 

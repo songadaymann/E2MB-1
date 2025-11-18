@@ -13,10 +13,12 @@ contract FinalizeTrace is Test {
 
     string private rpcUrl;
     bool private forkEnabled;
+    bool private traceEnabled;
 
     function setUp() public {
         rpcUrl = vm.envOr("SEPOLIA_RPC_URL", string(""));
-        forkEnabled = bytes(rpcUrl).length > 0;
+        traceEnabled = vm.envOr("ENABLE_FINALIZE_TRACE", false);
+        forkEnabled = traceEnabled && bytes(rpcUrl).length > 0;
         if (forkEnabled) {
             vm.createSelectFork(rpcUrl, 9453700);
         }

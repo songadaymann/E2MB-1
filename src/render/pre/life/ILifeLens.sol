@@ -12,10 +12,13 @@ interface ILifeLens {
         uint16[] leadDurations;
         int16[] bassPitches;
         uint16[] bassDurations;
+        uint32[] wordSeeds;
         uint256 currentRank;
         uint256 totalTokens;
         uint256 revealTimestamp;
         bool isRevealed;
+        string wordsText;
+        uint256 revealYear;
     }
 
     function name() external view returns (string memory);

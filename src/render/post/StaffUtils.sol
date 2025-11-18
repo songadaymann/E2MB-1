@@ -5,15 +5,10 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./SvgMusicGlyphs.sol";
 import "../../interfaces/IStaffUtils.sol";
 
-/// @title StaffUtils
-/// @notice Standardized staff line and clef generation utilities
-/// @dev Provides consistent coordinates and styling across all SVG music renderers
-/// @dev Converted from library to contract - now deployable separately
 contract StaffUtils is IStaffUtils {
     using Strings for uint256;
     // StaffGeometry struct is defined in IStaffUtils interface
 
-    /// @notice Standard staff geometry for most renderers
     function standardGeometry() internal pure returns (StaffGeometry memory) {
         return StaffGeometry({
             canvasWidth: 360,
@@ -28,7 +23,6 @@ contract StaffUtils is IStaffUtils {
         });
     }
 
-    /// @notice Larger staff geometry matching Python abc_to_svg.py exactly
     function largeGeometry() external pure override returns (StaffGeometry memory) {
         return StaffGeometry({
             canvasWidth: 600,
@@ -43,9 +37,6 @@ contract StaffUtils is IStaffUtils {
         });
     }
 
-    /// @notice Generate complete staff lines (treble + bass) as SVG string
-    /// @param geom Staff geometry to use
-    /// @param strokeColor Color for staff lines (e.g. "#fff")
     function generateStaffLines(
         StaffGeometry memory geom, 
         string memory strokeColor
@@ -93,9 +84,6 @@ contract StaffUtils is IStaffUtils {
         ));
     }
 
-    /// @notice Generate both clefs positioned correctly for the geometry
-    /// @param geom Staff geometry to use  
-    /// @param fillColor Color for clefs (e.g. "#fff")
     function generateClefs(
         StaffGeometry memory geom,
         string memory fillColor
@@ -121,7 +109,6 @@ contract StaffUtils is IStaffUtils {
         ));
     }
 
-    /// @notice Convert int16 to string (handles negative numbers)
     function _int16ToString(int16 value) private pure returns (string memory) {
         if (value >= 0) {
             return uint256(int256(value)).toString();
@@ -130,10 +117,6 @@ contract StaffUtils is IStaffUtils {
         }
     }
 
-    /// @notice Generate complete grand staff (staff lines + clefs) as SVG
-    /// @param geom Staff geometry to use
-    /// @param strokeColor Color for staff lines
-    /// @param fillColor Color for clefs
     function generateGrandStaff(
         StaffGeometry memory geom,
         string memory strokeColor,

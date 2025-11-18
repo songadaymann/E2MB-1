@@ -3,14 +3,7 @@ pragma solidity ^0.8.20;
 
 import "../../interfaces/ISvgMusicGlyphs.sol";
 
-/// @title SvgMusicGlyphs
-/// @notice Minimal reusable music glyph symbols to inline inside <defs> of the SVG.
-///         Symbols are designed to use fill="currentColor" so the caller can set color
-///         via a parent group or explicit fill on <use> wrappers.
-/// @dev Converted from library to contract - now deployable separately
 contract SvgMusicGlyphs is ISvgMusicGlyphs {
-    /// @notice Returns a compact set of <symbol> definitions (without the outer <defs> tag)
-    ///         Include this inside a <defs> ... </defs> block of your SVG.
     function defsMinimal() external pure override returns (string memory) {
         return string(abi.encodePacked(
             // Quarter notes (up/down stems)

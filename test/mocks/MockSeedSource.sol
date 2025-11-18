@@ -6,6 +6,7 @@ import "../../src/render/pre/life/LifeLensInit.sol";
 contract MockSeedSource is ILifeSeedSource {
     mapping(uint256 => uint32) public tokenSeed;
     mapping(uint256 => bytes32) public sevenWords;
+    mapping(uint256 => string) private _sevenWordsText;
     bytes32 public previousNotesHash;
     bytes32 public globalState;
     mapping(uint256 => uint256) private _currentRank;
@@ -20,6 +21,10 @@ contract MockSeedSource is ILifeSeedSource {
 
     function setSevenWords(uint256 tokenId, bytes32 value) external {
         sevenWords[tokenId] = value;
+    }
+
+    function setSevenWordsText(uint256 tokenId, string calldata words) external {
+        _sevenWordsText[tokenId] = words;
     }
 
     function setPreviousNotesHash(bytes32 value) external {
@@ -56,5 +61,9 @@ contract MockSeedSource is ILifeSeedSource {
 
     function START_YEAR() external view returns (uint256) {
         return startYear;
+    }
+
+    function sevenWordsText(uint256 tokenId) external view returns (string memory) {
+        return _sevenWordsText[tokenId];
     }
 }

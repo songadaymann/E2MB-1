@@ -6,10 +6,6 @@ import "./ILifeLens.sol";
 import "./LifeLensInit.sol";
 import "./LifeSVG.sol";
 
-/**
- * @title LifeLensSvgRenderer
- * @notice Thin adapter that exposes the Life Lens SVG as an ICountdownRenderer-compatible contract.
- */
 contract LifeLensSvgRenderer {
     LifeLensInit public immutable lifeLens;
 

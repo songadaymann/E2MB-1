@@ -3,13 +3,6 @@ pragma solidity ^0.8.20;
 
 import "../../interfaces/IMidiToStaff.sol";
 
-/**
- * @title MidiToStaff
- * @notice Converts MIDI notes to staff positions using diatonic conversion
- * @dev Based on successful Python implementation that bypassed ABC parsing complexity
- *      Uses C4 = treble step 10, bass step -2 as reference points
- * @dev Converted from library to contract - now deployable separately
- */
 contract MidiToStaff is IMidiToStaff {
     
     // Staff step references (from Python implementation)
@@ -27,11 +20,6 @@ contract MidiToStaff is IMidiToStaff {
     uint16 constant WHOLE_DURATION = 1920;   // Whole note
     uint16 constant SIXTEENTH_DURATION = 120; // Sixteenth note
     
-    /**
-     * @notice Get diatonic step for pitch class (C=0, D=1, E=2, F=3, G=4, A=5, B=6)
-     * @param pitchClass Pitch class (0-11: C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-     * @return Diatonic step within octave
-     */
     function _pitchClassToStep(uint8 pitchClass) private pure returns (uint8) {
         // C, C#, D, D#, E, F, F#, G, G#, A, A#, B
         if (pitchClass == 0 || pitchClass == 1) return 0; // C, C#
@@ -46,12 +34,6 @@ contract MidiToStaff is IMidiToStaff {
     
     // Enums and structs are defined in IMidiToStaff interface
     
-    /**
-     * @notice Main function: converts MIDI note and duration to staff position
-     * @param midiNote MIDI note number (0-127)
-     * @param duration Note duration in ticks
-     * @return StaffPosition struct with all positioning info
-     */
     function midiToStaffPosition(uint8 midiNote, uint16 duration) 
         external 
         pure 
@@ -88,12 +70,6 @@ contract MidiToStaff is IMidiToStaff {
         });
     }
     
-    /**
-     * @notice Convert MIDI note to staff step using diatonic conversion
-     * @param midiNote MIDI note number
-     * @param clef Which clef this note will appear on
-     * @return Staff step (0=top line, increasing downward)
-     */
     function _midiToStaffStep(uint8 midiNote, Clef clef) private pure returns (uint8) {
         // OCTAVE SHIFT: Apply only to bass clef for better positioning
         // Bass notes (MIDI 24-46 = C1-Bb2) are very low, shift up 1 octave for readability
@@ -139,13 +115,6 @@ contract MidiToStaff is IMidiToStaff {
         return uint8(uint256(staffStep));
     }
     
-    /**
-     * @notice Determine note type based on duration and stem direction rules
-     * @param duration Note duration in ticks
-     * @param staffStep Staff position for stem direction logic
-     * @param clef Which clef for stem direction reference
-     * @return NoteType enum value
-     */
     function _getDurationNoteType(uint16 duration, uint8 staffStep, Clef clef) 
         private 
         pure 
@@ -165,8 +134,7 @@ contract MidiToStaff is IMidiToStaff {
             baseType = NoteType.SIXTEENTH_UP; // Will adjust for stem direction
         }
         
-        // Apply stem direction rules
-        // Notes below middle line get stems up, notes above get stems down
+        // Apply stem direction rules (below middle line → stems up)
         uint8 middleLine = (clef == Clef.TREBLE) ? 4 : 4; // B4 line for treble, D3 line for bass
         
         bool stemUp = (staffStep >= middleLine);
@@ -185,11 +153,6 @@ contract MidiToStaff is IMidiToStaff {
         return baseType; // Fallback
     }
     
-    /**
-     * @notice Get string representation of note type for SVG symbol reference
-     * @param noteType NoteType enum value
-     * @return String identifier for SVG symbol
-     */
     function noteTypeToString(NoteType noteType) external pure override returns (string memory) {
         if (noteType == NoteType.QUARTER_UP) return "quarter-up";
         if (noteType == NoteType.QUARTER_DOWN) return "quarter-down";

@@ -21,7 +21,9 @@
   "dependencies": {
     "@chainlink/contracts": "^1.5.0",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.0.0",
-    "@openzeppelin/contracts": "^5.0.0"
+    "@openzeppelin/contracts": "^5.0.0",
+    "ethers": "^6.15.0",
+    "tone": "^14.7.77"
   },
   "overrides": {
     "debug": "4.3.7",

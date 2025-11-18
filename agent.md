@@ -174,7 +174,7 @@ Events:
 
 * **One-time** randomness draw (Chainlink VRF v2.5 recommended) after the primary sale closes and before renderers are finalized.
 * Create a **full permutation** of `1..totalSupply` → `baseQueueIndex[tokenId]` using Fisher-Yates with the VRF seed.
-* Today the permutation lives in the `basePermutation` mapping; a future upgrade will mirror the data into an **SSTORE2** blob referenced by `permutationScript` for cheaper reads and proofs.
+* Today the permutation lives in the `basePermutation` mapping; a future upgrade may mirror the data into an **SSTORE2** blob for cheaper reads and proofs.
 
   * Event: `RandomnessRequested(reqId)`, `RandomnessFulfilled(seed)`, `PermutationIngested(totalSupply)`, `PermutationFinalized()`.
 
@@ -182,16 +182,13 @@ Events:
 
 ## 7) Token States & Pre-reveal Modes
 
-* Pre-reveal → holder may choose a **display mode** (enum, 2–3 bits per token):
+* Pre-reveal selection is handled by the `PreRevealRegistry` slots (owner can add/update slots, holders opt in per-token while seven words are set). Today’s layout:
 
-  * **Ideas (TBD exact):**
+  1. **Slot 0 – Countdown (default)**: SVG + HTML countdown clock that runs on pure SVG/SMIL. Every token points here unless the holder explicitly chooses another slot.
+  2. **Slot 1 – Life Lens**: Game-of-Life + audio experience. Uses Dav’s `beginningJS` EthFS contract for Tone.js and our own `LifeGlyphs` font (teed up to mirror to EthFS so other builders can reuse it). Gateable on seven words.
+  3. **Slots 2+ – Reserved**: left inactive so we can onboard future lenses post-launch without touching the core NFT.
 
-    * **Countdown clock** to their reveal year.
-    * **Game of Life** animation (pure SVG/SMIL; no JS).
-    * **Minimal waveform** or **lissajous** seeded by tokenSalt.
-    * **“Markov heatmap”**: small visualization of recent chord movement likelihoods.
-    * etc.
-* Mode is **changeable by owner until reveal**; locked after reveal.
+* Holders can change their slot at any time before reveal; the registry enforces seven-word gating per slot. After reveal the selection is locked.
 
 ---
 
@@ -247,7 +244,7 @@ Events:
 * Points stack: `setPointsManager(address)`, `setPointsAggregator(address)`.
 * VRF: `configureVRF(...)`, `requestPermutationSeed()`, `setPermutationSeedManual(bytes32)`.
 * Permutation ingest: `ingestPermutationChunk(uint256[],uint256[])`, `finalizePermutation()`.
-* Misc: `setGlobalState(bytes32)` (testing hook), `setPermutationScript(address)` (future SSTORE2 pointer).
+* Misc: `setGlobalState(bytes32)` (testing hook).
 
 ### Points & Ranking (PointsManager.sol + PointsAggregator.sol)
 
@@ -269,7 +266,7 @@ Key events of interest:
 * Global sale / config:
 
   * `totalMinted`, `mintEnabled`, `mintPrice`, `payoutAddress`
-  * External addresses: `songAlgorithm`, `musicRenderer`, `audioRenderer`, `countdownRenderer`, `countdownHtmlRenderer`, `pointsManager`, `pointsAggregator`, `permutationScript`
+  * External addresses: `songAlgorithm`, `musicRenderer`, `audioRenderer`, `countdownRenderer`, `countdownHtmlRenderer`, `pointsManager`, `pointsAggregator`
   * VRF params: `vrfCoordinator`, `vrfKeyHash`, `vrfSubscriptionId`, `vrfMinConfirmations`, `vrfCallbackGasLimit`, `vrfNumWords`, `vrfRequestInFlight`, `vrfRequestId`
   * Booleans: `renderersFinalized`, `permutationSeedFulfilled`, `permutationFinalized`
   * Counters: `permutationEntryCount`, `permutationChunkCount`
